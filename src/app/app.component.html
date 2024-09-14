@@ -1,45 +1,7 @@
 <div class="dashboard bg-[#fbfbfb]">
-  <header>
-    <app-navbar></app-navbar>
-  </header>
-
-  <app-sidebar></app-sidebar>
-
-  <div class="main-content">
     <header>
-      <app-greetings></app-greetings>
+      <app-navbar></app-navbar>
     </header>
-
-    <section class="overview">
-      <app-display-card></app-display-card>
-      <app-display-card></app-display-card>
-    </section>
-
-    <section class="financial-overview">
-      <h2>Financial Overview</h2>
-      <ngx-charts-bar-vertical
-        [view]="[700, 400]"
-
-        [results]="financialData"
-        [gradient]="false"
-        [xAxis]="true"
-        [yAxis]="true"
-        [legend]="true"
-        [showXAxisLabel]="true"
-        [xAxisLabel]="'Month'"
-        [showYAxisLabel]="true"
-        [yAxisLabel]="'Amount (€)'"
-      ></ngx-charts-bar-vertical>
-    </section>
-
-    <section class="quick-links">
-      <h2>Quick Links</h2>
-      <ul>
-        <li>Account Details</li>
-        <li>Project</li>
-        <li>Financial Forecast</li>
-        <li>Money & Cashflow Overview</li>
-      </ul>
-    </section>
-  </div>
+    <app-sidebar></app-sidebar>
+    <router-outlet></router-outlet>
 </div>
