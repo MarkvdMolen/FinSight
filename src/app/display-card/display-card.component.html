@@ -1,0 +1,13 @@
+<div class="bg-[#f1f1f1] shadow-md rounded-lg p-6 max-w-sm">
+    <h2 class="text-xl font-bold mb-4">Accounts</h2>
+    <div class="space-y-2">
+      <div *ngFor="let account of accounts" class="flex justify-between">
+        <span>{{ account.name }}</span>
+        <span class="font-semibold">€{{ account.balance.toLocaleString() }}</span>
+      </div>
+    </div>
+    <div class="mt-4 pt-2 border-t border-gray-200 flex justify-between font-bold">
+      <span>Total Balance</span>
+      <span>€{{ totalBalance.toLocaleString() }}</span>
+    </div>
+  </div>
