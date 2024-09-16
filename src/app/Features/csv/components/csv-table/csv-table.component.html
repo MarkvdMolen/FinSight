@@ -1,0 +1,24 @@
+<table class="min-w-full shadow-2xl rounded-lg border-[#f1f1f1] border font-outfit text-[#014e60]">
+    <thead class="uppercase bg-[#f1f1f1]">
+        <tr>
+        <th class="px-4 py-2 text-left">IBAN/BBAN</th>
+        <th class="px-4 py-2 text-left">Naam tegenpartij</th>
+        <th class="px-4 py-2 text-left">Omschrijving</th>
+        <th class="px-4 py-2 text-left">Bedrag</th>
+        <th class="px-4 py-2 text-left">Datum</th>
+        <th class="px-4 py-2 text-left"></th>
+        </tr>
+    </thead>
+    <tbody class="text-gray-700 text-sm">
+        <tr *ngFor="let transaction of transactions">
+        <td class="border px-4 py-2">{{ transaction.iban }}</td>
+        <td class="border px-4 py-2">{{ transaction.tegenpartij }}</td>
+        <td class="border px-4 py-2">{{ transaction.omschrijving }}</td>
+        <td class="border px-4 py-2">{{ transaction.amount }}</td>
+        <td class="border px-4 py-2">{{ transaction.date }}</td>
+        <td class="border px-4 py-2">
+            <a href="#" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
+        </td>
+        </tr>
+    </tbody>
+</table>
