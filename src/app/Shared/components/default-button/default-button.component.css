@@ -1,7 +1,7 @@
 .btn {
     @apply 
     rounded-md 
-    bg-blue-600 
+    bg-[#019b98]
     py-2 
     px-4 
     border 
@@ -15,9 +15,11 @@
     focus:bg-blue-700 
     focus:shadow-none 
     active:bg-blue-700 
-    hover:bg-blue-700 
+    hover:bg-[#55ccc9]
     active:shadow-none 
     disabled:pointer-events-none 
     disabled:opacity-50 
     disabled:shadow-none ml-2
+    font-outfit
+    text-lg
 }

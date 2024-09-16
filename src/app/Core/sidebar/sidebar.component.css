@@ -1,4 +1,9 @@
 aside {
     @apply
-    w-64 transition-transform -translate-x-full sm:translate-x-0
+    w-64 
+    transition-transform 
+    -translate-x-full 
+    sm:translate-x-0
+    bg-[#f1f1f1]
+    h-full
 }
