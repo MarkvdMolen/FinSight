@@ -1,53 +1,99 @@
 import { Component, OnInit } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable, of } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-csv-table',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './csv-table.component.html',
-  styleUrl: './csv-table.component.css'
+  styleUrls: ['./csv-table.component.css']
 })
 export class CsvTableComponent implements OnInit {
-  transactions = [
-    {
-      iban: 'NL25RABO0347258441',
-      currency: 'EUR',
-      bic: 'RABONL2U',
-      volgnr: 3555,
-      date: '2024-08-13',
-      rentedatum: '2024-08-13',
-      amount: '-12,79',
-      balance: '+1578,76',
-      tegenrekeningIban: 'NL65ADYB2006011162',
-      tegenpartij: 'NENT Group International AB',
-      omschrijving: 'NENT Group International AB Viaplay d633096a-be9a-490f-9598-3d8e9545f0b4',
-      omschrijving2: '',
-      omschrijving3: ''
-    },
-    {
-      iban: 'NL25RABO0347258441',
-      currency: 'EUR',
-      bic: 'RABONL2U',
-      volgnr: 3556,
-      date: '2024-08-13',
-      rentedatum: '2024-08-13',
-      amount: '-9,95',
-      balance: '+1568,81',
-      tegenrekeningIban: 'DE86210700200123010101',
-      tegenpartij: 'Zalando Payments GmbH',
-      omschrijving: 'Zalando Plus abonnement 10202166945984 ZB 011518875948',
-      omschrijving2: '',
-      omschrijving3: ''
-    }
-  ];
+
+  transactions: any[] = [];
+  private cacheKey = 'transactionsCache';  // De key voor localStorage
+  editingTransaction: any = null;  // Huidige transactie die wordt bewerkt
+
+  constructor(private http: HttpClient) { }
 
   ngOnInit() {
-    // Herhaal de transacties 30 keer
-    const repeatedTransactions = [];
-    for (let i = 0; i < 30; i++) {
-      repeatedTransactions.push(...this.transactions);  // Voeg alle transacties toe
+    const cachedData = this.getCachedTransactions();
+    if (cachedData) {
+      // Als er data in de cache zit, gebruik deze dan
+      console.log('Using cached data:', cachedData);
+      this.transactions = cachedData;
+    } else {
+      // Zo niet, haal de data van de API en sla deze op in de cache
+      this.getTransactions().subscribe((data: any[]) => {
+        console.log('Fetched data from API:', data);
+        this.transactions = data;
+        this.cacheTransactions(data);  // Sla de data op in de cache
+      });
     }
-    this.transactions = repeatedTransactions;  // Update de originele array
+  }
+
+  // Methode om de transacties op te halen van het API-endpoint
+  getTransactions(): Observable<any[]> {
+    const url = 'http://localhost:8080/api/transactions/all';  // Je API-endpoint
+    return this.http.get<any[]>(url);
+  }
+
+  // Methode om een transactie te updaten
+  updateTransaction(transaction: any): Observable<any> {
+    const url = `http://localhost:8080/api/transactions/${transaction.transactions_id}`;
+    return this.http.put(url, transaction);  // Voer de PUT-aanroep uit
+  }
+
+  // Bewerkingsfunctie
+  editTransaction(transaction: any) {
+    this.editingTransaction = { ...transaction };  // Maak een kopie van de te bewerken transactie
+  }
+
+  // Methode om de wijzigingen op te slaan
+  saveTransaction() {
+    this.updateTransaction(this.editingTransaction).subscribe((updatedTransaction) => {
+      const index = this.transactions.findIndex(t => t.transactions_id === updatedTransaction.transactions_id);
+      if (index !== -1) {
+        this.transactions[index] = updatedTransaction;  // Werk de transactie bij in de lijst
+      }
+      this.editingTransaction = null;  // Stop met bewerken
+    });
+  }
+
+  cancelEdit() {
+    this.editingTransaction = null;  // Annuleer het bewerken
+  }
+
+  // Functie om data op te slaan in localStorage
+  cacheTransactions(transactions: any[]): void {
+    const dataToCache = {
+      data: transactions,
+      timestamp: Date.now()
+    };
+    localStorage.setItem(this.cacheKey, JSON.stringify(dataToCache));
+  }
+
+  // Functie om data op te halen uit de cache
+  getCachedTransactions(): any[] | null {
+    const cached = localStorage.getItem(this.cacheKey);
+    if (cached) {
+      const parsed = JSON.parse(cached);
+      const cacheDuration = 1000 * 60 * 10;  // Cache geldigheid van 10 minuten
+      const isCacheValid = Date.now() - parsed.timestamp < cacheDuration;
+      if (isCacheValid) {
+        return parsed.data;
+      } else {
+        this.clearCache();  // Invalideer de cache als deze verlopen is
+      }
+    }
+    return null;  // Als er geen geldige cache is, retourneer null
+  }
+
+  // Functie om de cache te wissen
+  clearCache(): void {
+    localStorage.removeItem(this.cacheKey);
   }
 }

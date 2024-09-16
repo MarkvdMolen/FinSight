@@ -1,24 +1,55 @@
 <table class="min-w-full shadow-2xl rounded-lg border-[#f1f1f1] border font-outfit text-[#014e60]">
     <thead class="uppercase bg-[#f1f1f1]">
         <tr>
-        <th class="px-4 py-2 text-left">IBAN/BBAN</th>
-        <th class="px-4 py-2 text-left">Naam tegenpartij</th>
-        <th class="px-4 py-2 text-left">Omschrijving</th>
-        <th class="px-4 py-2 text-left">Bedrag</th>
-        <th class="px-4 py-2 text-left">Datum</th>
-        <th class="px-4 py-2 text-left"></th>
+            <th class="px-4 py-2 text-left">#</th>
+            <th class="px-4 py-2 text-left">IBAN/BBAN</th>
+            <th class="px-4 py-2 text-left">Naam tegenpartij</th>
+            <th class="px-4 py-2 text-left">Omschrijving</th>
+            <th class="px-4 py-2 text-left">Bedrag</th>
+            <th class="px-4 py-2 text-left">Datum</th>
+            <th class="px-4 py-2 text-left"></th>
         </tr>
     </thead>
     <tbody class="text-gray-700 text-sm">
         <tr *ngFor="let transaction of transactions">
-        <td class="border px-4 py-2">{{ transaction.iban }}</td>
-        <td class="border px-4 py-2">{{ transaction.tegenpartij }}</td>
-        <td class="border px-4 py-2">{{ transaction.omschrijving }}</td>
-        <td class="border px-4 py-2">{{ transaction.amount }}</td>
-        <td class="border px-4 py-2">{{ transaction.date }}</td>
-        <td class="border px-4 py-2">
-            <a href="#" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
-        </td>
+            <td>{{ transaction.transactions_id }}</td>
+            <td *ngIf="editingTransaction?.transactions_id !== transaction.transactions_id">{{ transaction.account }}</td>
+            <td *ngIf="editingTransaction?.transactions_id === transaction.transactions_id">
+                <input [(ngModel)]="editingTransaction.account" class="border p-1">
+            </td>
+    
+            <td *ngIf="editingTransaction?.transactions_id !== transaction.transactions_id">{{ transaction.recipient }}</td>
+            <td *ngIf="editingTransaction?.transactions_id === transaction.transactions_id">
+                <input [(ngModel)]="editingTransaction.recipient" class="border p-1">
+            </td>
+    
+            <td *ngIf="editingTransaction?.transactions_id !== transaction.transactions_id">{{ transaction.description }}</td>
+            <td *ngIf="editingTransaction?.transactions_id === transaction.transactions_id">
+                <input [(ngModel)]="editingTransaction.description" class="border p-1">
+            </td>
+    
+            <td *ngIf="editingTransaction?.transactions_id !== transaction.transactions_id">{{ transaction.amount | currency:'EUR' }}</td>
+            <td *ngIf="editingTransaction?.transactions_id === transaction.transactions_id">
+                <input type="number" [(ngModel)]="editingTransaction.amount" class="border p-1">
+            </td>
+    
+            <td *ngIf="editingTransaction?.transactions_id !== transaction.transactions_id">{{ transaction.date | date }}</td>
+            <td *ngIf="editingTransaction?.transactions_id === transaction.transactions_id">
+                <input [(ngModel)]="editingTransaction.date" class="border p-1" type="date">
+            </td>
+    
+            <td>
+                <a *ngIf="editingTransaction?.transactions_id !== transaction.transactions_id" 
+                   class="font-medium text-blue-600 dark:text-blue-500 hover:underline" 
+                   (click)="editTransaction(transaction)">Edit</a>
+                <a *ngIf="editingTransaction?.transactions_id === transaction.transactions_id" 
+                   class="text-green-500 hover:underline mr-4"  
+                   (click)="saveTransaction()">Save</a>
+                <a *ngIf="editingTransaction?.transactions_id === transaction.transactions_id" 
+                   class="text-red-500 hover:underline" 
+                   (click)="cancelEdit()">Cancel</a>
+              </td>
+              
         </tr>
     </tbody>
 </table>
