@@ -1,11 +1,9 @@
-<div class="dashboard grid grid-cols-[30px_1fr] bg-[#fbfbfb] h-screen">
-  <header class="col-span-2">
+<div class="dashboard grid grid-cols-6 bg-[#fbfbfb]">
+  <header class="col-span-6">
     <app-navbar></app-navbar>
   </header>
-  <aside>
-    <app-sidebar></app-sidebar>
-  </aside>
-  <main>
+  <app-sidebar class="col-span-1"></app-sidebar>
+  <main class="col-span-5">
     <router-outlet></router-outlet>
   </main>
 </div>
