@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { DefaultButtonComponent } from '@shared/components/default-button/default-button.component';
 
 @Component({
   selector: 'app-csv-page',
   standalone: true,
-  imports: [CommonModule], // Import CommonModule
+  imports: [CommonModule, DefaultButtonComponent], // Import CommonModule
   templateUrl: './csv-page.component.html',
   styleUrls: ['./csv-page.component.css']
 })
