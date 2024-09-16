@@ -1,7 +1,11 @@
-<div class="dashboard bg-[#fbfbfb]">
-    <header>
-      <app-navbar></app-navbar>
-    </header>
+<div class="dashboard grid grid-cols-[30px_1fr] bg-[#fbfbfb] h-screen">
+  <header class="col-span-2">
+    <app-navbar></app-navbar>
+  </header>
+  <aside>
     <app-sidebar></app-sidebar>
+  </aside>
+  <main>
     <router-outlet></router-outlet>
+  </main>
 </div>

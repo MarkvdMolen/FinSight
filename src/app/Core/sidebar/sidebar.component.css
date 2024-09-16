@@ -1,0 +1,4 @@
+aside {
+    @apply
+    w-64 transition-transform -translate-x-full sm:translate-x-0
+}
