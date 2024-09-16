@@ -2,15 +2,13 @@ import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 
-import { SidebarComponent } from "../sidebar/sidebar.component";
-import { NavbarComponent } from "../navbar/navbar.component";
-import { GreetingsComponent } from "../greetings/greetings.component";
-import { DisplayCardComponent } from "../display-card/display-card.component";
+import { GreetingsComponent } from "../../components/greetings/greetings.component";
+import { DisplayCardComponent } from "../../components/display-card/display-card.component";
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [RouterOutlet, SidebarComponent, NgxChartsModule, NavbarComponent, GreetingsComponent, DisplayCardComponent],
+  imports: [RouterOutlet, NgxChartsModule, GreetingsComponent, DisplayCardComponent],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css'
 })
