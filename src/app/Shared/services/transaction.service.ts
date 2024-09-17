@@ -31,6 +31,12 @@ export class TransactionService {
     localStorage.setItem(this.cacheKey, JSON.stringify(dataToCache));
   }
 
+  // Methode om een transactie te updaten
+  updateTransaction(transaction: any): Observable<any> {
+    const url = `http://localhost:8080/api/transactions/${transaction.transactions_id}`;
+    return this.http.put(url, transaction);  // Voer de PUT-aanroep uit
+  }
+
   // Retrieve cached transactions
   getCachedTransactions(): any[] | null {
     const cached = localStorage.getItem(this.cacheKey);

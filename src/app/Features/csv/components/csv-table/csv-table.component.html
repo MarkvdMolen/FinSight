@@ -1,55 +1,66 @@
-<table class="min-w-full shadow-2xl rounded-lg border-[#f1f1f1] border font-outfit text-[#014e60]">
-    <thead class="uppercase bg-[#f1f1f1]">
+<table>
+    <thead>
         <tr>
-            <th class="px-4 py-2 text-left">#</th>
-            <th class="px-4 py-2 text-left">IBAN/BBAN</th>
-            <th class="px-4 py-2 text-left">Naam tegenpartij</th>
-            <th class="px-4 py-2 text-left">Omschrijving</th>
-            <th class="px-4 py-2 text-left">Bedrag</th>
-            <th class="px-4 py-2 text-left">Datum</th>
-            <th class="px-4 py-2 text-left"></th>
+            <th>#</th>
+            <th>IBAN/BBAN</th>
+            <th>Naam tegenpartij</th>
+            <th>Omschrijving</th>
+            <th>Bedrag</th>
+            <th>Datum</th>
+            <th></th>
         </tr>
     </thead>
-    <tbody class="text-gray-700 text-sm">
+    <tbody>
         <tr *ngFor="let transaction of transactions">
             <td>{{ transaction.transactions_id }}</td>
-            <td *ngIf="editingTransaction?.transactions_id !== transaction.transactions_id">{{ transaction.account }}</td>
-            <td *ngIf="editingTransaction?.transactions_id === transaction.transactions_id">
-                <input [(ngModel)]="editingTransaction.account" class="border p-1">
+            <!-- Account -->
+            <td *ngIf="!editingTransaction || editingTransaction.transactions_id !== transaction.transactions_id">
+                {{ transaction.account }}
             </td>
-    
-            <td *ngIf="editingTransaction?.transactions_id !== transaction.transactions_id">{{ transaction.recipient }}</td>
-            <td *ngIf="editingTransaction?.transactions_id === transaction.transactions_id">
-                <input [(ngModel)]="editingTransaction.recipient" class="border p-1">
+            <td *ngIf="editingTransaction && editingTransaction.transactions_id === transaction.transactions_id">
+                <input [(ngModel)]="editingTransaction.account">
             </td>
-    
-            <td *ngIf="editingTransaction?.transactions_id !== transaction.transactions_id">{{ transaction.description }}</td>
-            <td *ngIf="editingTransaction?.transactions_id === transaction.transactions_id">
-                <input [(ngModel)]="editingTransaction.description" class="border p-1">
+            <!-- Recipient -->
+            <td *ngIf="!editingTransaction || editingTransaction.transactions_id !== transaction.transactions_id">
+                {{ transaction.recipient }}
             </td>
-    
-            <td *ngIf="editingTransaction?.transactions_id !== transaction.transactions_id">{{ transaction.amount | currency:'EUR' }}</td>
-            <td *ngIf="editingTransaction?.transactions_id === transaction.transactions_id">
-                <input type="number" [(ngModel)]="editingTransaction.amount" class="border p-1">
+            <td *ngIf="editingTransaction && editingTransaction.transactions_id === transaction.transactions_id">
+                <input [(ngModel)]="editingTransaction.recipient">
             </td>
-    
-            <td *ngIf="editingTransaction?.transactions_id !== transaction.transactions_id">{{ transaction.date | date }}</td>
-            <td *ngIf="editingTransaction?.transactions_id === transaction.transactions_id">
-                <input [(ngModel)]="editingTransaction.date" class="border p-1" type="date">
+            <!-- Description -->
+            <td *ngIf="!editingTransaction || editingTransaction.transactions_id !== transaction.transactions_id">
+                {{ transaction.description }}
             </td>
-    
+            <td *ngIf="editingTransaction && editingTransaction.transactions_id === transaction.transactions_id">
+                <input [(ngModel)]="editingTransaction.description">
+            </td>
+            <!-- Amount -->
+            <td *ngIf="!editingTransaction || editingTransaction.transactions_id !== transaction.transactions_id">
+                {{ transaction.amount | currency:'EUR' }}
+            </td>
+            <td *ngIf="editingTransaction && editingTransaction.transactions_id === transaction.transactions_id">
+                <input type="number" [(ngModel)]="editingTransaction.amount">
+            </td>
+            <!-- Date -->
+            <td *ngIf="!editingTransaction || editingTransaction.transactions_id !== transaction.transactions_id">
+                {{ transaction.date | date }}
+            </td>
+            <td *ngIf="editingTransaction && editingTransaction.transactions_id === transaction.transactions_id">
+                <input [(ngModel)]="editingTransaction.date" type="date">
+            </td>
+
+            <!-- Actions -->
             <td>
-                <a *ngIf="editingTransaction?.transactions_id !== transaction.transactions_id" 
-                   class="edit" 
-                   (click)="editTransaction(transaction)">Edit</a>
-                <a *ngIf="editingTransaction?.transactions_id === transaction.transactions_id" 
-                   class="text-green-500 hover:underline mr-4"  
-                   (click)="saveTransaction()">Save</a>
-                <a *ngIf="editingTransaction?.transactions_id === transaction.transactions_id" 
-                   class="text-red-500 hover:underline" 
-                   (click)="cancelEdit()">Cancel</a>
-              </td>
-              
-        </tr>
+                <a *ngIf="!editingTransaction || editingTransaction.transactions_id !== transaction.transactions_id"
+                    class="edit"
+                    (click)="editTransaction(transaction)">Edit</a>
+                <a *ngIf="editingTransaction && editingTransaction.transactions_id === transaction.transactions_id"
+                    class="save"
+                    (click)="saveTransaction()">Save</a>
+                <a *ngIf="editingTransaction && editingTransaction.transactions_id === transaction.transactions_id"
+                    class="cancel"
+                    (click)="cancelEdit()">Cancel</a>
+            </td>
+        </tr>              
     </tbody>
 </table>

@@ -1,0 +1,19 @@
+<p>error-message works!</p>
+<div *ngIf="showAlert" class="bg-pink-100 border-t-4 border-pink-500 rounded-b text-pink-900 px-4 py-3 shadow-md" role="alert">
+    <div class="flex">
+      <div class="py-1">
+        <svg class="fill-current h-6 w-6 text-pink-500 mr-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+          <path d="M10 14h1v2h3v1H6v-1h3v-2zm0 2h1v2h3v1H6v-1h3v-2zm0 2h1v2h3v1H6v-1h3v-2z"/>
+        </svg>
+      </div>
+      <div>
+        <p class="font-bold">Something went wrong!</p>
+        <p class="text-sm">The program has turned off unexpectedly. Send report</p>
+      </div>
+      <div class="ml-auto pl-4">
+        <button (click)="closeAlert()" class="close-button text-sm px-4 py-[6px] rounded-full bg-red focus:outline-none focus:shadow-outline">
+          ×
+        </button>
+      </div>
+    </div>
+  </div>

@@ -1,8 +1,13 @@
+/**
+ * @fileoverview CsvTableComponent displays and allows editing of transaction data in a table format.
+ */
 import { Component, OnInit } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable, of } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+
+// Shared imports
+import { TransactionService } from '@shared/services/transaction.service';
+import { Transaction } from '@shared/models/transaction.model';
 
 @Component({
   selector: 'app-csv-table',
@@ -13,88 +18,112 @@ import { FormsModule } from '@angular/forms';
 })
 export class CsvTableComponent implements OnInit {
 
-  transactions: any[] = [];
-  private cacheKey = 'transactionsCache';  // De key voor localStorage
-  editingTransaction: any = null;  // Huidige transactie die wordt bewerkt
+    /**
+     * Array to store transaction data.
+     * @type {Transaction[]}
+     */
+    transactions: Transaction[] = [];
 
-  constructor(private http: HttpClient) { }
+    /**
+     * Current transaction being edited.
+     * @type {Transaction | null}
+     */
+    editingTransaction: Transaction | null = null;
 
-  ngOnInit() {
-    const cachedData = this.getCachedTransactions();
-    if (cachedData) {
-      // Als er data in de cache zit, gebruik deze dan
-      console.log('Using cached data:', cachedData);
-      this.transactions = cachedData;
-    } else {
-      // Zo niet, haal de data van de API en sla deze op in de cache
-      this.getTransactions().subscribe((data: any[]) => {
-        console.log('Fetched data from API:', data);
+    /**
+     * Creates an instance of CsvTableComponent.
+     *
+     * @param {TransactionService} transactionService - Service to handle transaction data.
+     */
+    constructor(private transactionService: TransactionService) { }
+
+    /**
+     * Angular lifecycle hook that is called after data-bound properties are initialized.
+     * Fetches transactions on component initialization.
+     */
+    ngOnInit() {
+      this.transactionService.getTransactions().subscribe((data: Transaction[]) => {
         this.transactions = data;
-        this.cacheTransactions(data);  // Sla de data op in de cache
       });
     }
-  }
 
-  // Methode om de transacties op te halen van het API-endpoint
-  getTransactions(): Observable<any[]> {
-    const url = 'http://localhost:8080/api/transactions/all';  // Je API-endpoint
-    return this.http.get<any[]>(url);
-  }
+    /**
+     * Initiates editing of a transaction.
+     * @param {Transaction} transaction - The transaction to edit.
+     */
+    editTransaction(transaction: Transaction) {
+      // Make a deep copy to avoid mutating the original object before saving
+      this.editingTransaction = { ...transaction };
+    }
 
-  // Methode om een transactie te updaten
-  updateTransaction(transaction: any): Observable<any> {
-    const url = `http://localhost:8080/api/transactions/${transaction.transactions_id}`;
-    return this.http.put(url, transaction);  // Voer de PUT-aanroep uit
-  }
+    /**
+     * Saves the edited transaction.
+     * Updates the transaction via the service and refreshes the local data.
+     */
+    saveTransaction() {
+      if (this.editingTransaction) {
+        this.transactionService.updateTransaction(this.editingTransaction).subscribe((updatedTransaction: Transaction) => {
+          const index = this.transactions.findIndex(t => t.transactions_id === updatedTransaction.transactions_id);
+          if (index !== -1) {
+            this.transactions[index] = updatedTransaction;
+          }
+          this.editingTransaction = null;
 
-  // Bewerkingsfunctie
-  editTransaction(transaction: any) {
-    this.editingTransaction = { ...transaction };  // Maak een kopie van de te bewerken transactie
-  }
-
-  // Methode om de wijzigingen op te slaan
-  saveTransaction() {
-    this.updateTransaction(this.editingTransaction).subscribe((updatedTransaction) => {
-      const index = this.transactions.findIndex(t => t.transactions_id === updatedTransaction.transactions_id);
-      if (index !== -1) {
-        this.transactions[index] = updatedTransaction;  // Werk de transactie bij in de lijst
-      }
-      this.editingTransaction = null;  // Stop met bewerken
-    });
-    this.clearCache();
-  }
-
-  cancelEdit() {
-    this.editingTransaction = null;  // Annuleer het bewerken
-  }
-
-  // Functie om data op te slaan in localStorage
-  cacheTransactions(transactions: any[]): void {
-    const dataToCache = {
-      data: transactions,
-      timestamp: Date.now()
-    };
-    localStorage.setItem(this.cacheKey, JSON.stringify(dataToCache));
-  }
-
-  // Functie om data op te halen uit de cache
-  getCachedTransactions(): any[] | null {
-    const cached = localStorage.getItem(this.cacheKey);
-    if (cached) {
-      const parsed = JSON.parse(cached);
-      const cacheDuration = 1000 * 60 * 10;  // Cache geldigheid van 10 minuten
-      const isCacheValid = Date.now() - parsed.timestamp < cacheDuration;
-      if (isCacheValid) {
-        return parsed.data;
-      } else {
-        this.clearCache();  // Invalideer de cache als deze verlopen is
+          // Update the cache with the modified transactions
+          this.transactionService.cacheTransactions(this.transactions);
+        });
       }
     }
-    return null;  // Als er geen geldige cache is, retourneer null
-  }
 
-  // Functie om de cache te wissen
-  clearCache(): void {
-    localStorage.removeItem(this.cacheKey);
-  }
+    /**
+     * Cancels the editing process.
+     */
+    cancelEdit() {
+      this.editingTransaction = null;
+    }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  // // Bewerkingsfunctie
+  // editTransaction(transaction: any) {
+  //   this.editingTransaction = { ...transaction };  // Maak een kopie van de te bewerken transactie
+  // }
+
+  // // Methode om de wijzigingen op te slaan
+  // saveTransaction() {
+  //   this.updateTransaction(this.editingTransaction).subscribe((updatedTransaction) => {
+  //     const index = this.transactions.findIndex(t => t.transactions_id === updatedTransaction.transactions_id);
+  //     if (index !== -1) {
+  //       this.transactions[index] = updatedTransaction;  // Werk de transactie bij in de lijst
+  //     }
+  //     this.editingTransaction = null;  // Stop met bewerken
+  //   });
+  //   this.clearCache();
+  // }
+
+  // cancelEdit() {
+  //   this.editingTransaction = null;  // Annuleer het bewerken
+  // }
+
+
+
+
+

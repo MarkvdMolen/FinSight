@@ -11,7 +11,7 @@ import { GreetingsComponent } from "@features/overview/components/greetings/gree
 import { DisplayCardComponent } from "@features/overview/components/display-card/display-card.component";
 
 // Shared imports
-import { TransactionService } from '@shared/services/transaction_service';
+import { TransactionService } from '@shared/services/transaction.service';
 import { DataMap } from '@shared/models/datamap.model';
 
 /**

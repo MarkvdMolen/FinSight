@@ -1,0 +1,3 @@
+.close-button {
+    @apply bg-white hover:bg-gray-200 text-gray-800 font-semibold py-1 px-2 rounded;
+  }
