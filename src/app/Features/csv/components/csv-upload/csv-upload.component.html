@@ -1,5 +1,5 @@
-<div class="bg-white rounded-lg shadow-md p-6 max-w-md mx-auto">
-    <h2 class="text-2xl font-bold mb-4">Upload Files</h2>
+<div class="bg-[#f1f1f1] rounded-lg shadow-md p-6 max-w-md mx-auto border">
+    <h2>Upload Files</h2>
     <!-- Drag & Drop Area -->
     <div 
       class="border-2 border-dashed border-gray-300 rounded-lg p-8 mb-4 text-center cursor-pointer"
@@ -24,8 +24,8 @@
         <svg class="h-6 w-6 text-orange-500 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
         </svg>
-        <div>
-          <p class="text-sm font-medium">{{ file.name }}</p>
+        <div class="truncate max-w-xs">
+          <p class="text-sm font-medium truncate">{{ file.name }}</p>
           <p class="text-xs text-gray-500">{{ file.type }} | {{ (file.size / 1024 / 1024).toFixed(2) }} MB</p>
         </div>
       </div>
@@ -41,7 +41,7 @@
           </svg>
         </button>
       </div>
-    </div>
+    </div>    
   
     <!-- Remove File Download Option -->
     <div *ngIf="uploadedFiles.length > 0" class="mt-4 flex items-center text-sm text-gray-600">
@@ -50,4 +50,9 @@
       </svg>
       Remove file download from this task
     </div>
+
+    <div class="flex items-center justify-center h-full">
+      <app-default-button [buttonName]="'Upload'" (click)="uploadFiles()"></app-default-button>
+    </div>
+    
   </div>  
