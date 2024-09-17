@@ -40,7 +40,7 @@
     
             <td>
                 <a *ngIf="editingTransaction?.transactions_id !== transaction.transactions_id" 
-                   class="font-medium text-blue-600 dark:text-blue-500 hover:underline" 
+                   class="edit" 
                    (click)="editTransaction(transaction)">Edit</a>
                 <a *ngIf="editingTransaction?.transactions_id === transaction.transactions_id" 
                    class="text-green-500 hover:underline mr-4"  

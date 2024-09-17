@@ -61,6 +61,7 @@ export class CsvTableComponent implements OnInit {
       }
       this.editingTransaction = null;  // Stop met bewerken
     });
+    this.clearCache();
   }
 
   cancelEdit() {
