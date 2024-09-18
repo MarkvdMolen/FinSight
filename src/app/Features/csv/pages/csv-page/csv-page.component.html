@@ -4,8 +4,12 @@
         <app-default-button [buttonName]="'Upload'" (click)="setActiveSection('upload')"></app-default-button>
     </div>
     <div *ngIf="activeSection === 'overview'" class="mt-8">
-        <!-- <app-csv-table></app-csv-table> -->
-         <app-missing-files></app-missing-files>
+        <ng-container *ngIf="hasData; else noData">
+          <app-csv-table></app-csv-table>
+        </ng-container>
+        <ng-template #noData>
+          <app-missing-files></app-missing-files>
+        </ng-template>
     </div>
     <div *ngIf="activeSection === 'upload'" class="mt-8">
         <app-csv-upload></app-csv-upload>
