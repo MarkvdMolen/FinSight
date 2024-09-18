@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 
 @Component({
   selector: 'app-error-message',
@@ -9,6 +9,9 @@ import { Component } from '@angular/core';
   styleUrl: './error-message.component.css'
 })
 export class ErrorMessageComponent {
+  @Input() title: string = '';
+  @Input() message: string = '';
+  
   showAlert = true;
 
   closeAlert() {

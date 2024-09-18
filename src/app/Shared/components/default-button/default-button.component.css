@@ -11,6 +11,8 @@
     text-white 
     transition-all 
     shadow-md 
+    select-none
+
     hover:shadow-lg 
     focus:bg-blue-700 
     focus:shadow-none 
@@ -21,5 +23,5 @@
     disabled:opacity-50 
     disabled:shadow-none ml-2
     font-outfit
-    text-lg
+    text-lg;
 }

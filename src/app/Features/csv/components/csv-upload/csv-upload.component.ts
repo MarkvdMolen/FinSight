@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { DefaultButtonComponent } from '@shared/components/default-button/default-button.component';
-import { ErrorMessageComponent } from "../../../../Shared/components/messages/error-message/error-message.component";
+import { ErrorMessageComponent } from "@shared/components/messages/error-message/error-message.component";
 
 @Component({
   selector: 'app-csv-upload',
@@ -46,13 +46,20 @@ export class CsvUploadComponent {
 
   handleFiles(files: FileList): void {
     Array.from(files).forEach(file => {
-      if (file.size <= 10 * 1024 * 1024) { // 10MB limit
-        this.uploadedFiles.push(file); // Opslaan als 'File' object in plaats van 'UploadedFile'
+      if (this.isCSVFile(file)) {
+        if (file.size <= 10 * 1024 * 1024) { // 10MB limit
+          this.uploadedFiles.push(file); 
+        } else {
+          this.errorMessage = `File too large: ${file.name}`;
+        }
       } else {
-        console.error('File too large:', file.name);
-        // Hier kun je een foutmelding tonen aan de gebruiker
+        this.errorMessage = `Only CSV files are allowed.`;
       }
     });
+  }
+
+  isCSVFile(file: File): boolean {
+    return file.name.endsWith('.csv') || file.type === 'text/csv';
   }
 
   removeFile(file: File): void {
@@ -65,13 +72,11 @@ export class CsvUploadComponent {
   uploadFiles(): void {
     const formData = new FormData();
 
-    // Stop the function from executing if no files are uploaded
     if (this.uploadedFiles.length === 0) {
       return; 
     }
 
     this.uploadedFiles.forEach(file => {
-      // Voor elke file
       formData.append('file', file, file.name);  
     });
 
