@@ -2,22 +2,18 @@ import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { DefaultButtonComponent } from '@shared/components/default-button/default-button.component';
-
-interface UploadedFile {
-  name: string;
-  size: number;
-  type: string;
-}
+import { ErrorMessageComponent } from "../../../../Shared/components/messages/error-message/error-message.component";
 
 @Component({
   selector: 'app-csv-upload',
   standalone: true,
-  imports: [CommonModule, DefaultButtonComponent],
+  imports: [CommonModule, DefaultButtonComponent, ErrorMessageComponent],
   templateUrl: './csv-upload.component.html',  
   styleUrls: ['./csv-upload.component.css']    
 })
 export class CsvUploadComponent {
-  uploadedFiles: File[] = [];  
+  uploadedFiles: File[] = [];
+  errorMessage: string | null = null;  // Voeg een errorMessage toe om fouten op te slaan  
 
   constructor(private http: HttpClient) {}
 
@@ -68,16 +64,29 @@ export class CsvUploadComponent {
 
   uploadFiles(): void {
     const formData = new FormData();
+
+    // Stop the function from executing if no files are uploaded
+    if (this.uploadedFiles.length === 0) {
+      return; 
+    }
+
     this.uploadedFiles.forEach(file => {
-      formData.append('file', file, file.name);  // Voeg elk bestand toe aan de FormData
+      // Voor elke file
+      formData.append('file', file, file.name);  
     });
-    console.log(formData)
-    // API-aanroep om het bestand naar de backend te sturen
-    this.http.post('http://localhost:8080/api/transactions/upload', formData)
-      .subscribe(response => {
+
+    this.http.post('http://localhost:8080/api/transactions/upload', formData).subscribe({
+      next: (response) => {
         console.log('Upload success:', response);
-      }, error => {
-        console.error('Upload failed:', error);
-      });
+        this.errorMessage = null;  // Reset eventuele eerdere foutmeldingen
+      },
+      error: (error) => {
+        if (error.status === 400) {
+          this.errorMessage = 'Failed to upload the file. Please check the format and try again.';  // Stel de fout in
+        } else {
+          this.errorMessage = 'An unexpected error occurred. Please try again later.';
+        }
+      }
+    });
   }
 }

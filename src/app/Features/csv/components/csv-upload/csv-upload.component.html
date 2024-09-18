@@ -52,7 +52,16 @@
     </div>
 
     <div class="flex items-center justify-center h-full">
-      <app-default-button [buttonName]="'Upload'" (click)="uploadFiles()"></app-default-button>
+      <app-default-button 
+        [buttonName]="'Upload'" 
+        (click)="uploadFiles()" 
+        [disabled]="uploadedFiles.length === 0"> <!-- Disable de knop als er geen bestanden zijn -->
+      </app-default-button>
+    </div>
+
+    <!-- Error Message -->
+    <div *ngIf="errorMessage" class="bg-red-100 text-red-600 p-4 mt-4 rounded-lg">
+      {{ errorMessage }}
     </div>
     
   </div>  
