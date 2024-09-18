@@ -3,11 +3,12 @@ import { CommonModule } from '@angular/common';
 import { DefaultButtonComponent } from '@shared/components/default-button/default-button.component';
 import { CsvUploadComponent } from "@features/csv/components/csv-upload/csv-upload.component";
 import { CsvTableComponent } from "@features/csv/components/csv-table/csv-table.component";
+import { MissingFilesComponent } from "@shared/components/missing-files/missing-files.component";
 
 @Component({
   selector: 'app-csv-page',
   standalone: true,
-  imports: [CommonModule, DefaultButtonComponent, CsvUploadComponent, CsvTableComponent], // Import CommonModule
+  imports: [CommonModule, DefaultButtonComponent, CsvUploadComponent, CsvTableComponent, MissingFilesComponent], // Import CommonModule
   templateUrl: './csv-page.component.html',
   styleUrls: ['./csv-page.component.css']
 })
