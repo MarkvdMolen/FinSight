@@ -4,7 +4,8 @@
 
 import { Component, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { NgxChartsModule } from '@swimlane/ngx-charts';
+import { NgxChartsModule, Color, ScaleType } from '@swimlane/ngx-charts';
+import * as shape from 'd3-shape';
 
 // Feature imports
 import { GreetingsComponent } from "@features/overview/components/greetings/greetings.component";
@@ -45,7 +46,7 @@ export class HomeComponent implements OnInit {
    *
    * @param {TransactionService} transactionService - Service to handle transaction data.
    */
-  constructor(private transactionService: TransactionService) { }
+  constructor(private transactionService: TransactionService) {}
 
   /**
    * Angular lifecycle hook that is called after data-bound properties are initialized.
@@ -81,4 +82,30 @@ export class HomeComponent implements OnInit {
       value: dataMap[month],
     }));
   }
+
+  view: [number, number] = [700, 400];
+
+  // options
+  legend: boolean = true;
+  showLabels: boolean = true;
+  animations: boolean = true;
+  xAxis: boolean = true;
+  yAxis: boolean = true;
+  showYAxisLabel: boolean = true;
+  showXAxisLabel: boolean = true;
+  xAxisLabel: string = 'Month';
+  yAxisLabel: string = 'Amount (€)';
+  timeline: boolean = true;
+
+  colorScheme: Color = {
+    name: 'myScheme',
+    selectable: true,
+    group: ScaleType.Ordinal,
+    domain: ['#9333EA', '#06B6D4']
+  };
+
+  gradient: boolean = true;
+  autoScale: boolean = true;
+  curve: any = shape.curveLinear;  // Change this for a smooth line
+
 }
