@@ -1,7 +1,3 @@
-/**
- * @fileoverview HomeComponent responsible for displaying the home page with financial data visualization.
- */
-
 import { Component, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { NgxChartsModule, Color, ScaleType } from '@swimlane/ngx-charts';
@@ -13,14 +9,8 @@ import { DisplayCardComponent } from "@features/overview/components/display-card
 
 // Shared imports
 import { TransactionService } from '@shared/services/transaction.service';
-import { DataMap } from '@shared/models/datamap.model';
+import { Transaction } from '@shared/models/transaction.model';
 
-/**
- * HomeComponent displays the home page, including greetings, display cards, and financial overview chart.
- *
- * @component
- * @implements {OnInit}
- */
 @Component({
   selector: 'app-home',
   standalone: true,
@@ -29,17 +19,9 @@ import { DataMap } from '@shared/models/datamap.model';
   styleUrls: ['./home.component.css'] // Note: Corrected 'styleUrl' to 'styleUrls'
 })
 export class HomeComponent implements OnInit {
-  /**
-   * Array to store transaction data.
-   * @type {any[]}
-   */
-  transactions: any[] = [];
 
-  /**
-   * Data formatted for the financial chart.
-   * @type {any[]}
-   */
-  financialData: any[] = [];
+  transactions: Transaction[] = [];
+  monthlySummary: any = {};
 
   /**
    * Creates an instance of HomeComponent.
@@ -56,7 +38,7 @@ export class HomeComponent implements OnInit {
     this.transactionService.getTransactions().subscribe((data: any[]) => {
       this.transactions = data;
       this.transactionService.cacheTransactions(data);
-      this.processFinancialData();
+      this.calculateMonthlySummary();
     });
   }
   
@@ -64,24 +46,56 @@ export class HomeComponent implements OnInit {
    * Processes the transaction data to prepare it for the financial chart.
    * Aggregates transaction amounts by month.
    */
-  processFinancialData() {
-    const dataMap: DataMap = {};
+  calculateMonthlySummary() {
+    const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    const summary: any = {};
   
-    this.transactions.forEach((transaction) => {
+    // Group transactions by month and calculate total income/expenses for each month
+    this.transactions.forEach(transaction => {
       const date = new Date(transaction.date);
-      const month = date.toLocaleString('default', { month: 'short', year: 'numeric' });
+      const month = date.getMonth(); // Get the month index (0 for Jan, 11 for Dec)
   
-      if (!dataMap[month]) {
-        dataMap[month] = 0;
+      if (!summary[month]) {
+        summary[month] = { income: 0, expenses: 0 };
       }
-      dataMap[month] += transaction.amount;
+  
+      if (transaction.amount >= 0) {
+        summary[month].income += transaction.amount;
+      } else {
+        summary[month].expenses += Math.abs(transaction.amount); // Convert expenses to positive
+      }
     });
   
-    this.financialData = Object.keys(dataMap).map((month) => ({
-      name: month,
-      value: dataMap[month],
-    }));
+    // Create the series for "Income" and "Expenses" categories
+    const incomeSeries = {
+      name: "Income",
+      series: Object.keys(summary).map(monthIndex => {
+        const numericMonthIndex = parseInt(monthIndex, 10);
+        return {
+          name: monthNames[numericMonthIndex], // e.g., "Jan", "Feb"
+          value: summary[numericMonthIndex].income
+        };
+      })
+    };
+  
+    const expenseSeries = {
+      name: "Expenses",
+      series: Object.keys(summary).map(monthIndex => {
+        const numericMonthIndex = parseInt(monthIndex, 10);
+        return {
+          name: monthNames[numericMonthIndex],
+          value: summary[numericMonthIndex].expenses
+        };
+      })
+    };
+  
+    // Combine the two categories into the final summary
+    this.monthlySummary = [incomeSeries, expenseSeries];
+  
+    console.log(this.monthlySummary); // For debugging
   }
+  
+  
 
   view: [number, number] = [700, 400];
 
@@ -101,11 +115,11 @@ export class HomeComponent implements OnInit {
     name: 'myScheme',
     selectable: true,
     group: ScaleType.Ordinal,
-    domain: ['#9333EA', '#06B6D4']
+    domain: ['#019b98', '#dd0025']
   };
 
   gradient: boolean = true;
   autoScale: boolean = true;
-  curve: any = shape.curveLinear;  // Change this for a smooth line
+  curve: any = shape.curveBasis
 
 }

@@ -14,6 +14,7 @@ export class TransactionService {
   getTransactions(): Observable<any[]> {
     const cachedData = this.getCachedTransactions();
     if (cachedData) {
+      //TODO REMOVE LOGGING AFTER COMPLETION
       console.log('Using cached data:', cachedData);
       return of(cachedData);
     } else {
