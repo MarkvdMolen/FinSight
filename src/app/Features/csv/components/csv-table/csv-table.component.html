@@ -1,4 +1,10 @@
-<table>
+
+<!-- Material Spinner -->
+<div *ngIf="isLoading" >
+    <p> Loading....</p>
+</div>
+  
+<table *ngIf="!isLoading">
     <thead>
         <tr>
             <th>#</th>

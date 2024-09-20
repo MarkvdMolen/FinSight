@@ -1,51 +1,40 @@
-/**
- * @fileoverview CsvTableComponent displays and allows editing of transaction data in a table format.
- */
+
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 // Shared imports
 import { TransactionService } from '@shared/services/transaction.service';
 import { Transaction } from '@shared/models/transaction.model';
 
+
 @Component({
   selector: 'app-csv-table',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, MatProgressSpinnerModule],
   templateUrl: './csv-table.component.html',
   styleUrls: ['./csv-table.component.css']
 })
 export class CsvTableComponent implements OnInit {
 
-    /**
-     * Array to store transaction data.
-     * @type {Transaction[]}
-     */
+    
     transactions: Transaction[] = [];
-
-    /**
-     * Current transaction being edited.
-     * @type {Transaction | null}
-     */
     editingTransaction: Transaction | null = null;
+    isLoading = true; 
 
-    /**
-     * Creates an instance of CsvTableComponent.
-     *
-     * @param {TransactionService} transactionService - Service to handle transaction data.
-     */
     constructor(private transactionService: TransactionService) { }
 
-    /**
-     * Angular lifecycle hook that is called after data-bound properties are initialized.
-     * Fetches transactions on component initialization.
-     */
     ngOnInit() {
+      this.isLoading = true; // Zet isLoading op true voordat de data wordt opgehaald
       this.transactionService.getTransactions().subscribe((data: Transaction[]) => {
-        this.transactions = data;
+          this.transactions = data;
+          this.isLoading = false; // Zet isLoading op false zodra de data is opgehaald
+      }, error => {
+          console.error('Error fetching transactions', error);
+          this.isLoading = false; // Zet isLoading op false bij een fout
       });
-    }
+  }
 
     /**
      * Initiates editing of a transaction.

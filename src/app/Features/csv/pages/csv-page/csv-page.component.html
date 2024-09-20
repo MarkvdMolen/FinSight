@@ -4,7 +4,7 @@
         <app-default-button [buttonName]="'Upload'" (click)="setActiveSection('upload')"></app-default-button>
     </div>
     <div *ngIf="activeSection === 'overview'" class="mt-8">
-        <ng-container *ngIf="this.getData; else noData">
+        <ng-container *ngIf="this.getData(); else noData">
           <app-csv-table></app-csv-table>
         </ng-container>
         <ng-template #noData>

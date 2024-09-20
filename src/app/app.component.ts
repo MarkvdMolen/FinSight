@@ -2,7 +2,6 @@ import { Component } from '@angular/core';
 import { RouterModule, RouterOutlet } from '@angular/router'; 
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 
-
 import { SidebarComponent } from "./Core/sidebar/sidebar.component";
 import { NavbarComponent } from "./Core/navbar/navbar.component";
 
@@ -14,7 +13,7 @@ import { NavbarComponent } from "./Core/navbar/navbar.component";
     RouterOutlet,
     SidebarComponent,
     NgxChartsModule,
-    NavbarComponent,
+    NavbarComponent
   ],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'] 
