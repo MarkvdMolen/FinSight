@@ -92,10 +92,12 @@ export class CsvUploadComponent {
       error: (error) => {
         if (error.status === 400) {
           this.errorMessage = 'Failed to upload the file. Please check the format and try again.';
+        } else if (error.status === 500) {
+          this.errorMessage = 'Server is currently unavailable. Please try again later.';
         } else {
           this.errorMessage = 'An unexpected error occurred. Please try again later.';
         }
-      }
+      }      
     });
   }
 }
