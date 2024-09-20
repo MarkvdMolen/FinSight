@@ -1,6 +1,6 @@
 table {
     @apply
-    min-w-full shadow-2xl rounded-lg border-[#f1f1f1] border font-outfit text-[#014e60];
+    min-w-full select-none shadow-2xl rounded-lg border-[#f1f1f1] border font-outfit text-[#014e60];
 }
 
 thead {
@@ -10,7 +10,8 @@ thead {
 
 th {
     @apply
-    px-4 py-2 text-left;
+    px-4 py-2 text-left
+    select-text;
 }
 
 tbody{
@@ -20,7 +21,8 @@ tbody{
 
 td {
     @apply
-    border px-4 py-2;
+    border px-4 py-2
+    select-text;
 }
 
 input {

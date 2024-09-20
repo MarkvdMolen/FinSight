@@ -16,7 +16,7 @@ export class ExpenseIncomeLineChartComponent implements OnInit {
 
     constructor(private financialService: FinancialService) {}
 
-    // options
+    // Ngx-charts Options
     view: [number, number] = [700, 400];
     legend: boolean = true;
     showLabels: boolean = true;
@@ -38,7 +38,7 @@ export class ExpenseIncomeLineChartComponent implements OnInit {
   
     gradient: boolean = true;
     autoScale: boolean = true;
-    curve: any = shape.curveBasis
+    curve: any = shape.curveBumpX
 
     ngOnInit() {
       // Subscribe to the processed monthly summary in this component as well

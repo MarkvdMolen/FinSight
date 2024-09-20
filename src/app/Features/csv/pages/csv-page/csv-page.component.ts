@@ -25,4 +25,8 @@ export class CsvPageComponent {
     this.activeSection = section;
     this.transactionService.checkData()
   }
+
+  getData() {
+    return this.transactionService.hasData
+  }
 }
