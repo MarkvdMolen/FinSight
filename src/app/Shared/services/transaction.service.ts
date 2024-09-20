@@ -6,6 +6,8 @@ import { Observable, of } from 'rxjs';
   providedIn: 'root',
 })
 export class TransactionService {
+
+  public hasData: boolean = false;
   private cacheKey = 'transactionsCache';
 
   constructor(private http: HttpClient) { }
@@ -57,5 +59,15 @@ export class TransactionService {
   // Clear the cache
   clearCache(): void {
     localStorage.removeItem(this.cacheKey);
+  }
+
+  checkData() {
+    this.getTransactions().subscribe(transactions => {
+      if (transactions && transactions.length > 0) {
+        this.hasData = true;
+      } else {
+        this.hasData = false;
+      }
+    });
   }
 }

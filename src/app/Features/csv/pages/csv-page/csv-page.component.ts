@@ -17,23 +17,12 @@ export class CsvPageComponent {
 
   // Houdt bij welk deel van de pagina moet worden weergegeven
   activeSection: string = 'overview';
-  hasData: boolean = false;
 
   constructor(private transactionService: TransactionService) { }
 
   // Functie om de sectie te wijzigen
   setActiveSection(section: string) {
     this.activeSection = section;
-    this.checkData()
-  }
-
-  checkData() {
-    this.transactionService.getTransactions().subscribe(transactions => {
-      if (transactions && transactions.length > 0) {
-        this.hasData = true;
-      } else {
-        this.hasData = false;
-      }
-    });
+    this.transactionService.checkData()
   }
 }
