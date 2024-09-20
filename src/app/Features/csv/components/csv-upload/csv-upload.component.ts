@@ -13,23 +13,27 @@ import { ErrorMessageComponent } from "app/error-message/error-message.component
 })
 export class CsvUploadComponent {
   uploadedFiles: File[] = [];
-  errorMessage: string | null = null;  // Voeg een errorMessage toe om fouten op te slaan  
+  errorMessage: string | null = null;
+  isDragging: boolean = false;
 
   constructor(private http: HttpClient) {}
 
   onDragOver(event: DragEvent): void {
     event.preventDefault();
     event.stopPropagation();
+    this.isDragging = true;
   }
 
   onDragLeave(event: DragEvent): void {
     event.preventDefault();
     event.stopPropagation();
+    this.isDragging = false;
   }
 
   onDrop(event: DragEvent): void {
     event.preventDefault();
     event.stopPropagation();
+    this.isDragging = false;
     const files = event.dataTransfer?.files;
     if (files) {
       this.handleFiles(files);
@@ -83,11 +87,11 @@ export class CsvUploadComponent {
     this.http.post('http://localhost:8080/api/transactions/upload', formData).subscribe({
       next: (response) => {
         console.log('Upload success:', response);
-        this.errorMessage = null;  // Reset eventuele eerdere foutmeldingen
+        this.errorMessage = null;
       },
       error: (error) => {
         if (error.status === 400) {
-          this.errorMessage = 'Failed to upload the file. Please check the format and try again.';  // Stel de fout in
+          this.errorMessage = 'Failed to upload the file. Please check the format and try again.';
         } else {
           this.errorMessage = 'An unexpected error occurred. Please try again later.';
         }

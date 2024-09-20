@@ -1,62 +1,68 @@
 <div class="bg-[#f1f1f1] rounded-lg shadow-md p-6 max-w-md mx-auto border">
-    <h2>Upload Files</h2>
-    <!-- Drag & Drop Area -->
-    <div 
-      class="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center cursor-pointer"
-      (click)="fileInput.click()"
-      (dragover)="onDragOver($event)"
-      (dragleave)="onDragLeave($event)"
-      (drop)="onDrop($event)"
-    >
-      <svg class="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48" aria-hidden="true">
-        <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+  <h2 class="text-xl font-semibold mb-4">Upload Files</h2>
+  <!-- Drag & Drop Area -->
+  <div 
+    class="border-2 border-dashed rounded-lg p-8 text-center cursor-pointer transition-all duration-300 ease-in-out"
+    [ngClass]="{
+      'border-gray-300 bg-white': !isDragging,
+      'border-blue-500 bg-blue-50': isDragging
+    }"
+    (click)="fileInput.click()"
+    (dragover)="onDragOver($event)"
+    (dragleave)="onDragLeave($event)"
+    (drop)="onDrop($event)"
+  >
+    <svg class="mx-auto h-12 w-12 transition-colors duration-300 ease-in-out" [ngClass]="{'text-gray-400': !isDragging, 'text-blue-500': isDragging}" stroke="currentColor" fill="none" viewBox="0 0 48 48" aria-hidden="true">
+      <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+    </svg>
+    <p class="mt-2 text-sm transition-colors duration-300 ease-in-out" [ngClass]="{'text-gray-600': !isDragging, 'text-blue-500': isDragging}">
+      {{ isDragging ? 'Drop your files here' : 'Drag & drop or click to choose files' }}
+    </p>
+  </div>
+
+  <!-- Hidden File Input -->
+  <input #fileInput type="file" class="hidden" (change)="onFileSelected($event)" multiple>
+
+  <!-- User information -->
+  <div class="flex justify-between mt-2 mb-6 text-xs text-gray-500">
+    <p>Only supports CSV file format</p>
+    <p>Max file size: 10 MB</p>
+  </div>
+
+  <!-- List of Uploaded Files -->
+  <div *ngFor="let file of uploadedFiles" class="bg-gray-50 rounded-lg p-3 mb-2 flex items-center justify-between">
+    <div class="flex items-center">
+      <svg class="h-6 w-6 text-orange-500 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
       </svg>
-      <p class="mt-2 text-sm text-gray-600 select-none">Drag & drop or click to choose files</p>
+      <div class="truncate max-w-xs">
+        <p class="text-sm font-medium truncate">{{ file.name }}</p>
+        <p class="text-xs text-gray-500">{{ file.type }} | {{ (file.size / 1024 / 1024).toFixed(2) }} MB</p>
+      </div>
     </div>
-  
-    <!-- Hidden File Input -->
-    <input #fileInput type="file" class="hidden" (change)="onFileSelected($event)" multiple>
-
-    <!-- User information -->
-    <div class="flex justify-between mt-2 mb-6 text-xs text-gray-500">
-      <p>Only supports CSV file format</p>
-      <p>Max file size: 10 MB</p>
-    </div>
-
-    <!-- List of Uploaded Files -->
-    <div *ngFor="let file of uploadedFiles" class="bg-gray-50 rounded-lg p-3 mb-2 flex items-center justify-between">
-      <div class="flex items-center">
-        <svg class="h-6 w-6 text-orange-500 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+    <div>
+      <button class="text-gray-400 hover:text-gray-500 mr-2">
+        <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
         </svg>
-        <div class="truncate max-w-xs">
-          <p class="text-sm font-medium truncate">{{ file.name }}</p>
-          <p class="text-xs text-gray-500">{{ file.type }} | {{ (file.size / 1024 / 1024).toFixed(2) }} MB</p>
-        </div>
-      </div>
-      <div>
-        <button class="text-gray-400 hover:text-gray-500 mr-2">
-          <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-          </svg>
-        </button>
-        <button class="text-gray-400 hover:text-gray-500" (click)="removeFile(file)">
-          <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-          </svg>
-        </button>
-      </div>
+      </button>
+      <button class="text-gray-400 hover:text-gray-500" (click)="removeFile(file)">
+        <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+        </svg>
+      </button>
     </div>
+  </div>
 
-    <!-- Error Message -->
-    <app-error-message *ngIf="errorMessage" title="Wrong File Type" message="{{errorMessage}}"></app-error-message>
-    
-    <!-- Upload Button -->
-    <div class="flex items-center justify-center h-full">
-      <app-default-button 
-        [buttonName]="'Upload'" 
-        (click)="uploadFiles()" 
-        [disabled]="uploadedFiles.length === 0">
-      </app-default-button>
-    </div>    
-  </div>  
+  <!-- Error Message -->
+  <app-error-message *ngIf="errorMessage" title="Wrong File Type" [message]="errorMessage"></app-error-message>
+
+  <!-- Upload Button -->
+  <div class="flex items-center justify-center h-full mt-4">
+    <app-default-button 
+      [buttonName]="'Upload'" 
+      (click)="uploadFiles()" 
+      [disabled]="uploadedFiles.length === 0">
+    </app-default-button>
+  </div>    
+</div>
