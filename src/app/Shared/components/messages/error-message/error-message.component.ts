@@ -9,12 +9,16 @@ import { Component, Input } from '@angular/core';
   styleUrl: './error-message.component.css'
 })
 export class ErrorMessageComponent {
+  @Input() status: 'success' | 'error' = 'error';
   @Input() title: string = '';
   @Input() message: string = '';
   
-  showAlert = true;
 
-  closeAlert() {
-    this.showAlert = false;
+  handleClick() {
+    if (this.status === 'success') {
+      console.log('Continue button clicked.');
+    } else {
+      console.log('Retry button clicked.');
+    }
   }
 }

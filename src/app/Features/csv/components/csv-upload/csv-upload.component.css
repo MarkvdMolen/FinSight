@@ -2,5 +2,28 @@ h2 {
     @apply
     text-2xl 
     font-bold 
-    mb-4
+    mb-4;
+}
+
+.container {
+    @apply
+    bg-[#f1f1f1] 
+    rounded-lg 
+    shadow-md 
+    p-6 
+    max-w-md 
+    mx-auto border;
+}
+
+.drag_n_drop {
+    @apply
+    border-2 
+    border-dashed 
+    rounded-lg 
+    p-8 
+    text-center 
+    cursor-pointer 
+    transition-all 
+    duration-300 
+    ease-in-out
 }

@@ -1,8 +1,8 @@
-<div class="bg-[#f1f1f1] rounded-lg shadow-md p-6 max-w-md mx-auto border">
-  <h2 class="text-xl font-semibold mb-4">Upload Files</h2>
+<div class="container" *ngIf="!errorMessage">
+  <h2>Upload Files</h2>
   <!-- Drag & Drop Area -->
   <div 
-    class="border-2 border-dashed rounded-lg p-8 text-center cursor-pointer transition-all duration-300 ease-in-out"
+    class="drag_n_drop"
     [ngClass]="{
       'border-gray-300 bg-white': !isDragging,
       'border-blue-500 bg-blue-50': isDragging
@@ -15,7 +15,10 @@
     <svg class="mx-auto h-12 w-12 transition-colors duration-300 ease-in-out" [ngClass]="{'text-gray-400': !isDragging, 'text-blue-500': isDragging}" stroke="currentColor" fill="none" viewBox="0 0 48 48" aria-hidden="true">
       <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
     </svg>
-    <p class="mt-2 text-sm transition-colors duration-300 ease-in-out" [ngClass]="{'text-gray-600': !isDragging, 'text-blue-500': isDragging}">
+    <p class="mt-2 text-sm transition-colors duration-300 ease-in-out" 
+    [ngClass]="{
+      'text-gray-600': !isDragging, 
+      'text-blue-500': isDragging}">
       {{ isDragging ? 'Drop your files here' : 'Drag & drop or click to choose files' }}
     </p>
   </div>
@@ -54,9 +57,6 @@
     </div>
   </div>
 
-  <!-- Error Message -->
-  <app-error-message *ngIf="errorMessage" title="Wrong File Type" [message]="errorMessage"></app-error-message>
-
   <!-- Upload Button -->
   <div class="flex items-center justify-center h-full mt-4">
     <app-default-button 
@@ -64,5 +64,10 @@
       (click)="uploadFiles()" 
       [disabled]="uploadedFiles.length === 0">
     </app-default-button>
-  </div>    
+  </div> 
+</div>
+
+<!-- Error Message *ngIf="errorMessage"-->
+<div *ngIf="errorMessage" class="container">
+  <app-error-message [status]="status" [title]="title" [message]="errorMessage"></app-error-message>
 </div>

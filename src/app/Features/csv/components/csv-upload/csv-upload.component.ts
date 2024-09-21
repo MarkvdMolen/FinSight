@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { DefaultButtonComponent } from '@shared/components/default-button/default-button.component';
-import { ErrorMessageComponent } from "app/error-message/error-message.component";
+import { ErrorMessageComponent } from "@shared/components/messages/error-message/error-message.component";
 
 @Component({
   selector: 'app-csv-upload',
@@ -13,8 +13,11 @@ import { ErrorMessageComponent } from "app/error-message/error-message.component
 })
 export class CsvUploadComponent {
   uploadedFiles: File[] = [];
-  errorMessage: string | null = null;
   isDragging: boolean = false;
+
+  status: 'success' | 'error' = 'error';
+  title: string = 'Error'
+  errorMessage: string | null = null;
 
   constructor(private http: HttpClient) {}
 
