@@ -5,11 +5,12 @@ import { CsvUploadComponent } from "@features/csv/components/csv-upload/csv-uplo
 import { CsvTableComponent } from "@features/csv/components/csv-table/csv-table.component";
 import { MissingFilesComponent } from "@shared/components/missing-files/missing-files.component";
 import { TransactionService } from '@shared/services/transaction.service';
+import { SearchBarComponent } from "@shared/components/search-bar/search-bar.component";
 
 @Component({
   selector: 'app-csv-page',
   standalone: true,
-  imports: [CommonModule, DefaultButtonComponent, CsvUploadComponent, CsvTableComponent, MissingFilesComponent], // Import CommonModule
+  imports: [CommonModule, DefaultButtonComponent, CsvUploadComponent, CsvTableComponent, MissingFilesComponent, SearchBarComponent], // Import CommonModule
   templateUrl: './csv-page.component.html',
   styleUrls: ['./csv-page.component.css']
 })
