@@ -2,13 +2,13 @@ import { CommonModule } from '@angular/common';
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 
 @Component({
-  selector: 'app-error-message',
+  selector: 'app-notification-message',
   standalone: true,
   imports: [CommonModule],
-  templateUrl: './error-message.component.html',
-  styleUrls: ['./error-message.component.css']
+  templateUrl: './notification-message.component.html',
+  styleUrls: ['./notification-message.component.css']
 })
-export class ErrorMessageComponent {
+export class NotificationMessageComponent {
   @Input() status: 'success' | 'error' = 'error';
   @Input() img_path: string = 'mappy_sad_1.png'
   @Input() title: string = 'Error';

@@ -2,12 +2,12 @@ import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { DefaultButtonComponent } from '@shared/components/default-button/default-button.component';
-import { ErrorMessageComponent } from "@shared/components/messages/error-message/error-message.component";
+import { NotificationMessageComponent } from "@shared/components/messages/notification-message/notification-message.component";
 
 @Component({
   selector: 'app-csv-upload',
   standalone: true,
-  imports: [CommonModule, DefaultButtonComponent, ErrorMessageComponent],
+  imports: [CommonModule, DefaultButtonComponent, NotificationMessageComponent],
   templateUrl: './csv-upload.component.html',  
   styleUrls: ['./csv-upload.component.css']    
 })

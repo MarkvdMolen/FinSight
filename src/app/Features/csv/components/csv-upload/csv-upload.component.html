@@ -69,11 +69,11 @@
 
 <!-- Error Message *ngIf="errorMessage"-->
 <div *ngIf="errorMessage || status === 'success'" class="cont">
-  <app-error-message 
+  <app-notification-message 
     [status]="status"
     [img_path] = "img_path" 
     [title]="title" 
     [message]="errorMessage || 'Your files have been uploaded successfully.'" 
     (actionClicked)="resetError()">
-  </app-error-message>
+  </app-notification-message>
 </div>
