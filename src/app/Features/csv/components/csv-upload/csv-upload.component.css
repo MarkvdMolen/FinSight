@@ -5,14 +5,18 @@ h2 {
     mb-4;
 }
 
-.container {
+.cont {
     @apply
-    bg-[#f1f1f1] 
     rounded-lg 
     shadow-md 
-    p-6 
     max-w-md 
     mx-auto border;
+}
+
+.upload-cont {
+    @apply
+    bg-[#f1f1f1] 
+    p-6;
 }
 
 .drag_n_drop {

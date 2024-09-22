@@ -38,6 +38,7 @@ export class CsvUploadComponent {
     event.stopPropagation();
     this.isDragging = false;
     const files = event.dataTransfer?.files;
+    
     if (files) {
       this.handleFiles(files);
     }
@@ -46,24 +47,34 @@ export class CsvUploadComponent {
   onFileSelected(event: Event): void {
     const element = event.target as HTMLInputElement;
     const files = element.files;
+    
     if (files) {
       this.handleFiles(files);
     }
   }
 
   handleFiles(files: FileList): void {
+    const errors: string[] = [];
+  
     Array.from(files).forEach(file => {
       if (this.isCSVFile(file)) {
         if (file.size <= 10 * 1024 * 1024) { // 10MB limit
           this.uploadedFiles.push(file); 
         } else {
-          this.errorMessage = `File too large: ${file.name}`;
+          errors.push(`File too large: ${file.name}`);
         }
       } else {
-        this.errorMessage = `Only CSV files are allowed.`;
+        errors.push(`Invalid file type: ${file.name}`);
       }
     });
+  
+    if (errors.length > 0) {
+      this.status = 'error';
+      this.title = 'File Upload Error';
+      this.errorMessage = errors.join('\n');
+    }
   }
+  
 
   isCSVFile(file: File): boolean {
     return file.name.endsWith('.csv') || file.type === 'text/csv';
@@ -86,21 +97,38 @@ export class CsvUploadComponent {
     this.uploadedFiles.forEach(file => {
       formData.append('file', file, file.name);  
     });
-
-    this.http.post('http://localhost:8080/api/transactions/upload', formData).subscribe({
+  
+    this.http.post('http://localhost:8080/api/transactions/upload', formData, { responseType: 'text' }).subscribe({
       next: (response) => {
-        console.log('Upload success:', response);
-        this.errorMessage = null;
+        this.status = 'success';
+        this.title = 'Upload Successful';
+        this.errorMessage = 'Succes';
+        // Optionally, clear uploaded files or keep them as per your requirement
       },
       error: (error) => {
-        if (error.status === 400) {
+        this.status = 'error';
+        if (error.status === 0) {
+          this.title = 'Connection Error';
+          this.errorMessage = 'Could not connect to the server. Ensure the backend is running or reachable.';
+        }  
+        else if (error.status === 400) {
+          this.title = 'Upload Failed';
           this.errorMessage = 'Failed to upload the file. Please check the format and try again.';
         } else if (error.status === 500) {
+          this.title = 'Server Error';
           this.errorMessage = 'Server is currently unavailable. Please try again later.';
         } else {
+          this.title = 'Unexpected Error';
           this.errorMessage = 'An unexpected error occurred. Please try again later.';
         }
-      }      
+      },
+      complete: () => {
+        console.log('Upload complete');
+      }
     });
+  }
+
+  resetError() {
+    this.errorMessage = null;
   }
 }
