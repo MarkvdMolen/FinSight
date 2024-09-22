@@ -1,7 +1,10 @@
 
 <!-- Material Spinner -->
 <div *ngIf="isLoading" >
-    <p> Loading....</p>
+    <div class="flex flex-col gap-4 p-4 flex-wrap items-center text-center">
+        <img class="w-20 h-20 animate-spin" src="https://www.svgrepo.com/show/70469/loading.svg" alt="Loading icon">
+        <p>Loading.....</p>
+    </div>
 </div>
   
 <table *ngIf="!isLoading">

@@ -16,7 +16,8 @@ export class CsvUploadComponent {
   isDragging: boolean = false;
 
   status: 'success' | 'error' = 'error';
-  title: string = 'Error'
+  img_path: string = ''
+  title: string = ''
   errorMessage: string | null = null;
 
   constructor(private http: HttpClient) {}
@@ -101,6 +102,7 @@ export class CsvUploadComponent {
     this.http.post('http://localhost:8080/api/transactions/upload', formData, { responseType: 'text' }).subscribe({
       next: (response) => {
         this.status = 'success';
+        this.img_path = 'mappy_happy_1.png'
         this.title = 'Upload Successful';
         this.errorMessage = 'Succes';
         // Optionally, clear uploaded files or keep them as per your requirement
@@ -108,16 +110,17 @@ export class CsvUploadComponent {
       error: (error) => {
         this.status = 'error';
         if (error.status === 0) {
+          this.img_path = 'mappy_sad_2.png'
           this.title = 'Connection Error';
           this.errorMessage = 'Could not connect to the server. Ensure the backend is running or reachable.';
         }  
         else if (error.status === 400) {
+          this.img_path = 'mappy_sad_1.png'
           this.title = 'Upload Failed';
           this.errorMessage = 'Failed to upload the file. Please check the format and try again.';
-        } else if (error.status === 500) {
-          this.title = 'Server Error';
-          this.errorMessage = 'Server is currently unavailable. Please try again later.';
-        } else {
+        } 
+        else {
+          this.img_path = 'mappy_sad_1.png'
           this.title = 'Unexpected Error';
           this.errorMessage = 'An unexpected error occurred. Please try again later.';
         }

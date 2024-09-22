@@ -10,8 +10,9 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
 })
 export class ErrorMessageComponent {
   @Input() status: 'success' | 'error' = 'error';
-  @Input() title: string = '';
-  @Input() message: string = '';
+  @Input() img_path: string = 'mappy_sad_1.png'
+  @Input() title: string = 'Error';
+  @Input() message: string = 'Something went wrong';
 
   @Output() actionClicked = new EventEmitter<void>();
 
