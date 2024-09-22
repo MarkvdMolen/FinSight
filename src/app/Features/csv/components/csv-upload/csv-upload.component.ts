@@ -14,6 +14,7 @@ import { NotificationMessageComponent } from "@shared/components/messages/notifi
 export class CsvUploadComponent {
   uploadedFiles: File[] = [];
   isDragging: boolean = false;
+  isUploading: boolean = false;
 
   status: 'success' | 'error' = 'error';
   img_path: string = ''
@@ -71,6 +72,7 @@ export class CsvUploadComponent {
   
     if (errors.length > 0) {
       this.status = 'error';
+      this.img_path = 'mappy_sad_1.png'
       this.title = 'File Upload Error';
       this.errorMessage = errors.join('\n');
     }
@@ -94,6 +96,8 @@ export class CsvUploadComponent {
     if (this.uploadedFiles.length === 0) {
       return; 
     }
+
+    this.isUploading = true;  // Start spinner
 
     this.uploadedFiles.forEach(file => {
       formData.append('file', file, file.name);  
@@ -124,9 +128,10 @@ export class CsvUploadComponent {
           this.title = 'Unexpected Error';
           this.errorMessage = 'An unexpected error occurred. Please try again later.';
         }
+        this.isUploading = false;
       },
       complete: () => {
-        console.log('Upload complete');
+        this.isUploading = false;  // Stop spinner
       }
     });
   }

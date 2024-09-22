@@ -60,7 +60,7 @@
   <!-- Upload Button -->
   <div class="flex items-center justify-center h-full mt-4">
     <app-default-button 
-      [buttonName]="'Upload'" 
+      [buttonName]="isUploading ? 'Uploading...' : 'Upload'" 
       (click)="uploadFiles()" 
       [disabled]="uploadedFiles.length === 0">
     </app-default-button>
