@@ -15,6 +15,14 @@ import { Transaction } from '@shared/models/transaction.model';
   styleUrls: ['./csv-table.component.css']
 })
 export class CsvTableComponent implements OnInit {
+  headers = [
+    { key: 'transactions_id', label: 'ID' },
+    { key: 'account', label: 'Account' },
+    { key: 'recipient', label: 'Recipient' },
+    { key: 'description', label: 'Description' },
+    { key: 'amount', label: 'Amount' },
+    { key: 'date', label: 'Date' }
+  ];
 
   transactions: Transaction[] = [];
   editingTransaction: Transaction | null = null;

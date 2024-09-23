@@ -10,14 +10,47 @@
 <table *ngIf="!isLoading">
     <thead>
         <tr>
-            <th>#</th>
-            <th>IBAN/BBAN</th>
-            <th>Naam tegenpartij</th>
-            <th>Omschrijving</th>
-            <th>Bedrag</th>
-            <th>Datum</th>
-            <th></th>
-        </tr>
+            <tr>
+                <ng-container *ngFor="let header of headers">
+                  <th
+                    (click)="sortData(header.key)"
+                  >
+                    <div class="flex items-center space-x-1">
+                      <span>{{ header.label }}</span>
+                      <span class="flex flex-col">
+                        <svg
+                        [ngClass]="{
+                          'text-gray-400': sortedColumn !== header.key || sortDirection !== 'asc',
+                          'text-blue-500': sortedColumn === header.key && sortDirection === 'asc'
+                        }"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                        class="w-4 h-4"
+                      >
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7" />
+                      </svg>
+                      
+                      <svg
+                        [ngClass]="{
+                          'text-gray-400': sortedColumn !== header.key || sortDirection !== 'desc',
+                          'text-blue-500': sortedColumn === header.key && sortDirection === 'desc'
+                        }"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                        class="w-4 h-4"
+                      >
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                      </svg>
+                      
+                      </span>
+                    </div>
+                  </th>
+                </ng-container>
+              </tr>
     </thead>
     <tbody>
         <tr *ngFor="let transaction of transactions">
