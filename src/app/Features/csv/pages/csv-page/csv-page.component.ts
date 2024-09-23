@@ -10,13 +10,12 @@ import { SearchBarComponent } from "@shared/components/search-bar/search-bar.com
 @Component({
   selector: 'app-csv-page',
   standalone: true,
-  imports: [CommonModule, DefaultButtonComponent, CsvUploadComponent, CsvTableComponent, MissingFilesComponent, SearchBarComponent], // Import CommonModule
+  imports: [CommonModule, DefaultButtonComponent, CsvUploadComponent, CsvTableComponent, MissingFilesComponent, SearchBarComponent], 
   templateUrl: './csv-page.component.html',
   styleUrls: ['./csv-page.component.css']
 })
 export class CsvPageComponent {
 
-  // Houdt bij welk deel van de pagina moet worden weergegeven
   activeSection: string = 'overview';
 
   constructor(private transactionService: TransactionService) { }
@@ -28,6 +27,7 @@ export class CsvPageComponent {
   }
 
   getData() {
-    return this.transactionService.hasData
+    console.log(this.transactionService.hasData)
+    return this.transactionService.getData()
   }
 }
