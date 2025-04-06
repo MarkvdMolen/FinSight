@@ -6,6 +6,17 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 // Shared imports
 import { TransactionService } from '@shared/services/transaction.service';
 import { Transaction } from '@shared/models/transaction.model';
+import rawClassifications from '../../../../../../public/classifications.json'
+
+type Classifications = {
+    [hoofdtype: string]: {
+      [categorie: string]: {
+        [subcategorie: string]: string[]
+      }
+    }
+  };
+  
+const classifications: Classifications = rawClassifications;
 
 @Component({
   selector: 'app-csv-table',
@@ -28,6 +39,8 @@ export class CsvTableComponent implements OnInit {
   transactions: Transaction[] = [];
   editingTransaction: Transaction | null = null;
   isLoading = true;
+  
+  ruleBasedColoring: { [id: number]: boolean } = {}; // bijhouden wie geel moet worden
 
   // For sorting, filtering, and pagination
   sortDirection: 'asc' | 'desc' = 'asc';  // Default sorting direction
@@ -55,6 +68,46 @@ export class CsvTableComponent implements OnInit {
             this.isLoading = false;
         });
     }
+
+    ruleBasedMatch(description: string, recipient: string) {
+        const tekst = `${description} ${recipient}`.toLowerCase();
+
+        for (const hoofdtype in classifications) {
+            const categorieën = classifications[hoofdtype];
+        for (const categorie in categorieën) {
+            const subcategorieën = categorieën[categorie];
+            for (const subcategorie in subcategorieën) {
+            const trefwoorden: string[] = subcategorieën[subcategorie];
+            for (const trefwoord of trefwoorden) {
+                if (tekst.includes(trefwoord.toLowerCase())) {
+                return {
+                    soort: hoofdtype,
+                    categorie,
+                    subcategorie,
+                    match: trefwoord
+                };
+                }
+            }
+            }
+        }
+        }
+        return null;
+      }
+
+    classifyAll() {
+        for (let t of this.transactions) {
+            if (!t.category || t.category.trim() === '') {
+                const match = this.ruleBasedMatch(t.description, t.recipient);
+                if (match) {
+                    t.category = match.subcategorie;
+                    this.ruleBasedColoring[t.transactions_id] = true;
+                }
+            }
+        }
+    }
+
+
+
 
   /**
    * Sorts data based on the clicked column.

@@ -77,8 +77,11 @@
                 <input [(ngModel)]="editingTransaction.description">
             </td>
             <!-- Category -->
-            <td *ngIf="!editingTransaction || editingTransaction.transactions_id !== transaction.transactions_id">
-                {{ transaction.category }}
+            <td
+              *ngIf="!editingTransaction || editingTransaction.transactions_id !== transaction.transactions_id"
+              [ngClass]="{ 'bg-yellow-100': ruleBasedColoring[transaction.transactions_id] }"
+            >
+              {{ transaction.category }}
             </td>
             <td *ngIf="editingTransaction && editingTransaction.transactions_id === transaction.transactions_id">
                 <input [(ngModel)]="editingTransaction.category">
@@ -113,3 +116,4 @@
         </tr>              
     </tbody>
 </table>
+<button (click)="classifyAll()" class="mb-4 bg-blue-500 text-white px-4 py-2 rounded">Classificeer alles</button>
