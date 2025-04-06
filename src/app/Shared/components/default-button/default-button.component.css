@@ -7,7 +7,6 @@
     border 
     border-transparent 
     text-center 
-    text-sm 
     text-white 
     transition-all 
     shadow-md 
@@ -22,6 +21,5 @@
     disabled:pointer-events-none 
     disabled:opacity-50 
     disabled:shadow-none ml-2
-    font-outfit
     text-lg;
 }

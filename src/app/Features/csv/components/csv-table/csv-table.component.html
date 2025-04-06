@@ -76,6 +76,13 @@
             <td *ngIf="editingTransaction && editingTransaction.transactions_id === transaction.transactions_id">
                 <input [(ngModel)]="editingTransaction.description">
             </td>
+            <!-- Category -->
+            <td *ngIf="!editingTransaction || editingTransaction.transactions_id !== transaction.transactions_id">
+                {{ transaction.category }}
+            </td>
+            <td *ngIf="editingTransaction && editingTransaction.transactions_id === transaction.transactions_id">
+                <input [(ngModel)]="editingTransaction.category">
+            </td>
             <!-- Amount -->
             <td *ngIf="!editingTransaction || editingTransaction.transactions_id !== transaction.transactions_id">
                 {{ transaction.amount | currency:'EUR' }}

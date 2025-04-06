@@ -20,6 +20,7 @@ export class CsvTableComponent implements OnInit {
     { key: 'account', label: 'Account' },
     { key: 'recipient', label: 'Recipient' },
     { key: 'description', label: 'Description' },
+    { key: 'category', label: 'Category' },
     { key: 'amount', label: 'Amount' },
     { key: 'date', label: 'Date' }
   ];
@@ -44,19 +45,16 @@ export class CsvTableComponent implements OnInit {
   /**
    * Fetches transactions from the server with sorting, filtering, and pagination.
    */
-  fetchTransactions() {
-    this.isLoading = true;
-    
-    // Fetch transactions from the service, passing sorting, filtering, and pagination params
-    this.transactionService.getTransactions(this.sortedColumn, this.sortDirection, this.filterCriteria, this.currentPage, this.pageSize)
-      .subscribe((data: Transaction[]) => {
-        this.transactions = data;
-        this.isLoading = false;
-      }, error => {
-        console.error('Error fetching transactions', error);
-        this.isLoading = false;
-      });
-  }
+    fetchTransactions() {
+        this.isLoading = true;
+        this.transactionService.getTransactions(this.sortedColumn, this.sortDirection, this.filterCriteria, this.currentPage, this.pageSize).subscribe((data: Transaction[]) => {
+            this.transactions = data;
+            this.isLoading = false;
+        }, error => {
+            console.error('Error fetching transactions', error);
+            this.isLoading = false;
+        });
+    }
 
   /**
    * Sorts data based on the clicked column.
