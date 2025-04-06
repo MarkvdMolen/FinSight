@@ -106,7 +106,17 @@ export class CsvTableComponent implements OnInit {
         }
     }
 
-
+    pushAllTransactions() {
+        this.transactionService.pushAllTransactions(this.transactions).subscribe({
+            next: () => {
+                alert('Transacties succesvol opgeslagen!');
+            },
+            error: (err) => {
+                alert('Fout bij het opslaan van transacties.');
+            }
+        });
+      }
+      
 
 
   /**

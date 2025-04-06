@@ -27,7 +27,7 @@ export class CsvPageComponent {
   }
 
   getData() {
-    console.log(this.transactionService.hasData)
+    // console.log(this.transactionService.hasData)
     return this.transactionService.getData()
   }
 }

@@ -1,14 +1,19 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { map, Observable, of } from 'rxjs';
+import { Transaction } from '@shared/models/transaction.model';
+
+const BASE_URL = 'http://localhost:8080/api/transactions';
 
 @Injectable({
   providedIn: 'root',
 })
+
 export class TransactionService {
 
   public hasData: boolean = false;
   private cacheKey = 'transactionsCache';
+  
 
   constructor(private http: HttpClient) { }
 
@@ -28,7 +33,7 @@ export class TransactionService {
             return of(cachedData);
         } 
         else {
-            const url = 'http://localhost:8080/api/transactions';
+            const url = `${BASE_URL}`;
             let params = new HttpParams()
                 .set('sort', sortBy)
                 .set('direction', direction)
@@ -44,9 +49,15 @@ export class TransactionService {
     }
 
 
-
-
+    pushAllTransactions(transactions: Transaction[]): Observable<any> {
+      return this.http.post(`${BASE_URL}/bulk-update`, transactions);
+    }
     
+
+
+
+
+
   /**
    * Cache transactions in localStorage.
    * @param transactions The transactions to cache.
