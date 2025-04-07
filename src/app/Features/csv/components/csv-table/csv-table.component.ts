@@ -1,7 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatTableModule } from '@angular/material/table';
+import { MatPaginatorModule, MatPaginator, PageEvent } from '@angular/material/paginator';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSelectModule } from '@angular/material/select';
+import { Subscription, tap, catchError, of } from 'rxjs';
 
 // Shared imports
 import { TransactionService } from '@shared/services/transaction.service';
@@ -19,55 +24,106 @@ type Classifications = {
 const classifications: Classifications = rawClassifications;
 
 @Component({
-  selector: 'app-csv-table',
-  standalone: true,
-  imports: [CommonModule, FormsModule, MatProgressSpinnerModule],
-  templateUrl: './csv-table.component.html',
-  styleUrls: ['./csv-table.component.css']
-})
+    selector: 'app-csv-table',
+    standalone: true,
+    imports: [
+      CommonModule,
+      FormsModule,
+      MatProgressSpinnerModule,
+      MatTableModule,
+      MatPaginatorModule,
+      MatFormFieldModule,
+      MatSelectModule
+    ],
+    templateUrl: './csv-table.component.html',
+    styleUrls: ['./csv-table.component.css']
+  })
 export class CsvTableComponent implements OnInit {
-  headers = [
-    { key: 'transactions_id', label: 'ID' },
-    { key: 'account', label: 'Account' },
-    { key: 'recipient', label: 'Recipient' },
-    { key: 'description', label: 'Description' },
-    { key: 'category', label: 'Category' },
-    { key: 'amount', label: 'Amount' },
-    { key: 'date', label: 'Date' }
-  ];
+    headers = [
+        { key: 'transactions_id', label: 'ID' },
+        { key: 'account', label: 'Account' },
+        { key: 'recipient', label: 'Recipient' },
+        { key: 'description', label: 'Description' },
+        { key: 'category', label: 'Category' },
+        { key: 'amount', label: 'Amount' },
+        { key: 'date', label: 'Date' }
+    ];
 
-  transactions: Transaction[] = [];
-  editingTransaction: Transaction | null = null;
-  isLoading = true;
-  
-  ruleBasedColoring: { [id: number]: boolean } = {}; // bijhouden wie geel moet worden
+    transactions: Transaction[] = [];
+    editingTransaction: Transaction | null = null;
+    isLoading = true;
+    
+    ruleBasedColoring: { [id: number]: boolean } = {}; // bijhouden wie geel moet worden
 
-  // For sorting, filtering, and pagination
-  sortDirection: 'asc' | 'desc' = 'asc';  // Default sorting direction
-  sortedColumn: string = 'date';  // Default sorted column
-  filterCriteria: string = '';  // Default filter criteria
-  currentPage: number = 0;  // Pagination - current page
-  pageSize: number = 10;  // Pagination - page size
+    // For sorting, filtering, and pagination
+    sortDirection: 'asc' | 'desc' = 'asc';  // Default sorting direction
+    sortedColumn: string = 'date';  // Default sorted column
+    filterCriteria: string = '';  // Default filter criteria
+    currentPage: number = 0;  // Pagination - current page
+    pageSize: number = 10;  // Pagination - page size
 
-  constructor(private transactionService: TransactionService) {}
+    // Pagination
+    totalRecords = 0;
+    pageIndex = 0;
 
-  ngOnInit() {
-    this.fetchTransactions();
-  }
+    @ViewChild(MatPaginator) paginator!: MatPaginator;
+    private transactionService = inject(TransactionService);
+	private transactionSubscription: Subscription | undefined;
+
+    ngOnInit() {
+        this.fetchTransactions();
+        this.loadTransactions(this.pageIndex, this.pageSize);
+    }
+    ngAfterViewInit() {
+        // Paginator binding (optioneel)
+    }
+
+	/**
+	 * Handler voor paginawijzigingen vanuit de Material paginator.
+	 *
+	 * @param event - Het paginagebeurtenis-object van Angular Material,
+	 *                met informatie over de nieuwe `pageIndex` en `pageSize`.
+	 */
+    onPageChange(event: PageEvent) {
+		this.pageSize = event.pageSize;
+		this.pageIndex = event.pageIndex;
+    	this.loadTransactions(this.pageIndex, this.pageSize);
+    }
+    
+      loadTransactions(pageIndex: number, pageSize: number) {
+        this.isLoading = true;
+        this.transactionService.getTransactions('date', 'asc', '', pageIndex, pageSize).subscribe(response => {
+        //   this.transactions = response.content;
+        //   this.totalRecords = response.totalElements;
+          this.isLoading = false;
+        });
+      }
 
   /**
    * Fetches transactions from the server with sorting, filtering, and pagination.
    */
-    fetchTransactions() {
-        this.isLoading = true;
-        this.transactionService.getTransactions(this.sortedColumn, this.sortDirection, this.filterCriteria, this.currentPage, this.pageSize).subscribe((data: Transaction[]) => {
-            this.transactions = data;
-            this.isLoading = false;
-        }, error => {
-            console.error('Error fetching transactions', error);
-            this.isLoading = false;
-        });
-    }
+  fetchTransactions() {
+    this.isLoading = true;
+    this.transactionSubscription?.unsubscribe(); // Unsubscribe from any previous subscription
+
+    this.transactionSubscription = this.transactionService.getTransactions(
+      this.sortedColumn,
+      this.sortDirection,
+      this.filterCriteria,
+      this.currentPage,
+      this.pageSize
+    ).pipe(
+      tap((data: Transaction[]) => {
+        this.transactions = data;
+        this.isLoading = false;
+      }),
+      catchError(error => {
+        console.error('Error fetching transactions', error);
+        this.isLoading = false;
+        return of([]); // Or handle the error and potentially return a default value
+      })
+    ).subscribe();
+  }
 
     ruleBasedMatch(description: string, recipient: string) {
         const tekst = `${description} ${recipient}`.toLowerCase();

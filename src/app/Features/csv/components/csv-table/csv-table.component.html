@@ -116,6 +116,14 @@
         </tr>              
     </tbody>
 </table>
+
+<mat-paginator
+  [length]="totalRecords"
+  [pageSize]="pageSize"
+  [pageSizeOptions]="[5, 10, 25, 50]"
+  (page)="onPageChange($event)">
+</mat-paginator>
+
 <button (click)="classifyAll()" class="mb-4 bg-blue-500 text-white px-4 py-2 rounded">Classificeer alles</button>
 <button (click)="pushAllTransactions()" class="mb-4 bg-green-600 text-white px-4 py-2 rounded ml-2">
   Opslaan naar database
