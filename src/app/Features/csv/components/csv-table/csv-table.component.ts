@@ -78,6 +78,10 @@ export class CsvTableComponent implements OnInit {
         // Paginator binding (optioneel)
     }
 
+	ngOnDestroy(): void {
+		this.transactionSubscription?.unsubscribe();
+	}
+
 	/**
 	 * Handler voor paginawijzigingen vanuit de Material paginator.
 	 *
@@ -87,43 +91,55 @@ export class CsvTableComponent implements OnInit {
     onPageChange(event: PageEvent) {
 		this.pageSize = event.pageSize;
 		this.pageIndex = event.pageIndex;
-    	this.loadTransactions(this.pageIndex, this.pageSize);
+    	// this.loadTransactions(this.pageIndex, this.pageSize);
+		this.fetchTransactions()
     }
     
-      loadTransactions(pageIndex: number, pageSize: number) {
-        this.isLoading = true;
-        this.transactionService.getTransactions('date', 'asc', '', pageIndex, pageSize).subscribe(response => {
-        //   this.transactions = response.content;
-        //   this.totalRecords = response.totalElements;
-          this.isLoading = false;
-        });
-      }
+	loadTransactions(pageIndex: number, pageSize: number) {
+		this.isLoading = true;
+		this.transactionService.getTransactions('date', 'asc', '', pageIndex, pageSize).subscribe(response => {
+		//   this.transactions = response.content;
+		//   this.totalRecords = response.totalElements;
+			this.isLoading = false;
+		});
+	}
 
-  /**
-   * Fetches transactions from the server with sorting, filtering, and pagination.
-   */
-  fetchTransactions() {
-    this.isLoading = true;
-    this.transactionSubscription?.unsubscribe(); // Unsubscribe from any previous subscription
+	/**
+	 * Haalt transacties op van de backend met de huidige filter-, sorteer- en paginatie-instellingen.
+	 *
+	 * 1. Zet de `isLoading` vlag aan om een laadindicator te tonen.
+	 * 2. Unsubscribet van een eerdere subscription (indien aanwezig) om memory leaks te voorkomen.
+	 * 3. Roept `TransactionService.getTransactions(...)` aan met de huidige sorteer- en paginatieconfiguratie.
+	 * 4. Zodra de data binnenkomt:
+	 *    - Wordt de `transactions` lijst bijgewerkt.
+	 *    - Wordt de `isLoading` vlag uitgezet.
+	 * 5. Bij een fout:
+	 *    - Wordt de fout gelogd.
+	 *    - De `isLoading` vlag wordt alsnog uitgezet.
+	 *    - Er wordt een lege lijst teruggegeven als fallback.
+	 */
+	fetchTransactions() {
+		this.isLoading = true;
+		this.transactionSubscription?.unsubscribe();
 
-    this.transactionSubscription = this.transactionService.getTransactions(
-      this.sortedColumn,
-      this.sortDirection,
-      this.filterCriteria,
-      this.currentPage,
-      this.pageSize
-    ).pipe(
-      tap((data: Transaction[]) => {
-        this.transactions = data;
-        this.isLoading = false;
-      }),
-      catchError(error => {
-        console.error('Error fetching transactions', error);
-        this.isLoading = false;
-        return of([]); // Or handle the error and potentially return a default value
-      })
-    ).subscribe();
-  }
+		this.transactionSubscription = this.transactionService.getTransactions(
+			this.sortedColumn,
+			this.sortDirection,
+			this.filterCriteria,
+			this.currentPage,
+			this.pageSize
+		).pipe(
+			tap((data: Transaction[]) => {
+				this.transactions = data; 
+				this.isLoading = false;
+			}),
+			catchError(error => {
+				console.error('Error fetching transactions', error);
+				this.isLoading = false;
+				return of([]); 
+			})
+		).subscribe();
+	}
 
     ruleBasedMatch(description: string, recipient: string) {
         const tekst = `${description} ${recipient}`.toLowerCase();
