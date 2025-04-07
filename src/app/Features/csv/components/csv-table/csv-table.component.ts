@@ -132,6 +132,7 @@ export class CsvTableComponent implements OnInit {
 		).pipe(
 			tap((data: TransactionResponse) => {
 				this.transactions = data.content; 
+				this.totalRecords = data.totalElements;
 				this.isLoading = false;
 			}),
 			catchError(error => {
