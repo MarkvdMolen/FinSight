@@ -12,6 +12,7 @@ import { Subscription, tap, catchError, of } from 'rxjs';
 import { TransactionService } from '@shared/services/transaction.service';
 import { Transaction } from '@shared/models/transaction.model';
 import rawClassifications from '../../../../../../public/classifications.json'
+import { TransactionResponse } from '@shared/models/transaction-response.model';
 
 type Classifications = {
     [hoofdtype: string]: {
@@ -129,8 +130,8 @@ export class CsvTableComponent implements OnInit {
 			this.currentPage,
 			this.pageSize
 		).pipe(
-			tap((data: Transaction[]) => {
-				this.transactions = data; 
+			tap((data: TransactionResponse) => {
+				this.transactions = data.content; 
 				this.isLoading = false;
 			}),
 			catchError(error => {
