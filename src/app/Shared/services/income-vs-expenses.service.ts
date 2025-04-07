@@ -13,11 +13,11 @@ export class FinancialService {
   /**
    * Fetches transactions and processes them into monthly summary for income and expenses.
    */
-  getMonthlySummary(): Observable<any> {
-    return this.transactionService.getTransactions().pipe(
-      map((transactions: Transaction[]) => this.calculateMonthlySummary(transactions))
-    );
-  }
+  // getMonthlySummary(): Observable<any> {
+  //   return this.transactionService.getTransactions().pipe(
+  //     map((transactions: Transaction[]) => this.calculateMonthlySummary(transactions))
+  //   );
+  // }
 
   /**
    * Processes the transaction data to prepare it for the financial chart.

@@ -42,9 +42,9 @@ export class ExpenseIncomeLineChartComponent implements OnInit {
 
     ngOnInit() {
       // Subscribe to the processed monthly summary in this component as well
-      this.financialService.getMonthlySummary().subscribe((summary) => {
-        this.monthlySummary = summary;
-      });
+      // this.financialService.getMonthlySummary().subscribe((summary) => {
+      //   this.monthlySummary = summary;
+      // });
     }
 
 }
