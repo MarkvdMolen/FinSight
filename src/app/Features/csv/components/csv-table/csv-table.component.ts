@@ -60,12 +60,10 @@ export class CsvTableComponent implements OnInit {
     sortDirection: 'asc' | 'desc' = 'asc';  // Default sorting direction
     sortedColumn: string = 'date';  // Default sorted column
     filterCriteria: string = '';  // Default filter criteria
-    currentPage: number = 0;  // Pagination - current page
+    pageIndex: number = 0;  // Pagination - current page
     pageSize: number = 10;  // Pagination - page size
+    totalRecords: number = 0;
 
-    // Pagination
-    totalRecords = 0;
-    pageIndex = 0;
 
     @ViewChild(MatPaginator) paginator!: MatPaginator;
     private transactionService = inject(TransactionService);
@@ -73,7 +71,6 @@ export class CsvTableComponent implements OnInit {
 
     ngOnInit() {
         this.fetchTransactions();
-        this.loadTransactions(this.pageIndex, this.pageSize);
     }
     ngAfterViewInit() {
         // Paginator binding (optioneel)
@@ -92,18 +89,9 @@ export class CsvTableComponent implements OnInit {
     onPageChange(event: PageEvent) {
 		this.pageSize = event.pageSize;
 		this.pageIndex = event.pageIndex;
-    	// this.loadTransactions(this.pageIndex, this.pageSize);
-		this.fetchTransactions()
+		
+        this.fetchTransactions()
     }
-    
-	loadTransactions(pageIndex: number, pageSize: number) {
-		this.isLoading = true;
-		this.transactionService.getTransactions('date', 'asc', '', pageIndex, pageSize).subscribe(response => {
-		//   this.transactions = response.content;
-		//   this.totalRecords = response.totalElements;
-			this.isLoading = false;
-		});
-	}
 
 	/**
 	 * Haalt transacties op van de backend met de huidige filter-, sorteer- en paginatie-instellingen.
@@ -127,7 +115,7 @@ export class CsvTableComponent implements OnInit {
 			this.sortedColumn,
 			this.sortDirection,
 			this.filterCriteria,
-			this.currentPage,
+			this.pageIndex,
 			this.pageSize
 		).pipe(
 			tap((data: TransactionResponse) => {
@@ -143,11 +131,29 @@ export class CsvTableComponent implements OnInit {
 		).subscribe();
 	}
 
+
+    /**
+     * Doorzoekt de classificatieregels op basis van tekst in de transactie-omschrijving
+     * en tegenpartij, en retourneert de eerste match.
+     *
+     * - Combineert `description` en `recipient` tot één zoekbare tekststring.
+     * - Vergelijkt deze tekst met alle trefwoorden in de JSON-classificatiestructuur.
+     * - Doorloopt de hiërarchie: hoofdtype → categorie → subcategorie → trefwoord.
+     * - Zodra een trefwoord voorkomt in de tekst, retourneert het matchresultaat.
+     * - Als er geen match is, retourneert de functie `null`.
+     * 
+     * MAP GEBRUIKEN? KIJKEN OF DE NESTED FOR LOOP ER UIT KAN
+     *
+     * @param description - De omschrijving van de transactie (bijv. uit de bankregel).
+     * @param recipient - De tegenpartij of ontvanger van de transactie.
+     * @returns Een object met de gevonden match { soort, categorie, subcategorie, match }
+     *          of `null` als er geen match is gevonden.
+     */
     ruleBasedMatch(description: string, recipient: string) {
         const tekst = `${description} ${recipient}`.toLowerCase();
 
-        for (const hoofdtype in classifications) {
-            const categorieën = classifications[hoofdtype];
+        for (const type in classifications) {
+            const categorieën = classifications[type];
         for (const categorie in categorieën) {
             const subcategorieën = categorieën[categorie];
             for (const subcategorie in subcategorieën) {
@@ -155,7 +161,7 @@ export class CsvTableComponent implements OnInit {
             for (const trefwoord of trefwoorden) {
                 if (tekst.includes(trefwoord.toLowerCase())) {
                 return {
-                    soort: hoofdtype,
+                    soort: type,
                     categorie,
                     subcategorie,
                     match: trefwoord
@@ -166,9 +172,13 @@ export class CsvTableComponent implements OnInit {
         }
         }
         return null;
-      }
+    }
 
-    classifyAll() {
+
+    /**
+     * Voert rule-based classificatie uit op alle transacties zonder bestaande categorie.
+     */
+    classifyAll(): void {
         for (let t of this.transactions) {
             if (!t.category || t.category.trim() === '') {
                 const match = this.ruleBasedMatch(t.description, t.recipient);
@@ -206,7 +216,7 @@ export class CsvTableComponent implements OnInit {
       this.sortedColumn = column;
       this.sortDirection = 'asc';
     }
-    this.fetchTransactions();  // Re-fetch sorted data
+    // this.fetchTransactions();  // Re-fetch sorted data
   }
 
   /**
@@ -215,7 +225,7 @@ export class CsvTableComponent implements OnInit {
    */
   applyFilter(criteria: string) {
     this.filterCriteria = criteria;
-    this.fetchTransactions();  // Re-fetch filtered data
+    // this.fetchTransactions();  // Re-fetch filtered data
   }
 
   /**
@@ -223,8 +233,8 @@ export class CsvTableComponent implements OnInit {
    * @param page The new page to navigate to.
    */
   changePage(page: number) {
-    this.currentPage = page;
-    this.fetchTransactions();  // Re-fetch paginated data
+    // this.currentPage = page;
+    // this.fetchTransactions();  // Re-fetch paginated data
   }
 
   /**
