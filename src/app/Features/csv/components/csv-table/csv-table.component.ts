@@ -42,7 +42,7 @@ const classifications: Classifications = rawClassifications;
   })
 export class CsvTableComponent implements OnInit {
     headers = [
-        { key: 'transactions_id', label: 'ID' },
+        { key: 'transactionsId', label: 'ID' },
         { key: 'account', label: 'Account' },
         { key: 'recipient', label: 'Recipient' },
         { key: 'description', label: 'Description' },
@@ -182,13 +182,16 @@ export class CsvTableComponent implements OnInit {
                 const match = this.ruleBasedMatch(t.description, t.recipient); // Check if there is a match
                 if(match) { // If there is a match then
                     t.category = match.subcategory; // Replace the empty value with a category
-                    this.ruleBasedColoring[t.transactions_id] = true; // and set Color
+                    this.ruleBasedColoring[t.transactionsId] = true; // and set Color
                 }
             }
         }
     }
 
-    pushAllTransactions() {
+    /*
+    * Function that will bulk save al currently edited fields
+    */
+    pushAllTransactions(): void {
         this.transactionService.pushAllTransactions(this.transactions).subscribe({
             next: () => {
                 alert('Transacties succesvol opgeslagen!');
@@ -200,22 +203,23 @@ export class CsvTableComponent implements OnInit {
       }
       
 
-
-  /**
-   * Sorts data based on the clicked column.
-   * @param column The column to sort by.
-   */
-  sortData(column: string) {
-    if (this.sortedColumn === column) {
-      // Toggle sorting direction if the same column is clicked again
-      this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc';
-    } else {
-      // Set new column to sort by and default to ascending
-      this.sortedColumn = column;
-      this.sortDirection = 'asc';
+    /**
+     * Sorts data based on the clicked column.
+     * @param column The column to sort by.
+     */
+    sortData(column: string): void {
+        console.log(column)
+        console.log(this.sortedColumn)
+        if (this.sortedColumn === column) {
+            // Toggle sorting direction if the same column is clicked again
+            this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc';
+        } else {
+            // Set new column to sort by and default to ascending
+            this.sortedColumn = column;
+            this.sortDirection = 'asc';
+        }
+        this.fetchTransactions();  // Re-fetch sorted data
     }
-    // this.fetchTransactions();  // Re-fetch sorted data
-  }
 
   /**
    * Applies a filter and fetches the filtered data.
@@ -250,7 +254,7 @@ export class CsvTableComponent implements OnInit {
   saveTransaction() {
     if (this.editingTransaction) {
       this.transactionService.updateTransaction(this.editingTransaction).subscribe((updatedTransaction: Transaction) => {
-        const index = this.transactions.findIndex(t => t.transactions_id === updatedTransaction.transactions_id);
+        const index = this.transactions.findIndex(t => t.transactionsId === updatedTransaction.transactionsId);
         if (index !== -1) {
           this.transactions[index] = updatedTransaction;
         }
