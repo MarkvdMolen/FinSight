@@ -13,6 +13,7 @@ import { TransactionService } from '@shared/services/transaction.service';
 import { Transaction } from '@shared/models/transaction.model';
 import rawClassifications from '../../../../../../public/classifications.json'
 import { TransactionResponse } from '@shared/models/transaction-response.model';
+import { MatchResult } from '@shared/models/match-result.model';
 
 type Classifications = {
     [hoofdtype: string]: {
@@ -86,13 +87,14 @@ export class CsvTableComponent implements OnInit {
 	 * @param event - Het paginagebeurtenis-object van Angular Material,
 	 *                met informatie over de nieuwe `pageIndex` en `pageSize`.
 	 */
-    onPageChange(event: PageEvent) {
+    onPageChange(event: PageEvent): void {
 		this.pageSize = event.pageSize;
 		this.pageIndex = event.pageIndex;
 		
         this.fetchTransactions()
     }
 
+    // TODO ONLY APPLY LOADING IF IT TAKES MORE THAN 2 Seconds
 	/**
 	 * Haalt transacties op van de backend met de huidige filter-, sorteer- en paginatie-instellingen.
 	 *
@@ -107,8 +109,9 @@ export class CsvTableComponent implements OnInit {
 	 *    - De `isLoading` vlag wordt alsnog uitgezet.
 	 *    - Er wordt een lege lijst teruggegeven als fallback.
 	 */
-	fetchTransactions() {
-		this.isLoading = true;
+	fetchTransactions(): void {
+		this.isLoading = true;  
+        this.ruleBasedColoring = {};
 		this.transactionSubscription?.unsubscribe();
 
 		this.transactionSubscription = this.transactionService.getTransactions(
@@ -131,7 +134,6 @@ export class CsvTableComponent implements OnInit {
 		).subscribe();
 	}
 
-
     /**
      * Doorzoekt de classificatieregels op basis van tekst in de transactie-omschrijving
      * en tegenpartij, en retourneert de eerste match.
@@ -149,42 +151,38 @@ export class CsvTableComponent implements OnInit {
      * @returns Een object met de gevonden match { soort, categorie, subcategorie, match }
      *          of `null` als er geen match is gevonden.
      */
-    ruleBasedMatch(description: string, recipient: string) {
-        const tekst = `${description} ${recipient}`.toLowerCase();
+    ruleBasedMatch(description: string, recipient: string): MatchResult | null {
+        const transaction_data = `${description} ${recipient}`.toLowerCase();
 
         for (const type in classifications) {
-            const categorieën = classifications[type];
-        for (const categorie in categorieën) {
-            const subcategorieën = categorieën[categorie];
-            for (const subcategorie in subcategorieën) {
-            const trefwoorden: string[] = subcategorieën[subcategorie];
-            for (const trefwoord of trefwoorden) {
-                if (tekst.includes(trefwoord.toLowerCase())) {
-                return {
-                    soort: type,
-                    categorie,
-                    subcategorie,
-                    match: trefwoord
-                };
+            for (const category in classifications[type]) {
+                for (const subcategory in classifications[type][category]) {
+                    for (const trefwoord of classifications[type][category][subcategory]) {
+                        if (transaction_data.includes(trefwoord.toLowerCase())) {
+                            return {
+                                type: type,
+                                category,
+                                subcategory,
+                                match: trefwoord
+                            };
+                        }
+                    }
                 }
             }
-            }
-        }
         }
         return null;
     }
 
-
     /**
-     * Voert rule-based classificatie uit op alle transacties zonder bestaande categorie.
+     * Execute rule-based classification on all Transactions that dont have a category.
      */
     classifyAll(): void {
         for (let t of this.transactions) {
-            if (!t.category || t.category.trim() === '') {
-                const match = this.ruleBasedMatch(t.description, t.recipient);
-                if (match) {
-                    t.category = match.subcategorie;
-                    this.ruleBasedColoring[t.transactions_id] = true;
+            if (!t.category || t.category.trim() === '') { // If Category is Empty then
+                const match = this.ruleBasedMatch(t.description, t.recipient); // Check if there is a match
+                if(match) { // If there is a match then
+                    t.category = match.subcategory; // Replace the empty value with a category
+                    this.ruleBasedColoring[t.transactions_id] = true; // and set Color
                 }
             }
         }
