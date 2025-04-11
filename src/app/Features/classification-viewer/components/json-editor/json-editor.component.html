@@ -1,20 +1,35 @@
-<div class="json-editor">
+<div class="bg-white rounded-lg border-gray-300 p-4">
     <ng-container *ngIf="isObject(json)">
-      <ul>
-        <li *ngFor="let key of keys(json)">
-          <div class="json-key">
-            <button (click)="toggleCollapse(key)" class="fold-toggle">
-              {{ isCollapsed(key) ? '▶' : '▼' }}
+      <ul class="space-y-2">
+        <li *ngFor="let key of keys(json)" class="pl-3">
+          <div class="flex items-center py-1">
+            <button 
+              (click)="toggleCollapse(key)" 
+              class="w-6 h-6 flex items-center justify-center rounded-md mr-2 hover:bg-gray-100 transition-colors"
+              [class.text-blue-500]="!isCollapsed(key)"
+              [class.text-gray-400]="isCollapsed(key)">
+              <span class="transform transition-transform" [class.rotate-90]="isCollapsed(key)">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" 
+                  stroke="#019b98" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="m6 9 6 6 6-6"/>
+                </svg>
+              </span>
             </button>
-            <strong>{{ key }}:</strong>
+            <strong class="text-gray-700 font-medium">{{ key }}</strong>
           </div>
   
-          <div *ngIf="!isCollapsed(key)">
+          <div *ngIf="!isCollapsed(key)" class="ml-6 mt-1 mb-2">
             <ng-container *ngIf="isObject(json[key])">
               <app-json-editor [json]="json[key]"></app-json-editor>
             </ng-container>
             <ng-container *ngIf="!isObject(json[key])">
-              <input [(ngModel)]="json[key]" />
+              <div class="flex items-center">
+                <input 
+                  [(ngModel)]="json[key]" 
+                  class="w-full px-3 py-2 border border-gray-300 rounded-md 
+                         focus:outline-none focus:ring-2 focus:ring-[#019b98] focus:border-transparent
+                         bg-white text-gray-900" />
+              </div>
             </ng-container>
           </div>
         </li>
@@ -22,7 +37,11 @@
     </ng-container>
   
     <ng-container *ngIf="!isObject(json)">
-      <input [(ngModel)]="json" />
+      <input 
+        [(ngModel)]="json" 
+        class="w-full px-3 py-2 border border-gray-300 rounded-md 
+               focus:outline-none focus:ring-2 focus:ring-[#019b98]focus:border-transparent
+               bg-white text-gray-900" />
     </ng-container>
   </div>
   
