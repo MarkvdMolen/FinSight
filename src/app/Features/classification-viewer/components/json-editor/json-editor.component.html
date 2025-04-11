@@ -1,1 +1,19 @@
-<p>json-editor works!</p>
+<div class="json-editor">
+    <ng-container *ngIf="isObject(json)">
+      <ul>
+        <li *ngFor="let key of keys(json)">
+          <strong>{{ key }}:</strong>
+          <ng-container *ngIf="isObject(json[key])">
+            <app-json-editor [json]="json[key]"></app-json-editor>
+          </ng-container>
+          <ng-container *ngIf="!isObject(json[key])">
+            <input [(ngModel)]="json[key]" />
+          </ng-container>
+        </li>
+      </ul>
+    </ng-container>
+    <ng-container *ngIf="!isObject(json)">
+      <input [(ngModel)]="json" />
+    </ng-container>
+</div>
+  
