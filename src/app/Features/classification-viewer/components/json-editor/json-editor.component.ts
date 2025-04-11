@@ -69,4 +69,14 @@ export class JsonEditorComponent implements OnInit {
             });
         }
     }
+
+        /**
+     * Utility method to determine if a value is an array.
+     * 
+     * @param value - The value to check.
+     * @returns True if the value is an array, otherwise false.
+     */
+        isArray(value: any): boolean {
+            return Array.isArray(value);
+        }
 }

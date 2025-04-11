@@ -1,4 +1,4 @@
-<div class="bg-white rounded-lg border-gray-300 p-4">
+<div class="p-4">
     <ng-container *ngIf="isObject(json)">
       <ul class="space-y-2">
         <li *ngFor="let key of keys(json)" class="pl-3">
@@ -6,7 +6,7 @@
             <button 
               (click)="toggleCollapse(key)" 
               class="w-6 h-6 flex items-center justify-center rounded-md mr-2 hover:bg-gray-100 transition-colors"
-              [class.text-blue-500]="!isCollapsed(key)"
+              [class.text-[#019b98]]="!isCollapsed(key)"
               [class.text-gray-400]="isCollapsed(key)">
               <span class="transform transition-transform" [class.rotate-90]="isCollapsed(key)">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" 
@@ -19,9 +19,32 @@
           </div>
   
           <div *ngIf="!isCollapsed(key)" class="ml-6 mt-1 mb-2">
-            <ng-container *ngIf="isObject(json[key])">
+            <!-- Als het een array is -->
+            <ng-container *ngIf="isArray(json[key])">
+              <ol class="list-decimal ml-5 space-y-2">
+                <li *ngFor="let item of json[key]; let i = index" class="pl-1">
+                  <div class="flex items-center">
+                    <ng-container *ngIf="isObject(item)">
+                      <app-json-editor [json]="item"></app-json-editor>
+                    </ng-container>
+                    <ng-container *ngIf="!isObject(item)">
+                      <input 
+                        [(ngModel)]="json[key][i]" 
+                        class="w-full px-3 py-2 border border-gray-300 rounded-md 
+                               focus:outline-none focus:ring-2 focus:ring-[#019b98] focus:border-transparent
+                               bg-white text-gray-900" />
+                    </ng-container>
+                  </div>
+                </li>
+              </ol>
+            </ng-container>
+  
+            <!-- Als het een object is -->
+            <ng-container *ngIf="isObject(json[key]) && !isArray(json[key])">
               <app-json-editor [json]="json[key]"></app-json-editor>
             </ng-container>
+  
+            <!-- Als het een primitieve waarde is -->
             <ng-container *ngIf="!isObject(json[key])">
               <div class="flex items-center">
                 <input 
@@ -40,7 +63,7 @@
       <input 
         [(ngModel)]="json" 
         class="w-full px-3 py-2 border border-gray-300 rounded-md 
-               focus:outline-none focus:ring-2 focus:ring-[#019b98]focus:border-transparent
+               focus:outline-none focus:ring-2 focus:ring-[#019b98] focus:border-transparent
                bg-white text-gray-900" />
     </ng-container>
   </div>
