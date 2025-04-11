@@ -74,6 +74,11 @@ export class TransactionService {
     pushAllTransactions(transactions: Transaction[]): Observable<any> {
     	return this.http.post(`${BASE_URL}/bulk-update`, transactions);
     }
+
+    getCategorizedCount(): Observable<number> {
+        return this.http.get<number>(`${BASE_URL}/count-categorized`);
+    }
+      
     
 
 
