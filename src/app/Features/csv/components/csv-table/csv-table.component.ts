@@ -49,22 +49,18 @@ export class CsvTableComponent implements OnInit {
         { key: 'category', label: 'Category' },
         { key: 'amount', label: 'Amount' },
         { key: 'date', label: 'Date' }
-    ];
+    ]; // Match Transaction Model to kv for display of table
 
     transactions: Transaction[] = [];
     editingTransaction: Transaction | null = null;
     isLoading = true;
-    
-    ruleBasedColoring: { [id: number]: boolean } = {}; // bijhouden wie geel moet worden
-
-    // For sorting, filtering, and pagination
-    sortDirection: 'asc' | 'desc' = 'asc';  // Default sorting direction
-    sortedColumn: string = 'date';  // Default sorted column
-    filterCriteria: string = '';  // Default filter criteria
-    pageIndex: number = 0;  // Pagination - current page
-    pageSize: number = 10;  // Pagination - page size
+    ruleBasedColoring: { [id: number]: boolean } = {}; // var to store two colors in
+    sortDirection: 'asc' | 'desc' = 'asc';  
+    sortedColumn: string = 'transactionsId'; 
+    filterCriteria: string = '';  
+    pageIndex: number = 0;  
+    pageSize: number = 10;  
     totalRecords: number = 0;
-
 
     @ViewChild(MatPaginator) paginator!: MatPaginator;
     private transactionService = inject(TransactionService);
@@ -112,7 +108,7 @@ export class CsvTableComponent implements OnInit {
 	fetchTransactions(): void {
 		this.isLoading = true;  
         this.ruleBasedColoring = {};
-		this.transactionSubscription?.unsubscribe();
+		this.ngOnDestroy();
 
 		this.transactionSubscription = this.transactionService.getTransactions(
 			this.sortedColumn,
@@ -200,7 +196,7 @@ export class CsvTableComponent implements OnInit {
                 alert('Fout bij het opslaan van transacties.');
             }
         });
-      }
+    }
       
 
     /**
