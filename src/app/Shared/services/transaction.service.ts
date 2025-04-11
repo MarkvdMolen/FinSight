@@ -3,6 +3,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { map, Observable, of } from 'rxjs';
 import { Transaction } from '@shared/models/transaction.model';
 import { TransactionResponse } from '@shared/models/transaction-response.model';
+import { ClassificationObject } from '@shared/models/classification-object.model';
 
 const BASE_URL = 'http://localhost:8080/api/transactions';
 
@@ -75,8 +76,8 @@ export class TransactionService {
     	return this.http.post(`${BASE_URL}/bulk-update`, transactions);
     }
 
-    getCategorizedCount(): Observable<number> {
-        return this.http.get<number>(`${BASE_URL}/count-categorized`);
+    getCategorizedCount(): Observable<ClassificationObject> {
+        return this.http.get<ClassificationObject>(`${BASE_URL}/count-categorized`);
     }
       
     

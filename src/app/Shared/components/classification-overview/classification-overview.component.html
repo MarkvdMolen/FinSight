@@ -1,1 +1,4 @@
-<p>classification-overview works!</p>
+<div *ngIf="transactions | async as data">
+    <p>Total: {{ data.total }}</p>
+    <p>Categorized: {{ data.count }}</p>
+</div>
