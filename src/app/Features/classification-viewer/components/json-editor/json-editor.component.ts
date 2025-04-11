@@ -13,6 +13,7 @@ import { FormsModule } from '@angular/forms';
 export class JsonEditorComponent {
 
     @Input() json: any;
+    collapsedKeys: { [path: string]: boolean } = {};
 
     /**
      * Utility method to determine if a value is a non-array object.
@@ -32,5 +33,13 @@ export class JsonEditorComponent {
      */
     keys(obj: any): string[] {
         return Object.keys(obj);
+    }
+
+    toggleCollapse(path: string): void {
+        this.collapsedKeys[path] = !this.collapsedKeys[path];
+    }
+
+    isCollapsed(path: string): boolean {
+        return this.collapsedKeys[path];
     }
 }
