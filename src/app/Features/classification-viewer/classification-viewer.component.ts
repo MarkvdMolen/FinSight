@@ -1,6 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { JsonEditorComponent } from "./components/json-editor/json-editor.component";
-import classificationStructure from '../../../../public/classifications.json';
+import { ClassificationService } from '@shared/services/classification.service';
 
 @Component({
   selector: 'app-classification-viewer',
@@ -9,9 +9,15 @@ import classificationStructure from '../../../../public/classifications.json';
   templateUrl: './classification-viewer.component.html',
   styleUrl: './classification-viewer.component.css'
 })
-export class ClassificationViewerComponent {
+export class ClassificationViewerComponent implements OnInit {
 
-    // NEEDS A TYPE BUT JSON IS DYNAMIC BECAUSE WE WILL BE EDITING IT
-    classificationStructureJson = classificationStructure
+    json: any = {};
+    constructor(private classificationService: ClassificationService) {}
+
+    ngOnInit() {
+        this.classificationService.getClassifications().subscribe(data => {
+            this.json = data;
+        });
+    }
 
 }
