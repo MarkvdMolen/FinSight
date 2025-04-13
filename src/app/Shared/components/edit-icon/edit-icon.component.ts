@@ -10,5 +10,5 @@ import { Component, Input } from '@angular/core';
 export class EditIconComponent {
     @Input() size: number = 24;
     @Input() color: string = 'currentColor';
-  }
+}
   
