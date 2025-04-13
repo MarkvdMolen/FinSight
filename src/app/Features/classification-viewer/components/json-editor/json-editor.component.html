@@ -1,29 +1,11 @@
-<div class="p-4">
+<section>
     <ng-container *ngIf="isObject(json)">
-        <!-- MOVE TO OWN COMPONENT 1-->
-        <div class="flex justify-between items-center mb-2 bg-black p-2">
-            <div class="flex gap-2">
-            <div class="relative">
-                <input 
-                    #newCategoryInput
-                    type="text" 
-                    placeholder="New category name" 
-                    class="px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#019b98] text-sm"
-                />
-                <button 
-                    (click)="addCategory(json, newCategoryInput.value); newCategoryInput.value = ''"
-                    class="px-2 py-1 bg-[#019b98] text-white rounded-md hover:bg-[#017f7d] transition-colors text-sm ml-2">
-                    Add Category
-                </button>
-            </div>
-            <button 
-                    (click)="addPropertyToObject(json)" 
-                    class="px-2 py-1 bg-[#019b98] text-white rounded-md hover:bg-[#017f7d] transition-colors text-sm">
-                Add Property
-            </button>
-            </div>
-        </div>
-      <!-- MOVE TO OWN COMPONENT 1-->
+        <app-control-panel-for-objects
+            [json]="json"
+            (addCategoryClicked)="addCategory(json, $event)"
+            (addPropertyClicked)="addPropertyToObject(json)">
+        </app-control-panel-for-objects>
+
       <ul class="space-y-2">
         <li *ngFor="let key of keys(json)" class="pl-3">
           <!-- Key Section-->  
@@ -128,5 +110,5 @@
                focus:outline-none focus:ring-2 focus:ring-[#019b98] focus:border-transparent
                bg-white text-gray-900" />
     </ng-container>
-  </div>
+</section>
   

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 @Component({
   selector: 'app-control-panel-for-objects',
@@ -9,4 +9,19 @@ import { Component } from '@angular/core';
 })
 export class ControlPanelForObjectsComponent {
 
+    @Input() json: any = {};
+    @Output() addCategoryClicked = new EventEmitter<string>();
+    @Output() addPropertyClicked = new EventEmitter<void>();
+  
+    newCategoryName = '';
+  
+    addCategory() {
+      if (!this.newCategoryName.trim()) return;
+      this.addCategoryClicked.emit(this.newCategoryName);
+      this.newCategoryName = '';
+    }
+  
+    addProperty() {
+      this.addPropertyClicked.emit();
+    }
 }

@@ -3,11 +3,12 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { EditIconComponent } from '@shared/components/edit-icon/edit-icon.component';
 import { DeleteIconComponent } from "@shared/components/delete-icon/delete-icon.component";
+import { ControlPanelForObjectsComponent } from "../control-panel-for-objects/control-panel-for-objects.component";
 
 @Component({
     selector: 'app-json-editor',
     standalone: true,
-    imports: [CommonModule, FormsModule, EditIconComponent, DeleteIconComponent],
+    imports: [CommonModule, FormsModule, EditIconComponent, DeleteIconComponent, ControlPanelForObjectsComponent],
     templateUrl: './json-editor.component.html',
     styleUrl: './json-editor.component.css'
 })
