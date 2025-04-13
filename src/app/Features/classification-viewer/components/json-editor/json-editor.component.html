@@ -1,8 +1,35 @@
 <div class="p-4">
     <ng-container *ngIf="isObject(json)">
+        <!-- MOVE TO OWN COMPONENT 1-->
+        <div class="flex justify-between items-center mb-2 bg-black p-2">
+            <div class="flex gap-2">
+            <div class="relative">
+                <input 
+                #newCategoryInput
+                type="text" 
+                placeholder="New category name" 
+                class="px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#019b98] text-sm"
+                />
+                <button 
+                (click)="addCategory(json, newCategoryInput.value); newCategoryInput.value = ''"
+                class="px-2 py-1 bg-[#019b98] text-white rounded-md hover:bg-[#017f7d] transition-colors text-sm ml-2">
+                Add Category
+                </button>
+            </div>
+            <button 
+                (click)="addPropertyToObject(json)" 
+                class="px-2 py-1 bg-[#019b98] text-white rounded-md hover:bg-[#017f7d] transition-colors text-sm">
+                Add Property
+            </button>
+            </div>
+        </div>
+      <!-- MOVE TO OWN COMPONENT 1-->
       <ul class="space-y-2">
         <li *ngFor="let key of keys(json)" class="pl-3">
+
+          <!-- Key Section-->  
           <div class="flex items-center py-1">
+            <!-- Toggle In/Out Button-->
             <button 
               (click)="toggleCollapse(key)" 
               class="w-6 h-6 flex items-center justify-center rounded-md mr-2 hover:bg-gray-100 transition-colors"
@@ -15,33 +42,94 @@
                 </svg>
               </span>
             </button>
-            <strong class="text-gray-700 font-medium">{{ key }}</strong>
+            
+            <!-- Editable key Might want to disallow it by default and use and edit icon -->
+            <input 
+              #keyInput
+              [value]="key"
+              (blur)="updatePropertyKey(json, key, keyInput.value)"
+              (keydown.enter)="keyInput.blur()"
+              class="font-medium text-gray-700 bg-transparent border-b border-transparent hover:border-gray-300 focus:border-[#019b98] focus:outline-none px-1"
+            />
+            
+            <!-- Delete Icon -->
+            <button 
+              (click)="removePropertyFromObject(json, key)" 
+              class="ml-2 p-1 text-red-500 rounded-full hover:bg-red-50 transition-colors">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" 
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M3 6h18"></path>
+                <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path>
+                <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path>
+              </svg>
+            </button>
           </div>
-  
+          
           <div *ngIf="!isCollapsed(key)" class="ml-6 mt-1 mb-2">
-            <!-- Als het een array is -->
+            <!-- Als het een array (Endlayer) is -->
             <ng-container *ngIf="isArray(json[key])">
-              <ol class="list-decimal ml-5 space-y-2">
-                <li *ngFor="let item of json[key]; let i = index" class="pl-1">
-                  <div class="flex items-center">
-                    <ng-container *ngIf="isObject(item)">
-                      <app-json-editor [json]="item"></app-json-editor>
-                    </ng-container>
-                    <ng-container *ngIf="!isObject(item)">
-                      <input 
-                        [(ngModel)]="json[key][i]" 
-                        class="w-full px-3 py-2 border border-gray-300 rounded-md 
-                               focus:outline-none focus:ring-2 focus:ring-[#019b98] focus:border-transparent
-                               bg-white text-gray-900" />
-                    </ng-container>
-                  </div>
-                </li>
-              </ol>
+                <!-- MOVE TO OWN COMPONENT 2-->
+                <div class="flex justify-between items-center mb-2">
+                    <div class="flex space-x-2">
+                    <button 
+                        (click)="addItemToArray(json[key], 'string')" 
+                        class="px-2 py-1 bg-[#019b98] text-white rounded-md hover:bg-[#017f7d] transition-colors text-xs">
+                        Add Item
+                    </button>
+                    <button 
+                        (click)="addItemToArray(json[key], 'object')" 
+                        class="px-2 py-1 bg-[#019b98] text-white rounded-md hover:bg-[#017f7d] transition-colors text-xs">
+                        Add Object
+                    </button>
+                    </div>
+                </div>
+                <!-- MOVE TO OWN COMPONENT 2-->
+                <ol class="list-decimal ml-5 space-y-2">
+                    <li *ngFor="let item of json[key]; let i = index; trackBy: trackByIndex" class="pl-1">
+                    <div class="flex items-center">
+                        <!-- TEMP SHOULD NOT BE ALLOWED -->
+                        <!-- <ng-container *ngIf="isObject(item)">
+                        <div class="w-full">
+                            <app-json-editor [json]="item"></app-json-editor>
+                        </div>
+                        </ng-container> -->
+                        <ng-container *ngIf="!isObject(item)">
+                        
+                        <!-- <input 
+                        #keyInput
+                        [value]="key"
+                        (blur)="updatePropertyKey(json, key, keyInput.value)"
+                        (keydown.enter)="keyInput.blur()"
+                        class="font-medium text-gray-700 bg-transparent border-b border-transparent hover:border-gray-300 focus:border-[#019b98] focus:outline-none px-1"
+                        /> -->
+
+                        <input 
+                            [(ngModel)]="json[key][i]" 
+                            (blur)="notifyChanges()"
+                            class="w-full px-3 py-2 border border-gray-300 rounded-md 
+                                focus:outline-none focus:ring-2 focus:ring-[#019b98] focus:border-transparent
+                                bg-white text-gray-900" />
+                      
+                        </ng-container>
+                        <button 
+                        (click)="removeItemFromArray(json[key], i)" 
+                        class="ml-2 p-1 text-red-500 rounded-full hover:bg-red-50 transition-colors">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" 
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M3 6h18"></path>
+                            <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path>
+                            <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path>
+                        </svg>
+                        </button>
+                    </div>
+                    </li>
+                </ol>
             </ng-container>
   
-            <!-- Als het een object is -->
+            <!-- Als het een object (holds something) is -->
             <ng-container *ngIf="isObject(json[key]) && !isArray(json[key])">
-              <app-json-editor [json]="json[key]"></app-json-editor>
+              <app-json-editor [json]="json[key]" (jsonChanged)="onChildJsonChanged(key, $event)"></app-json-editor>
+
             </ng-container>
   
           </div>
@@ -52,6 +140,7 @@
     <ng-container *ngIf="!isObject(json)">
       <input 
         [(ngModel)]="json" 
+        (ngModelChange)="notifyChanges()"
         class="w-full px-3 py-2 border border-gray-300 rounded-md 
                focus:outline-none focus:ring-2 focus:ring-[#019b98] focus:border-transparent
                bg-white text-gray-900" />
