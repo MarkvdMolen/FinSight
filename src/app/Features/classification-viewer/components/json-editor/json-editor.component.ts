@@ -17,6 +17,8 @@ export class JsonEditorComponent implements OnInit {
     @Output() jsonChanged = new EventEmitter<any>();
 
     collapsedKeys: { [path: string]: boolean } = {};
+    editingKeys: Record<string, boolean> = {};
+
 
     ngOnInit() {
         this.autoCollapseObjects();
@@ -208,4 +210,13 @@ export class JsonEditorComponent implements OnInit {
     trackByIndex(index: number, item: any): number {
         return index;
     }
+
+    isEditing(key: string): boolean {
+        return !!this.editingKeys[key];
+      }
+      
+    changeEditing(key: string): void {
+        this.editingKeys[key] = !this.editingKeys[key];
+    }
+      
 }

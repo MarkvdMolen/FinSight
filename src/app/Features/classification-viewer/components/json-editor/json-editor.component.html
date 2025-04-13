@@ -44,15 +44,20 @@
             
             <!-- Editable key Might want to disallow it by default and use and edit icon -->
             <input 
-              #keyInput
-              [value]="key"
-              (blur)="updatePropertyKey(json, key, keyInput.value)"
-              (keydown.enter)="keyInput.blur()"
-              class="font-medium text-gray-700 bg-transparent border-b border-transparent hover:border-gray-300 focus:border-[#019b98] focus:outline-none px-1"
+                #keyInput
+                [value]="key"
+                [readonly]="!isEditing(key)"
+                (blur)="updatePropertyKey(json, key, keyInput.value); editingKeys[key] = false"
+                (keydown.enter)="keyInput.blur()"
+                [ngClass]="{
+                    'font-medium text-gray-700 bg-transparent px-1 focus:outline-none': true,
+                    'border-2 border-[#019b98]': isEditing(key),
+                    'border-b border-black': !isEditing(key)
+                }"
             />
-            
-            <app-edit-icon [size]="16" [color]="'#007bff'"></app-edit-icon>
-            <app-delete-icon class="ml-2"[size]="16" [color]="'#ef4444'" (click)="removePropertyFromObject(json, key)"></app-delete-icon>
+          
+            <app-edit-icon class="ml-2 mt-1" [size]="16" [color]="'#007bff'" (click)="changeEditing(key)"></app-edit-icon>
+            <app-delete-icon class="ml-2 mt-1" [size]="16" [color]="'#ef4444'" (click)="removePropertyFromObject(json, key)"></app-delete-icon>
           </div>
           
           <div *ngIf="!isCollapsed(key)" class="ml-6 mt-1 mb-2">
