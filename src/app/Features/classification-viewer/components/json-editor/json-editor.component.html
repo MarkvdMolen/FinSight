@@ -55,8 +55,12 @@
                     'border-b border-black': !isEditing(key)
                 }"
             />
-          
-            <app-edit-icon class="ml-2 mt-1" [size]="16" [color]="'#007bff'" (click)="changeEditing(key)"></app-edit-icon>
+            <app-edit-icon
+                class="ml-2 mt-1 cursor-pointer"
+                [size]="16"
+                [color]="isEditing(key) ? '#cccccc' : '#007bff'" 
+                (click)="changeEditing(key)">
+            </app-edit-icon>
             <app-delete-icon class="ml-2 mt-1" [size]="16" [color]="'#ef4444'" (click)="removePropertyFromObject(json, key)"></app-delete-icon>
           </div>
           
