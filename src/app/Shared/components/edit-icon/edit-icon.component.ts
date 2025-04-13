@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 
 @Component({
   selector: 'app-edit-icon',
@@ -8,5 +8,7 @@ import { Component } from '@angular/core';
   styleUrl: './edit-icon.component.css'
 })
 export class EditIconComponent {
-
-}
+    @Input() size: number = 24;
+    @Input() color: string = 'currentColor';
+  }
+  

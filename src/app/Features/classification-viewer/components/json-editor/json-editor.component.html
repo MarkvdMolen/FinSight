@@ -26,7 +26,6 @@
       <!-- MOVE TO OWN COMPONENT 1-->
       <ul class="space-y-2">
         <li *ngFor="let key of keys(json)" class="pl-3">
-
           <!-- Key Section-->  
           <div class="flex items-center py-1">
             <!-- Toggle In/Out Button-->
@@ -52,6 +51,7 @@
               class="font-medium text-gray-700 bg-transparent border-b border-transparent hover:border-gray-300 focus:border-[#019b98] focus:outline-none px-1"
             />
             
+            <app-edit-icon [size]="16" [color]="'#007bff'"></app-edit-icon>
             <!-- Delete Icon -->
             <button 
               (click)="removePropertyFromObject(json, key)" 

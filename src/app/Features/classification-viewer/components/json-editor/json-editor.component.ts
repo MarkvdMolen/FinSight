@@ -1,11 +1,12 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { EditIconComponent } from '@shared/components/edit-icon/edit-icon.component';
 
 @Component({
     selector: 'app-json-editor',
     standalone: true,
-    imports: [ CommonModule, FormsModule ],
+    imports: [ CommonModule, FormsModule, EditIconComponent ],
     templateUrl: './json-editor.component.html',
     styleUrl: './json-editor.component.css'
 })
