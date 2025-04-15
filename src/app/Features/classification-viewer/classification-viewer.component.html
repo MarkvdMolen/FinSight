@@ -1,4 +1,5 @@
 <app-json-editor 
+    *ngIf="hasKeys(json)"
     [json]="json" 
     (jsonChanged)="onJsonChanged($event)">
 </app-json-editor>

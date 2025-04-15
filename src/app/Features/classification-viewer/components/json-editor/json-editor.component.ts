@@ -79,12 +79,10 @@ export class JsonEditorComponent implements OnInit {
      * Auto-collapses objects that are nested to improve initial readability
      */
     autoCollapseObjects(): void {
-        if (this.isObject(this.json)) { // If its an Object Then
-            const keys = this.keys(this.json) // Get the keys of that object
-            keys.forEach((key) => {
-                this.collapsedKeys[key] = true // Set Collapse to True
-            })
-        }
+        const keys = this.keys(this.json); // Get the keys of that object
+        keys.forEach((key) => {
+            this.collapsedKeys[key] = true; // Set Collapse to True
+        })
     }
 
     /**
