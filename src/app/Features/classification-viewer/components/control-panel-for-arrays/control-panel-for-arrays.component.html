@@ -1,1 +1,14 @@
-<p>control-panel-for-arrays works!</p>
+<div class="flex justify-between items-center mb-2">
+    <div class="flex space-x-2">
+    <button 
+        (click)="addItem('string')"
+        class="px-2 py-1 bg-[#019b98] text-white rounded-md hover:bg-[#017f7d] transition-colors text-xs">
+        Add Item
+    </button>
+    <button 
+        (click)="addItem('object')"  
+        class="px-2 py-1 bg-[#019b98] text-white rounded-md hover:bg-[#017f7d] transition-colors text-xs">
+        Add Category
+    </button>
+    </div>
+</div>

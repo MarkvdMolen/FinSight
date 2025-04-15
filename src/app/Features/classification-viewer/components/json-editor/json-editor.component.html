@@ -49,22 +49,12 @@
           <div *ngIf="!isCollapsed(key)" class="ml-6 mt-1 mb-2">
             <!-- Als het een array (Endlayer) is -->
             <ng-container *ngIf="isArray(json[key])">
-                <!-- MOVE TO OWN COMPONENT 2-->
-                <div class="flex justify-between items-center mb-2">
-                    <div class="flex space-x-2">
-                    <button 
-                        (click)="addItemToArray(json[key], 'string')" 
-                        class="px-2 py-1 bg-[#019b98] text-white rounded-md hover:bg-[#017f7d] transition-colors text-xs">
-                        Add Item
-                    </button>
-                    <button 
-                        (click)="addItemToArray(json[key], 'object')" 
-                        class="px-2 py-1 bg-[#019b98] text-white rounded-md hover:bg-[#017f7d] transition-colors text-xs">
-                        Add Category
-                    </button>
-                    </div>
-                </div>
-                <!-- MOVE TO OWN COMPONENT 2-->
+ 
+                <app-control-panel-for-arrays
+                    [data]="json[key]"
+                    (dataChanged)="updateJsonArray(key, $event)">
+                </app-control-panel-for-arrays>
+
                 <ol class="list-decimal ml-5 space-y-2">
                     <li *ngFor="let item of json[key]; let i = index; trackBy: trackByIndex" class="pl-1">
                         <div class="flex items-center">
