@@ -5,7 +5,7 @@
         (addCategoryClicked)="addCategory(json, $event)"
         (addPropertyClicked)="addPropertyToObject(json)">
     </app-control-panel-for-objects>
-    
+
         <ng-container *ngIf="isObject(json)">
       <ul class="space-y-2">
         <li *ngFor="let key of keys(json)" class="pl-3">
@@ -59,6 +59,7 @@
                     <li *ngFor="let item of json[key]; let i = index; trackBy: trackByIndex" class="pl-1">
                         <div class="flex items-center">
                             <ng-container *ngIf="!isObject(item)">
+                                <app-classification-icon [size]="16" [color]="'#ef4444'"></app-classification-icon>
                                 <input 
                                     [(ngModel)]="json[key][i]" 
                                     (blur)="notifyChanges()"

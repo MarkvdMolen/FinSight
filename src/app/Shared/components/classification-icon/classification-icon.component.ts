@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 
 @Component({
   selector: 'app-classification-icon',
@@ -8,5 +8,6 @@ import { Component } from '@angular/core';
   styleUrl: './classification-icon.component.css'
 })
 export class ClassificationIconComponent {
-
+    @Input() size: number = 24;
+    @Input() color: string = 'currentColor';
 }

@@ -5,11 +5,12 @@ import { EditIconComponent } from '@shared/components/edit-icon/edit-icon.compon
 import { DeleteIconComponent } from "@shared/components/delete-icon/delete-icon.component";
 import { ControlPanelForObjectsComponent } from "../control-panel-for-objects/control-panel-for-objects.component";
 import { ControlPanelForArraysComponent } from '../control-panel-for-arrays/control-panel-for-arrays.component';
+import { ClassificationIconComponent } from "../../../../Shared/components/classification-icon/classification-icon.component";
 
 @Component({
     selector: 'app-json-editor',
     standalone: true,
-    imports: [CommonModule, FormsModule, EditIconComponent, DeleteIconComponent, ControlPanelForObjectsComponent, ControlPanelForArraysComponent],
+    imports: [CommonModule, FormsModule, EditIconComponent, DeleteIconComponent, ControlPanelForObjectsComponent, ControlPanelForArraysComponent, ClassificationIconComponent],
     templateUrl: './json-editor.component.html',
     styleUrl: './json-editor.component.css'
 })
