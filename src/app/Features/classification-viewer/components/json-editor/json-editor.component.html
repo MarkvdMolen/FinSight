@@ -1,11 +1,12 @@
 <div>
-    <ng-container *ngIf="isObject(json)">
-        <app-control-panel-for-objects
-            [json]="json"
-            (addCategoryClicked)="addCategory(json, $event)"
-            (addPropertyClicked)="addPropertyToObject(json)">
-        </app-control-panel-for-objects>
-
+   
+    <app-control-panel-for-objects
+        [json]="json"
+        (addCategoryClicked)="addCategory(json, $event)"
+        (addPropertyClicked)="addPropertyToObject(json)">
+    </app-control-panel-for-objects>
+    
+        <ng-container *ngIf="isObject(json)">
       <ul class="space-y-2">
         <li *ngFor="let key of keys(json)" class="pl-3">
           <!-- Key Section-->  
