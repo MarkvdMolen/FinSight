@@ -1,0 +1,11 @@
+.array_input {
+    @apply
+    w-full px-3 py-2 border border-gray-300 rounded-md 
+    focus:outline-none focus:ring-2 focus:ring-[#019b98] focus:border-transparent
+    bg-white text-gray-900
+}
+
+.tree-branch {
+    @apply
+    relative pl-6 before:absolute before:left-[0rem] before:w-6 before:h-0.5 before:bg-gray-300
+}

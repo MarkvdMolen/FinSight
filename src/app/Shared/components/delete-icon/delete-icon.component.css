@@ -1,0 +1,9 @@
+.delete-icon-container {
+    @apply
+    inline-flex 
+    items-center 
+    justify-center 
+    cursor-pointer
+     
+    hover:opacity-80
+}

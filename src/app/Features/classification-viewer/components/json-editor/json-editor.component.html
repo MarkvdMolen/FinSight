@@ -1,0 +1,49 @@
+<div>  
+    <!-- If parent holds objects -->
+    <ng-container *ngIf="isObject(json)">
+        <div class="tree-root h-4"></div>
+        <!-- List of childern-->
+        <ul class="tree-root">
+            <li class="tree-branch">
+                <app-control-panel-for-objects
+                [json]="json"
+                (addCategoryClicked)="addCategory(json)"
+                (addPropertyClicked)="addPropertyToObject(json)"
+                (switchTypeClicked)="switchTypeOfParent(json)">
+                </app-control-panel-for-objects>
+            </li>
+            <li *ngFor="let key of keys(json)" class="tree-branch">
+                <div class="flex items-center">
+                    <app-json-key-row
+                        [keyName]="key"
+                        [value]="json[key]"
+                        [collapsed]="isCollapsed(key)"
+                        [editing]="isEditing(key)"
+                        [canSwitch]="canSwitchType(json[key])"
+                        (action)="handleKeyAction(key, $event)">
+                    </app-json-key-row>
+                </div>
+                <!-- Child Elements -->
+                <ul *ngIf="!isCollapsed(key)" class="mb-4">
+                    <!-- If Child holds an object create a nested component -->
+                    <app-json-editor
+                        *ngIf="isObject(json[key]) && !isArray(json[key])" 
+                        [json]="json[key]" 
+                        (jsonChanged)="onChildJsonChanged(key, $event)">
+                    </app-json-editor>
+
+                    <!-- If Child is holds an array its the end node-->
+                    <ng-container *ngIf="isArray(json[key])">
+                        <div class="tree-root h-4"></div>
+                        <ul class="tree-root">
+                            <app-item-list
+                                [data]="json[key]"
+                                (dataChanged)="updateJsonArray(key, $event)">
+                            </app-item-list>
+                        </ul>
+                    </ng-container>
+                </ul>
+            </li>
+        </ul>
+    </ng-container>
+</div> 

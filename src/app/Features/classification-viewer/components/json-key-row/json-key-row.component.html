@@ -1,0 +1,42 @@
+<div class="flex items-center py-1">
+    <ng-container [ngSwitch]="getObjectType(value)">
+        <app-object-with-classifications-icon *ngSwitchCase="'array'" [size]="32" [color]="'#019b98'"></app-object-with-classifications-icon>
+        <app-object-with-objects-icon *ngSwitchCase="'object'" [size]="32" [color]="'#019b98'"></app-object-with-objects-icon>
+    </ng-container>
+
+    <app-toggle-collapse-button
+        [collapsed]="collapsed"
+        (toggleClicked)="onToggleCollapse()">
+    </app-toggle-collapse-button>
+
+    <input 
+        #keyInput
+        [value]="keyName"
+        [readonly]="!editing"
+        (blur)="onRename(keyInput.value)"
+        (keydown.enter)="keyInput.blur()"
+        [ngClass]="{
+        'font-medium text-gray-700 bg-transparent px-1 focus:outline-none': true,
+        'border-2 border-[#019b98]': editing,
+        'border-b border-black': !editing
+        }"
+    />
+
+    <app-edit-icon
+        class="ml-2 mt-1 cursor-pointer"
+        [size]="16"
+        [color]="editing ? '#cccccc' : '#007bff'" 
+        (click)="onStartEdit()">
+    </app-edit-icon>
+
+    <app-delete-icon 
+        class="ml-2 mt-1" 
+        [size]="16" 
+        [color]="'#ef4444'" 
+        (click)="onDelete()">
+    </app-delete-icon>
+
+    <button *ngIf="canSwitch" (click)="onSwitchType()" class="ml-2">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 448 448"><path d="m0 940.362 112 112h48l-96-96h224v-32H64l96-96h-48zm448-224-112 112h-48l96-96H160v-32h224l-96-96h48z" style="fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" transform="translate(0 -604.362)"/></svg>
+    </button>
+</div>  
