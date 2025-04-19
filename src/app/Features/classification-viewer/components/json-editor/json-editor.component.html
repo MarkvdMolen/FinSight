@@ -1,94 +1,83 @@
 <div>
-   
-    <app-control-panel-for-objects
-        [json]="json"
-        (addCategoryClicked)="addCategory(json, $event)"
-        (addPropertyClicked)="addPropertyToObject(json)">
-    </app-control-panel-for-objects>
-
-        <ng-container *ngIf="isObject(json)">
-      <ul class="space-y-2">
-        <li *ngFor="let key of keys(json)" class="pl-3">
-          <!-- Key Section-->  
-          <div class="flex items-center py-1">
-            <!-- Toggle In/Out Button-->
-            <button 
-              (click)="toggleCollapse(key)" 
-              class="w-6 h-6 flex items-center justify-center rounded-md mr-2 hover:bg-gray-100 transition-colors"
-              [class.text-[#019b98]]="!isCollapsed(key)"
-              [class.text-gray-400]="isCollapsed(key)">
-              <span class="transform transition-transform" [class.rotate-90]="isCollapsed(key)">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" 
-                  stroke="#019b98" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="m6 9 6 6 6-6"/>
-                </svg>
-              </span>
-            </button>
-            
-            <!-- Editable key Might want to disallow it by default and use and edit icon -->
-            <input 
-                #keyInput
-                [value]="key"
-                [readonly]="!isEditing(key)"
-                (blur)="updatePropertyKey(json, key, keyInput.value); editingKeys[key] = false"
-                (keydown.enter)="keyInput.blur()"
-                [ngClass]="{
-                    'font-medium text-gray-700 bg-transparent px-1 focus:outline-none': true,
-                    'border-2 border-[#019b98]': isEditing(key),
-                    'border-b border-black': !isEditing(key)
-                }"
-            />
-            <app-edit-icon
-                class="ml-2 mt-1 cursor-pointer"
-                [size]="16"
-                [color]="isEditing(key) ? '#cccccc' : '#007bff'" 
-                (click)="changeEditing(key)">
-            </app-edit-icon>
-            <app-delete-icon class="ml-2 mt-1" [size]="16" [color]="'#ef4444'" (click)="removePropertyFromObject(json, key)"></app-delete-icon>
+    <!-- Als json een array is -->
+    <ng-container *ngIf="isArray(json)">
+        
+      <app-control-panel-for-arrays
+        [data]="json"
+        (dataChanged)="updateJsonArray(null, $event)">
+      </app-control-panel-for-arrays>
+  
+      <ol class="orderd-array-items">
+        <li *ngFor="let item of json; let i = index; trackBy: trackByIndex" class="pl-1">
+          <div class="flex items-center">
+            <ng-container *ngIf="!isObject(item)">
+              <app-classification-icon [size]="16" [color]="'#ef4444'"></app-classification-icon>
+              <input 
+                [(ngModel)]="json[i]" 
+                (blur)="notifyChanges()"
+                class="array_input" />
+            </ng-container>
+            <app-delete-icon class="ml-2 mt-2" [size]="16" [color]="'#ef4444'" (click)="removeItemFromArray(json, i)"></app-delete-icon>
           </div>
-          
-          <div *ngIf="!isCollapsed(key)" class="ml-6 mt-1 mb-2">
-            <!-- Als het een array (Endlayer) is -->
-            <ng-container *ngIf="isArray(json[key])">
-                <app-control-panel-for-arrays
-                    [data]="json[key]"
-                    (dataChanged)="updateJsonArray(key, $event)">
-                </app-control-panel-for-arrays>
-
-                <ol class="orderd-array-items">
-                    <li *ngFor="let item of json[key]; let i = index; trackBy: trackByIndex" class="pl-1">
+        </li>
+      </ol>
+    </ng-container>
+  
+    <!-- If parent holds objects -->
+    <ng-container *ngIf="isObject(json)">
+        <div class="relative ml-4 border-l-2 border-gray-300 h-4"></div>
+        <!-- List of childern-->
+        <ul class="relative ml-4 border-l-2 border-gray-300">
+            <li class="relative pl-6 before:absolute before:top-[1.1rem] before:left-[0rem] before:w-6 before:h-0.5 before:bg-gray-300">
+                <app-control-panel-for-objects
+                [json]="json"
+                (addCategoryClicked)="addCategory(json)"
+                (addPropertyClicked)="addPropertyToObject(json)"
+                (switchTypeClicked)="switchTypeOfParent(json)">
+                </app-control-panel-for-objects>
+            </li>
+            <li *ngFor="let key of keys(json)" class="relative pl-6 before:absolute before:top-[1.1rem] before:left-[0rem] before:w-6 before:h-0.5 before:bg-gray-300">
+                <div class="flex items-center">
+                    <app-json-key-row
+                        [keyName]="key"
+                        [value]="json[key]"
+                        [collapsed]="isCollapsed(key)"
+                        [editing]="isEditing(key)"
+                        [canSwitch]="canSwitchType(json[key])"
+                        (action)="handleKeyAction(key, $event)">
+                    </app-json-key-row>
+                </div>
+    
+                <!-- Child Elements -->
+                <ul *ngIf="!isCollapsed(key)" class="mt-1 mb-2">
+                    <!-- If Child is holds an array its the end node-->
+                    <ng-container *ngIf="isArray(json[key])">
+                    <app-control-panel-for-arrays
+                        [data]="json[key]"
+                        (dataChanged)="updateJsonArray(key, $event)">
+                    </app-control-panel-for-arrays>
+        
+                    <ol class="orderd-array-items">
+                        <li *ngFor="let item of json[key]; let i = index; trackBy: trackByIndex" class="pl-1">
                         <div class="flex items-center">
                             <ng-container *ngIf="!isObject(item)">
-                                <app-classification-icon [size]="16" [color]="'#ef4444'"></app-classification-icon>
-                                <input 
-                                    [(ngModel)]="json[key][i]" 
-                                    (blur)="notifyChanges()"
-                                    class="array_input" />
+                            <app-classification-icon [size]="16" [color]="'#ef4444'"></app-classification-icon>
+                            <input 
+                                [(ngModel)]="json[key][i]" 
+                                (blur)="notifyChanges()"
+                                class="array_input" />
                             </ng-container>
                             <app-delete-icon class="ml-2 mt-2" [size]="16" [color]="'#ef4444'" (click)="removeItemFromArray(json[key], i)"></app-delete-icon>
                         </div>
-                    </li>
-                </ol>
-            </ng-container>
-  
-            <!-- Als het een object (holds something) is -->
-            <ng-container *ngIf="isObject(json[key]) && !isArray(json[key])">
-              <app-json-editor [json]="json[key]" (jsonChanged)="onChildJsonChanged(key, $event)"></app-json-editor>
-
-            </ng-container>
-  
-          </div>
-        </li>
-      </ul>
+                        </li>
+                    </ol>
+                    </ng-container>
+                    <!-- If Child holds an object create a nested component -->
+                    <ng-container *ngIf="isObject(json[key]) && !isArray(json[key])">
+                        <app-json-editor [json]="json[key]" (jsonChanged)="onChildJsonChanged(key, $event)"></app-json-editor>
+                    </ng-container>
+                </ul>
+            </li>
+        </ul>
     </ng-container>
-  
-    <ng-container *ngIf="!isObject(json)">
-      <input 
-        [(ngModel)]="json" 
-        (ngModelChange)="notifyChanges()"
-        class="w-full px-3 py-2 border border-gray-300 rounded-md 
-               focus:outline-none focus:ring-2 focus:ring-[#019b98] focus:border-transparent
-               bg-white text-gray-900" />
-    </ng-container>
-</div>
-  
+</div> 

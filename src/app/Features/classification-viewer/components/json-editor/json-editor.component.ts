@@ -1,18 +1,16 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { EditIconComponent } from '@shared/components/edit-icon/edit-icon.component';
 import { DeleteIconComponent } from "@shared/components/delete-icon/delete-icon.component";
 import { ControlPanelForObjectsComponent } from "../control-panel-for-objects/control-panel-for-objects.component";
 import { ControlPanelForArraysComponent } from '../control-panel-for-arrays/control-panel-for-arrays.component';
 import { ClassificationIconComponent } from "@shared/components/classification-icon/classification-icon.component";
-import { ObjectWithObjectsIconComponent } from "@shared/components/object-with-objects-icon/object-with-objects-icon.component";
-import { ObjectWithClassificationsIconComponent } from "@shared/components/object-with-classifications-icon/object-with-classifications-icon.component";
+import { JsonKeyRowComponent } from "../json-key-row/json-key-row.component";
 
 @Component({
     selector: 'app-json-editor',
     standalone: true,
-    imports: [CommonModule, FormsModule, EditIconComponent, DeleteIconComponent, ControlPanelForObjectsComponent, ControlPanelForArraysComponent, ClassificationIconComponent, ObjectWithObjectsIconComponent, ObjectWithClassificationsIconComponent],
+    imports: [CommonModule, FormsModule, DeleteIconComponent, ControlPanelForObjectsComponent, ControlPanelForArraysComponent, ClassificationIconComponent, JsonKeyRowComponent],
     templateUrl: './json-editor.component.html',
     styleUrl: './json-editor.component.css'
 })
@@ -108,27 +106,30 @@ export class JsonEditorComponent implements OnInit {
      * @param obj - The object to add a property to.
      */
     addPropertyToObject(obj: any): void {
-        if (!this.isObject(obj)) return;
-
-        const newKey = `newProperty${Object.keys(obj).length}`;
-        obj[newKey] = "";
-        this.collapsedKeys[newKey] = false; // Expand the new property
+        if (!this.isArray(obj)) return;
+      
+        obj.push('New Item');
         this.notifyChanges();
-    }
+      }
 
+    
     /**
      * Adds a new category to the JSON structure.
      *
      * @param obj - The object to add a category to.
      * @param categoryName - The name of the category to add.
      */
-    addCategory(obj: any, categoryName: string): void {
-        if (!this.isObject(obj) || !categoryName.trim()) return
-
-        obj[categoryName] = {};
-        this.collapsedKeys[categoryName] = false; // Expand the new category
+    addCategory(obj: any): void {
+        if (!this.isObject(obj)) return;
+      
+        const baseName = 'New Category';
+        const newKey = this.generateUniqueKey(obj, baseName);
+      
+        obj[newKey] = {};
+        this.collapsedKeys[newKey] = false; // Expand the new category
         this.notifyChanges();
-    }
+      }
+      
 
     /**
      * Removes a property from an object in the JSON.
@@ -197,9 +198,118 @@ export class JsonEditorComponent implements OnInit {
         this.editingKeys[key] = !this.editingKeys[key];
     }
 
-    updateJsonArray(key: string, updatedArray: any[]): void {
-        this.json = { ...this.json, [key]: updatedArray }; // ES6 spread-syntax
+    updateJsonArray(key: string | null, newArray: any[]): void {
+        if (key === null) {
+          this.json = newArray;
+        } else {
+          this.json[key] = newArray;
+        }
+        this.notifyChanges();
+      }
+
+    /**
+     * Determines the type of a JSON node.
+     * @param value - The value to inspect.
+     * @returns 'object' | 'array' | 'primitive'
+     */
+    getObjectType(value: any): 'object' | 'array' | 'primitive' {
+        if (Array.isArray(value)) {
+        return 'array';
+        }
+        if (value !== null && typeof value === 'object') {
+        return 'object';
+        }
+        return 'primitive';
+    }
+
+    switchType(key: string): void {
+        const value = this.json[key];
+
+        if (this.isObject(value) && !this.isArray(value)) {
+            if (Object.keys(value).length === 0) {
+                this.json[key] = [];
+                this.notifyChanges();
+            } 
+            else {
+                console.warn('Cannot switch: object is not empty.');
+            }
+        } else if (this.isArray(value)) {
+            if (value.length === 0) {
+                this.json[key] = {};
+                this.notifyChanges();
+            } 
+            else {
+                console.warn('Cannot switch: array is not empty.');
+            }
+        } else {
+            console.warn('Cannot switch: value is neither object nor array.');
+        }
+    }
+
+      canSwitchType(value: any): boolean {
+        if (this.isObject(value) && !this.isArray(value)) {
+          return Object.keys(value).length === 0;
+        } else if (this.isArray(value)) {
+          return value.length === 0;
+        }
+        return false;
+      }
+
+    switchTypeOfParent(obj: any): void {
+        if (this.isObject(obj)) {
+            if (Object.keys(obj).length === 0) {
+                for (const key in obj) { // Object is empty → switch to array
+                    if (obj.hasOwnProperty(key)) {
+                        delete obj[key];
+                    }
+                }
+                Object.assign(obj, []); // Reassign to empty array
+            }
+        } 
+        else if (this.isArray(obj)) {
+            if (obj.length === 0) { // Array is empty → switch to object
+                obj.length = 0; // Clear array if needed
+                Object.assign(obj, {});
+            }
+        }
         this.notifyChanges();
     }
-      
+
+    /**
+     * Generates a unique key based on the base name and existing keys in the object.
+     *
+     * @param obj - The object to check for existing keys.
+     * @param baseName - The desired base name for the new key.
+     * @returns A unique key that does not conflict with existing keys.
+     */
+    generateUniqueKey(obj: any, baseName: string): string {
+        let counter = 1;
+        let newKey = baseName;
+        while (obj.hasOwnProperty(newKey)) {
+            newKey = `${baseName} (${counter})`;
+            counter++;
+        }
+        return newKey;
+    }
+
+    handleKeyAction(key: string, event: { type: string, payload?: any }): void {
+        switch (event.type) {
+            case 'toggle':
+                this.toggleCollapse(key);
+                break;
+            case 'edit':
+                this.changeEditing(key);
+                break;
+            case 'rename':
+                this.updatePropertyKey(this.json, key, event.payload);
+                this.editingKeys[key] = false;
+                break;
+            case 'delete':
+                this.removePropertyFromObject(this.json, key);
+                break;
+            case 'switch':
+                this.switchType(key);
+                break;
+        }
+    }
 }
