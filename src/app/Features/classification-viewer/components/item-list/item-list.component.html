@@ -1,28 +1,23 @@
-<div>
-    <app-control-panel-for-arrays
-      [data]="data"
-      (dataChanged)="dataChanged.emit($event)">
-    </app-control-panel-for-arrays>
-  
-    <ol class="orderd-array-items">
-      <li *ngFor="let item of data; let i = index; trackBy: trackByIndex" class="pl-1">
-        <div class="flex items-center">
+<ol>
+    <li class="tree-branch before:top-[1.1rem]">
+        <app-control-panel-for-arrays
+            [data]="data"
+            (dataChanged)="dataChanged.emit($event)">
+        </app-control-panel-for-arrays>
+    </li>
+    <li *ngFor="let item of data; let i = index; trackBy: trackByIndex" class="tree-branch before:top-[1.8rem]">
+        <!-- Item Row -->
+        <div class="flex items-center py-2">
+            <app-classification-icon [size]="24" [color]="'#ef4444'" class="mr-2"></app-classification-icon>
+            
+            <input [(ngModel)]="data[i]" (blur)="updateItem(i, data[i])"class="array_input" />
 
-            <app-classification-icon [size]="16" [color]="'#ef4444'"></app-classification-icon>
-            <input 
-              [(ngModel)]="data[i]" 
-              (blur)="updateItem(i, data[i])"
-              class="array_input" />
-
-  
-          <app-delete-icon 
-            class="ml-2 mt-2" 
-            [size]="16" 
-            [color]="'#ef4444'" 
-            (click)="removeItem(i)">
-          </app-delete-icon>
+            <app-delete-icon 
+                class="ml-2 mt-2" 
+                [size]="16" 
+                [color]="'#ef4444'" 
+                (click)="removeItem(i)">
+            </app-delete-icon>
         </div>
-      </li>
-    </ol>
-  </div>
-  
+    </li>
+</ol>

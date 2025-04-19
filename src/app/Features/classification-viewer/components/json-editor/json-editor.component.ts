@@ -1,10 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { DeleteIconComponent } from "@shared/components/delete-icon/delete-icon.component";
 import { ControlPanelForObjectsComponent } from "../control-panel-for-objects/control-panel-for-objects.component";
-import { ControlPanelForArraysComponent } from '../control-panel-for-arrays/control-panel-for-arrays.component';
-import { ClassificationIconComponent } from "@shared/components/classification-icon/classification-icon.component";
+
 import { JsonKeyRowComponent } from "../json-key-row/json-key-row.component";
 import { ItemListComponent } from "../item-list/item-list.component";
 
@@ -215,10 +213,10 @@ export class JsonEditorComponent implements OnInit {
      */
     getObjectType(value: any): 'object' | 'array' | 'primitive' {
         if (Array.isArray(value)) {
-        return 'array';
+            return 'array';
         }
         if (value !== null && typeof value === 'object') {
-        return 'object';
+            return 'object';
         }
         return 'primitive';
     }

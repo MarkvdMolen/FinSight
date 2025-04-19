@@ -1,0 +1,9 @@
+.tree-root {
+    @apply
+    relative ml-4 border-l-2 border-gray-300
+}
+
+.tree-branch {
+    @apply
+    relative pl-6 before:absolute before:top-[1.1rem] before:left-[0rem] before:w-6 before:h-0.5 before:bg-gray-300
+}

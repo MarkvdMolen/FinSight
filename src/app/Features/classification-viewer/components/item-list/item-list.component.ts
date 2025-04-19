@@ -36,6 +36,5 @@ export class ItemListComponent {
 
     trackByIndex(index: number, item: any): number {
         return index;
-      }
-      
+    }  
 }

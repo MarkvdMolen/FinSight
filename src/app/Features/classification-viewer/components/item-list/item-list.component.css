@@ -5,7 +5,7 @@
     bg-white text-gray-900
 }
 
-.orderd-array-items {
+.tree-branch {
     @apply
-    list-decimal ml-5 space-y-2
+    relative pl-6 before:absolute before:left-[0rem] before:w-6 before:h-0.5 before:bg-gray-300
 }
