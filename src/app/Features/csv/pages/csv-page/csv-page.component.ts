@@ -6,11 +6,12 @@ import { CsvTableComponent } from "@features/csv/components/csv-table/csv-table.
 import { MissingFilesComponent } from "@shared/components/missing-files/missing-files.component";
 import { TransactionService } from '@shared/services/transaction.service';
 import { SearchBarComponent } from "@shared/components/search-bar/search-bar.component";
+import { ClassificationOverviewComponent } from "@shared/components/classification-overview/classification-overview.component";
 
 @Component({
   selector: 'app-csv-page',
   standalone: true,
-  imports: [CommonModule, DefaultButtonComponent, CsvUploadComponent, CsvTableComponent, MissingFilesComponent, SearchBarComponent], 
+  imports: [CommonModule, DefaultButtonComponent, CsvUploadComponent, CsvTableComponent, MissingFilesComponent, SearchBarComponent, ClassificationOverviewComponent], 
   templateUrl: './csv-page.component.html',
   styleUrls: ['./csv-page.component.css']
 })

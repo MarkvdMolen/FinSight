@@ -54,68 +54,76 @@
     </thead>
     <tbody>
         <tr *ngFor="let transaction of transactions">
-            <td>{{ transaction.transactions_id }}</td>
+            <td>{{ transaction.transactionsId }}</td>
             <!-- Account -->
-            <td *ngIf="!editingTransaction || editingTransaction.transactions_id !== transaction.transactions_id">
+            <td *ngIf="!editingTransaction || editingTransaction.transactionsId !== transaction.transactionsId">
                 {{ transaction.account }}
             </td>
-            <td *ngIf="editingTransaction && editingTransaction.transactions_id === transaction.transactions_id">
+            <td *ngIf="editingTransaction && editingTransaction.transactionsId === transaction.transactionsId">
                 <input [(ngModel)]="editingTransaction.account">
             </td>
             <!-- Recipient -->
-            <td *ngIf="!editingTransaction || editingTransaction.transactions_id !== transaction.transactions_id">
+            <td *ngIf="!editingTransaction || editingTransaction.transactionsId !== transaction.transactionsId">
                 {{ transaction.recipient }}
             </td>
-            <td *ngIf="editingTransaction && editingTransaction.transactions_id === transaction.transactions_id">
+            <td *ngIf="editingTransaction && editingTransaction.transactionsId === transaction.transactionsId">
                 <input [(ngModel)]="editingTransaction.recipient">
             </td>
             <!-- Description -->
-            <td *ngIf="!editingTransaction || editingTransaction.transactions_id !== transaction.transactions_id">
+            <td *ngIf="!editingTransaction || editingTransaction.transactionsId !== transaction.transactionsId">
                 {{ transaction.description }}
             </td>
-            <td *ngIf="editingTransaction && editingTransaction.transactions_id === transaction.transactions_id">
+            <td *ngIf="editingTransaction && editingTransaction.transactionsId === transaction.transactionsId">
                 <input [(ngModel)]="editingTransaction.description">
             </td>
             <!-- Category -->
             <td
-              *ngIf="!editingTransaction || editingTransaction.transactions_id !== transaction.transactions_id"
-              [ngClass]="{ 'bg-yellow-100': ruleBasedColoring[transaction.transactions_id] }"
+              *ngIf="!editingTransaction || editingTransaction.transactionsId !== transaction.transactionsId"
+              [ngClass]="{ 'bg-yellow-100': ruleBasedColoring[transaction.transactionsId] }"
             >
               {{ transaction.category }}
             </td>
-            <td *ngIf="editingTransaction && editingTransaction.transactions_id === transaction.transactions_id">
+            <td *ngIf="editingTransaction && editingTransaction.transactionsId === transaction.transactionsId">
                 <input [(ngModel)]="editingTransaction.category">
             </td>
             <!-- Amount -->
-            <td *ngIf="!editingTransaction || editingTransaction.transactions_id !== transaction.transactions_id">
+            <td *ngIf="!editingTransaction || editingTransaction.transactionsId !== transaction.transactionsId">
                 {{ transaction.amount | currency:'EUR' }}
             </td>
-            <td *ngIf="editingTransaction && editingTransaction.transactions_id === transaction.transactions_id">
+            <td *ngIf="editingTransaction && editingTransaction.transactionsId === transaction.transactionsId">
                 <input type="number" [(ngModel)]="editingTransaction.amount">
             </td>
             <!-- Date -->
-            <td *ngIf="!editingTransaction || editingTransaction.transactions_id !== transaction.transactions_id">
+            <td *ngIf="!editingTransaction || editingTransaction.transactionsId !== transaction.transactionsId">
                 {{ transaction.date | date }}
             </td>
-            <td *ngIf="editingTransaction && editingTransaction.transactions_id === transaction.transactions_id">
+            <td *ngIf="editingTransaction && editingTransaction.transactionsId === transaction.transactionsId">
                 <input [(ngModel)]="editingTransaction.date" type="date">
             </td>
 
             <!-- Actions -->
             <td>
-                <a *ngIf="!editingTransaction || editingTransaction.transactions_id !== transaction.transactions_id"
+                <a *ngIf="!editingTransaction || editingTransaction.transactionsId !== transaction.transactionsId"
                     class="edit"
                     (click)="editTransaction(transaction)">Edit</a>
-                <a *ngIf="editingTransaction && editingTransaction.transactions_id === transaction.transactions_id"
+                <a *ngIf="editingTransaction && editingTransaction.transactionsId === transaction.transactionsId"
                     class="save"
                     (click)="saveTransaction()">Save</a>
-                <a *ngIf="editingTransaction && editingTransaction.transactions_id === transaction.transactions_id"
+                <a *ngIf="editingTransaction && editingTransaction.transactionsId === transaction.transactionsId"
                     class="cancel"
                     (click)="cancelEdit()">Cancel</a>
             </td>
         </tr>              
     </tbody>
 </table>
+
+<mat-paginator
+  [length]="totalRecords"
+  [pageSize]="pageSize"
+  [pageSizeOptions]="[5, 10, 25, 50]"
+  (page)="onPageChange($event)">
+</mat-paginator>
+
 <button (click)="classifyAll()" class="mb-4 bg-blue-500 text-white px-4 py-2 rounded">Classificeer alles</button>
 <button (click)="pushAllTransactions()" class="mb-4 bg-green-600 text-white px-4 py-2 rounded ml-2">
   Opslaan naar database
