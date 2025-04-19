@@ -1,28 +1,4 @@
-<div>
-    <!-- Als json een array is -->
-    <ng-container *ngIf="isArray(json)">
-        
-      <app-control-panel-for-arrays
-        [data]="json"
-        (dataChanged)="updateJsonArray(null, $event)">
-      </app-control-panel-for-arrays>
-  
-      <ol class="orderd-array-items">
-        <li *ngFor="let item of json; let i = index; trackBy: trackByIndex" class="pl-1">
-          <div class="flex items-center">
-            <ng-container *ngIf="!isObject(item)">
-              <app-classification-icon [size]="16" [color]="'#ef4444'"></app-classification-icon>
-              <input 
-                [(ngModel)]="json[i]" 
-                (blur)="notifyChanges()"
-                class="array_input" />
-            </ng-container>
-            <app-delete-icon class="ml-2 mt-2" [size]="16" [color]="'#ef4444'" (click)="removeItemFromArray(json, i)"></app-delete-icon>
-          </div>
-        </li>
-      </ol>
-    </ng-container>
-  
+<div>  
     <!-- If parent holds objects -->
     <ng-container *ngIf="isObject(json)">
         <div class="relative ml-4 border-l-2 border-gray-300 h-4"></div>
@@ -52,25 +28,10 @@
                 <ul *ngIf="!isCollapsed(key)" class="mt-1 mb-2">
                     <!-- If Child is holds an array its the end node-->
                     <ng-container *ngIf="isArray(json[key])">
-                    <app-control-panel-for-arrays
-                        [data]="json[key]"
-                        (dataChanged)="updateJsonArray(key, $event)">
-                    </app-control-panel-for-arrays>
-        
-                    <ol class="orderd-array-items">
-                        <li *ngFor="let item of json[key]; let i = index; trackBy: trackByIndex" class="pl-1">
-                        <div class="flex items-center">
-                            <ng-container *ngIf="!isObject(item)">
-                            <app-classification-icon [size]="16" [color]="'#ef4444'"></app-classification-icon>
-                            <input 
-                                [(ngModel)]="json[key][i]" 
-                                (blur)="notifyChanges()"
-                                class="array_input" />
-                            </ng-container>
-                            <app-delete-icon class="ml-2 mt-2" [size]="16" [color]="'#ef4444'" (click)="removeItemFromArray(json[key], i)"></app-delete-icon>
-                        </div>
-                        </li>
-                    </ol>
+                        <app-item-list
+                            [data]="json[key]"
+                            (dataChanged)="updateJsonArray(key, $event)">
+                        </app-item-list>
                     </ng-container>
                     <!-- If Child holds an object create a nested component -->
                     <ng-container *ngIf="isObject(json[key]) && !isArray(json[key])">

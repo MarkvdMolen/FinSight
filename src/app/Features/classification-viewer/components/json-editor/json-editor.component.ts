@@ -6,11 +6,12 @@ import { ControlPanelForObjectsComponent } from "../control-panel-for-objects/co
 import { ControlPanelForArraysComponent } from '../control-panel-for-arrays/control-panel-for-arrays.component';
 import { ClassificationIconComponent } from "@shared/components/classification-icon/classification-icon.component";
 import { JsonKeyRowComponent } from "../json-key-row/json-key-row.component";
+import { ItemListComponent } from "../item-list/item-list.component";
 
 @Component({
     selector: 'app-json-editor',
     standalone: true,
-    imports: [CommonModule, FormsModule, DeleteIconComponent, ControlPanelForObjectsComponent, ControlPanelForArraysComponent, ClassificationIconComponent, JsonKeyRowComponent],
+    imports: [CommonModule, FormsModule, ControlPanelForObjectsComponent, JsonKeyRowComponent, ItemListComponent],
     templateUrl: './json-editor.component.html',
     styleUrl: './json-editor.component.css'
 })
