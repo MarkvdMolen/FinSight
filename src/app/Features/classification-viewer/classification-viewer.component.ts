@@ -2,11 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { JsonEditorComponent } from "./components/json-editor/json-editor.component";
 import { ClassificationService } from '@shared/services/classification.service';
 import { CommonModule } from '@angular/common';
+import { ObjectWithObjectsIconComponent } from "@shared/components/object-with-objects-icon/object-with-objects-icon.component";
 
 @Component({
   selector: 'app-classification-viewer',
   standalone: true,
-  imports: [JsonEditorComponent, CommonModule],
+  imports: [JsonEditorComponent, CommonModule, ObjectWithObjectsIconComponent],
   templateUrl: './classification-viewer.component.html',
   styleUrl: './classification-viewer.component.css'
 })

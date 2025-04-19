@@ -1,12 +1,6 @@
-<div class="flex flex-row gap-2 mt-4">
-      <!-- Type Indicator -->
-    <div class="flex items-center gap-2 text-sm text-gray-700 mb-2">
-        <app-object-with-objects-icon [size]="24" [color]="'#019b98'"></app-object-with-objects-icon>
-    </div>
-    <!-- Buttons for adding category or property -->
-    <div class="flex gap-2">
-        <button (click)="addCategory()" class="px-3 py-1 bg-[#019b98] text-white rounded-md hover:bg-[#017f7d] transition-colors text-sm">
-            Add Subcategory
-        </button>
-    </div>
+<div class="control_panel_layout">
+    <app-settings-icon [size]="32" [color]="'#019b98'"></app-settings-icon>
+    <button (click)="addCategory()">
+        Add Category
+    </button>
 </div>

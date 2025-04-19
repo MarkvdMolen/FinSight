@@ -1,11 +1,11 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { ObjectWithObjectsIconComponent } from "@shared/components/object-with-objects-icon/object-with-objects-icon.component";
+import { SettingsIconComponent } from "@shared/components/settings-icon/settings-icon.component";
 
 @Component({
   selector: 'app-control-panel-for-objects',
   standalone: true,
-  imports: [CommonModule, ObjectWithObjectsIconComponent],
+  imports: [CommonModule, SettingsIconComponent],
   templateUrl: './control-panel-for-objects.component.html',
   styleUrl: './control-panel-for-objects.component.css'
 })
