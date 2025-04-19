@@ -1,14 +1,8 @@
-<div class="flex justify-between items-center mb-2">
-    <div class="flex space-x-2">
+<div class="control_panel_layout">
+    <app-settings-icon [size]="32" [color]="'#019b98'"></app-settings-icon>
     <button 
-        (click)="addItem('string')"
+        (click)="addItem()"
         class="px-2 py-1 bg-[#019b98] text-white rounded-md hover:bg-[#017f7d] transition-colors text-xs">
         Add Item
     </button>
-    <button 
-        (click)="addItem('object')"  
-        class="px-2 py-1 bg-[#019b98] text-white rounded-md hover:bg-[#017f7d] transition-colors text-xs">
-        Add Category
-    </button>
-    </div>
 </div>
