@@ -6,6 +6,7 @@
     <div *ngIf="activeSection === 'overview'" class="mt-8">
         <ng-container *ngIf="this.getData(); else noData">
             <app-search-bar></app-search-bar>
+            <app-classification-overview></app-classification-overview>
             <app-csv-table></app-csv-table>
         </ng-container>
         <ng-template #noData>

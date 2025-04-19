@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { map, Observable, of } from 'rxjs';
 import { Transaction } from '@shared/models/transaction.model';
+import { TransactionResponse } from '@shared/models/transaction-response.model';
+import { ClassificationObject } from '@shared/models/classification-object.model';
 
 const BASE_URL = 'http://localhost:8080/api/transactions';
 
@@ -13,6 +15,7 @@ export class TransactionService {
 
   public hasData: boolean = false;
   private cacheKey = 'transactionsCache';
+  private cachedTransactions: TransactionResponse | undefined;
   
 
   constructor(private http: HttpClient) { }
@@ -25,33 +28,58 @@ export class TransactionService {
     * @param page The page number for pagination.
     * @param size The number of items per page.
     */
-    getTransactions(sortBy: string = 'date', direction: string = 'asc', filter: string = '', page: number = 0, size: number = 10): Observable<any[]> {
-        const cachedData = this.getCachedTransactions();
-        if (cachedData) {
-            // TODO REMOVE LOGGING AFTER COMPLETION
-            console.log('Using cached data:', cachedData);
-            return of(cachedData);
-        } 
-        else {
-            const url = `${BASE_URL}`;
-            let params = new HttpParams()
-                .set('sort', sortBy)
-                .set('direction', direction)
-                .set('filter', filter)
-                .set('page', page.toString())
-                .set('size', size.toString());
+    // getTransactions(sortBy: string = 'date', direction: string = 'asc', filter: string = '', page: number = 0, size: number = 10): Observable<any[]> {
+    //     const cachedData = this.getCachedTransactions();
+    //     if (cachedData) {
+    //         // TODO REMOVE LOGGING AFTER COMPLETION
+    //         console.log('Using cached data:', cachedData);
+    //         return of(cachedData);
+    //     } 
+    //     else {
+    //         const url = `${BASE_URL}`;
+    //         let params = new HttpParams()
+    //             .set('sort', sortBy)
+    //             .set('direction', direction)
+    //             .set('filter', filter)
+    //             .set('page', page.toString())
+    //             .set('size', size.toString());
 
-            // extract `content` from the response json
-            return this.http.get<any>(url, { params }).pipe(
-                map(response => response.content)  
-            );
-        }
-    }
+    //         // extract `content` from the response json
+    //         return this.http.get<any>(url, { params }).pipe(
+    //             map(response => response.content)  
+    //         );
+    //     }
+    // }
+
+	getTransactions(sortBy: string = 'date', direction: string = 'asc', filter: string = '', page: number = 0, size: number = 10): Observable<TransactionResponse> {
+		const cachedData = this.getCachedTransactions();
+		if (cachedData) {
+		  // TODO REMOVE LOGGING AFTER COMPLETION
+		  console.log('Using cached data:', cachedData);
+		  return of(cachedData);
+		}
+		else {
+		  const url = `${BASE_URL}`;
+		  let params = new HttpParams()
+			.set('sort', sortBy)
+			.set('direction', direction)
+			.set('filter', filter)
+			.set('page', page.toString())
+			.set('size', size.toString());
+	
+		  return this.http.get<TransactionResponse>(url, { params });
+		}
+	  }
 
 
     pushAllTransactions(transactions: Transaction[]): Observable<any> {
-      return this.http.post(`${BASE_URL}/bulk-update`, transactions);
+    	return this.http.post(`${BASE_URL}/bulk-update`, transactions);
     }
+
+    getCategorizedCount(): Observable<ClassificationObject> {
+        return this.http.get<ClassificationObject>(`${BASE_URL}/count-categorized`);
+    }
+      
     
 
 
@@ -83,7 +111,7 @@ export class TransactionService {
    * Retrieve cached transactions from localStorage.
    * @returns Cached transactions or null if the cache is invalid.
    */
-  getCachedTransactions(): any[] | null {
+  getCachedTransactions(): TransactionResponse | undefined {
     const cached = localStorage.getItem(this.cacheKey);
     if (cached) {
       const parsed = JSON.parse(cached);
@@ -95,7 +123,7 @@ export class TransactionService {
         this.clearCache();
       }
     }
-    return null;
+    return this.cachedTransactions;
   }
 
   /**
@@ -110,7 +138,7 @@ export class TransactionService {
    */
   checkData() {
     this.getTransactions().subscribe(transactions => {
-      if (transactions && transactions.length > 0) {
+      if (transactions && transactions.content.length > 0) {
         this.hasData = true;
       } else {
         this.hasData = false;
