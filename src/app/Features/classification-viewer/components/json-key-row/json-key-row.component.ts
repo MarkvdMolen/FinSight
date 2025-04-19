@@ -1,18 +1,21 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { DeleteIconComponent } from "../../../../Shared/components/delete-icon/delete-icon.component";
-import { EditIconComponent } from "../../../../Shared/components/edit-icon/edit-icon.component";
-import { ToggleCollapseButtonComponent } from "../../../../Shared/components/toggle-collapse-button/toggle-collapse-button.component";
 import { CommonModule } from '@angular/common';
+import { DeleteIconComponent } from "@shared/components/delete-icon/delete-icon.component";
+import { EditIconComponent } from "@shared/components/edit-icon/edit-icon.component";
+import { ToggleCollapseButtonComponent } from "@shared/components/toggle-collapse-button/toggle-collapse-button.component";
+import { ObjectWithObjectsIconComponent } from "@shared/components/object-with-objects-icon/object-with-objects-icon.component";
+import { ObjectWithClassificationsIconComponent } from "@shared/components/object-with-classifications-icon/object-with-classifications-icon.component";
 
 @Component({
   selector: 'app-json-key-row',
   standalone: true,
-  imports: [CommonModule, DeleteIconComponent, EditIconComponent, ToggleCollapseButtonComponent],
+  imports: [CommonModule, DeleteIconComponent, EditIconComponent, ToggleCollapseButtonComponent, ObjectWithObjectsIconComponent, ObjectWithClassificationsIconComponent],
   templateUrl: './json-key-row.component.html',
   styleUrl: './json-key-row.component.css'
 })
 export class JsonKeyRowComponent {
     @Input() keyName: string = '';
+    @Input() value: string = '';
     @Input() collapsed: boolean = false;
     @Input() editing: boolean = false;
     @Input() canSwitch: boolean = false;
@@ -38,4 +41,11 @@ export class JsonKeyRowComponent {
     onSwitchType() {
         this.action.emit({ type: 'switch' });
     }
-  }
+
+    getObjectType(value: any): 'object' | 'array' {
+        if (Array.isArray(value)) {
+            return 'array';
+        }
+            return 'object';
+    }
+}

@@ -1,4 +1,9 @@
 <div class="flex items-center py-1">
+    <ng-container [ngSwitch]="getObjectType(value)">
+        <app-object-with-classifications-icon *ngSwitchCase="'array'" [size]="32" [color]="'#019b98'"></app-object-with-classifications-icon>
+        <app-object-with-objects-icon *ngSwitchCase="'object'" [size]="32" [color]="'#019b98'"></app-object-with-objects-icon>
+    </ng-container>
+
     <app-toggle-collapse-button
         [collapsed]="collapsed"
         (toggleClicked)="onToggleCollapse()">
@@ -34,4 +39,4 @@
     <button *ngIf="canSwitch" (click)="onSwitchType()" class="ml-2 px-2 py-1 text-xs bg-blue-500 text-white rounded hover:bg-blue-600">
         Switch Type
     </button>
-  </div>  
+</div>  
