@@ -52,13 +52,13 @@ export class TransactionService {
     // }
 
 	getTransactions(sortBy: string = 'date', direction: string = 'asc', filter: string = '', page: number = 0, size: number = 10): Observable<TransactionResponse> {
-		const cachedData = this.getCachedTransactions();
-		if (cachedData) {
-		  // TODO REMOVE LOGGING AFTER COMPLETION
-		  console.log('Using cached data:', cachedData);
-		  return of(cachedData);
-		}
-		else {
+		// const cachedData = this.getCachedTransactions();
+		// if (cachedData) {
+		//   // TODO REMOVE LOGGING AFTER COMPLETION
+		//   console.log('Using cached data:', cachedData);
+		//   return of(cachedData);}
+		
+		// else {
 		  const url = `${BASE_URL}`;
 		  let params = new HttpParams()
 			.set('sort', sortBy)
@@ -68,12 +68,12 @@ export class TransactionService {
 			.set('size', size.toString());
 	
 		  return this.http.get<TransactionResponse>(url, { params });
-		}
+		// }
 	  }
 
 
     pushAllTransactions(transactions: Transaction[]): Observable<any> {
-    	return this.http.post(`${BASE_URL}/bulk-update`, transactions);
+    	return this.http.post<Transaction[]>(`${BASE_URL}/bulk-update`, transactions);
     }
 
     getCategorizedCount(): Observable<ClassificationObject> {
@@ -98,14 +98,16 @@ export class TransactionService {
     localStorage.setItem(this.cacheKey, JSON.stringify(dataToCache));
   }
 
-  /**
-   * Update a specific transaction via PUT request.
-   * @param transaction The transaction to update.
-   */
-  updateTransaction(transaction: any): Observable<any> {
-    const url = `http://localhost:8080/api/transactions/${transaction.transactions_id}`;
-    return this.http.put(url, transaction);  // Perform PUT request
-  }
+    /**
+     * Update a specific transaction via PUT request.
+     * @param transaction The transaction to update.
+     */
+    updateTransaction(transaction: Transaction): Observable<Transaction> {
+        console.log('Request payload:', transaction);
+        const url = `${BASE_URL}/${transaction.transactionsId}`;
+        return this.http.put<Transaction>(url, transaction);
+      }
+      
 
   /**
    * Retrieve cached transactions from localStorage.

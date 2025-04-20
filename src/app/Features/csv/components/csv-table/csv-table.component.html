@@ -76,6 +76,15 @@
             <td *ngIf="editingTransaction && editingTransaction.transactionsId === transaction.transactionsId">
                 <input [(ngModel)]="editingTransaction.description">
             </td>
+            <td
+                [ngClass]="{
+                'text-red-700': transaction.classificationSource === 0,
+                'text-green-600': transaction.classificationSource === 1,
+                'text-yellow-600': transaction.classificationSource === 2,
+                'text-orange-600': transaction.classificationSource === 3
+              }">
+            {{ classificationLabels[transaction.classificationSource] }}
+            </td>
             <!-- Category -->
             <td
               *ngIf="!editingTransaction || editingTransaction.transactionsId !== transaction.transactionsId"

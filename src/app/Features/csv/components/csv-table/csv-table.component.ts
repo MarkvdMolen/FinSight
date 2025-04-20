@@ -46,6 +46,7 @@ export class CsvTableComponent implements OnInit {
         { key: 'account', label: 'Account' },
         { key: 'recipient', label: 'Recipient' },
         { key: 'description', label: 'Description' },
+        { key: 'classificationSource', label: 'Classification Type' },
         { key: 'category', label: 'Category' },
         { key: 'amount', label: 'Amount' },
         { key: 'date', label: 'Date' }
@@ -61,6 +62,7 @@ export class CsvTableComponent implements OnInit {
     pageIndex: number = 0;  
     pageSize: number = 10;  
     totalRecords: number = 0;
+    classificationLabels = ['Ongeclassificeerd','Manueel','Rule‑based','ML'];
 
     @ViewChild(MatPaginator) paginator!: MatPaginator;
     private transactionService = inject(TransactionService);
@@ -178,6 +180,7 @@ export class CsvTableComponent implements OnInit {
                 const match = this.ruleBasedMatch(t.description, t.recipient); // Check if there is a match
                 if(match) { // If there is a match then
                     t.category = match.subcategory; // Replace the empty value with a category
+                    t.classificationSource = 2;
                     this.ruleBasedColoring[t.transactionsId] = true; // and set Color
                 }
             }
@@ -217,55 +220,51 @@ export class CsvTableComponent implements OnInit {
         this.fetchTransactions();  // Re-fetch sorted data
     }
 
-  /**
-   * Applies a filter and fetches the filtered data.
-   * @param criteria The filtering criteria to apply.
-   */
-  applyFilter(criteria: string) {
-    this.filterCriteria = criteria;
-    // this.fetchTransactions();  // Re-fetch filtered data
-  }
-
-  /**
-   * Handles pagination change.
-   * @param page The new page to navigate to.
-   */
-  changePage(page: number) {
-    // this.currentPage = page;
-    // this.fetchTransactions();  // Re-fetch paginated data
-  }
-
-  /**
-   * Initiates editing of a transaction.
-   * @param {Transaction} transaction - The transaction to edit.
-   */
-  editTransaction(transaction: Transaction) {
-    this.editingTransaction = { ...transaction };  // Deep copy to avoid mutating the original object before saving
-  }
+    /**
+     * Initiates editing of a transaction.
+     * @param {Transaction} transaction - The transaction to edit.
+     */
+    editTransaction(transaction: Transaction) {
+        this.editingTransaction = { ...transaction };  // Deep copy to avoid mutating the original object before saving
+    }
 
   /**
    * Saves the edited transaction.
    * Updates the transaction via the service and refreshes the local data.
    */
-  saveTransaction() {
-    if (this.editingTransaction) {
-      this.transactionService.updateTransaction(this.editingTransaction).subscribe((updatedTransaction: Transaction) => {
-        const index = this.transactions.findIndex(t => t.transactionsId === updatedTransaction.transactionsId);
-        if (index !== -1) {
-          this.transactions[index] = updatedTransaction;
-        }
-        this.editingTransaction = null;
+    saveTransaction(): void {
+        if (!this.editingTransaction) return;   // Guard Clause
+    
+        this.editingTransaction.classificationSource = 1; // Set to Manually edited
+    
+        this.transactionService.updateTransaction(this.editingTransaction).subscribe({
+            next: (updatedTransaction: Transaction) => {
+                console.log('API response:', updatedTransaction);
 
-        // Update the cache with the modified transactions
-        this.transactionService.cacheTransactions(this.transactions);
-      });
+                const index = this.transactions.findIndex(
+                    t => t.transactionsId === updatedTransaction.transactionsId
+                );
+
+                if (index !== -1) {
+                    this.transactions[index] = updatedTransaction;
+                } 
+                else {
+                    console.warn(`Kon transactie met ID ${updatedTransaction.transactionsId} niet vinden in de bestaande lijst.`);
+                }
+
+                this.editingTransaction = null;
+                this.transactionService.cacheTransactions(this.transactions);
+            },
+            error: err => {
+                console.error('Kon niet opslaan', err);
+            }
+        });
     }
-  }
-
-  /**
-   * Cancels the editing process.
-   */
-  cancelEdit() {
-    this.editingTransaction = null;
-  }
+  
+    /**
+     * Cancels the editing process.
+     */
+    cancelEdit() {
+        this.editingTransaction = null;
+    }
 }
