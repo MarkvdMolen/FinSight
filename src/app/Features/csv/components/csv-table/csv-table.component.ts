@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, AfterViewInit, inject } from '@angular/core';
+import { Component, OnInit, ViewChild, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
@@ -7,23 +7,12 @@ import { MatPaginatorModule, MatPaginator, PageEvent } from '@angular/material/p
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { Subscription, tap, catchError, of } from 'rxjs';
-
 // Shared imports
 import { TransactionService } from '@shared/services/transaction.service';
 import { Transaction } from '@shared/models/transaction.model';
-import rawClassifications from '../../../../../../public/classifications.json'
 import { TransactionResponse } from '@shared/models/transaction-response.model';
 import { MatchResult } from '@shared/models/match-result.model';
-
-type Classifications = {
-    [hoofdtype: string]: {
-      [categorie: string]: {
-        [subcategorie: string]: string[]
-      }
-    }
-  };
-  
-const classifications: Classifications = rawClassifications;
+import { ClassificationService } from '@shared/services/classification.service';
 
 @Component({
     selector: 'app-csv-table',
@@ -62,15 +51,20 @@ export class CsvTableComponent implements OnInit {
     pageIndex: number = 0;  
     pageSize: number = 10;  
     totalRecords: number = 0;
-    classificationLabels = ['Ongeclassificeerd','Manueel','Rule‑based','ML'];
+    classifications: any;  // de JSON-structuur uit MongoDB
+    classificationLabels = ['Unclassified','Manual','Rule‑based','ML'];
 
-    @ViewChild(MatPaginator) paginator!: MatPaginator;
     private transactionService = inject(TransactionService);
+    private classificationService = inject(ClassificationService);
 	private transactionSubscription: Subscription | undefined;
 
     ngOnInit() {
         this.fetchTransactions();
+        this.classificationService.getClassifications().subscribe(data => {
+            this.classifications = data; // Fetch JSON from DB
+        }); 
     }
+
     ngAfterViewInit() {
         // Paginator binding (optioneel)
     }
@@ -132,56 +126,62 @@ export class CsvTableComponent implements OnInit {
 		).subscribe();
 	}
 
-    /**
-     * Doorzoekt de classificatieregels op basis van tekst in de transactie-omschrijving
-     * en tegenpartij, en retourneert de eerste match.
-     *
-     * - Combineert `description` en `recipient` tot één zoekbare tekststring.
-     * - Vergelijkt deze tekst met alle trefwoorden in de JSON-classificatiestructuur.
-     * - Doorloopt de hiërarchie: hoofdtype → categorie → subcategorie → trefwoord.
-     * - Zodra een trefwoord voorkomt in de tekst, retourneert het matchresultaat.
-     * - Als er geen match is, retourneert de functie `null`.
-     * 
-     * MAP GEBRUIKEN? KIJKEN OF DE NESTED FOR LOOP ER UIT KAN
-     *
-     * @param description - De omschrijving van de transactie (bijv. uit de bankregel).
-     * @param recipient - De tegenpartij of ontvanger van de transactie.
-     * @returns Een object met de gevonden match { soort, categorie, subcategorie, match }
-     *          of `null` als er geen match is gevonden.
-     */
-    ruleBasedMatch(description: string, recipient: string): MatchResult | null {
-        const transaction_data = `${description} ${recipient}`.toLowerCase();
+    // 2) Recursieve helper: doorloop de tree, zoek een match in leaf-arrays
+    private searchNode(node: any, path: string[], text: string): { path: string[]; match: string } | null {
+        for (const key of Object.keys(node)) {
+            const value = node[key];
+            const newPath = [...path, key];
 
-        for (const type in classifications) {
-            for (const category in classifications[type]) {
-                for (const subcategory in classifications[type][category]) {
-                    for (const trefwoord of classifications[type][category][subcategory]) {
-                        if (transaction_data.includes(trefwoord.toLowerCase())) {
-                            return {
-                                type: type,
-                                category,
-                                subcategory,
-                                match: trefwoord
-                            };
-                        }
+            if (Array.isArray(value)) {
+                // we zitten op een leaf: een array van keywords
+                for (const kw of value) {
+                    if (text.includes(kw.toLowerCase())) {
+                        return { path: newPath, match: kw };
                     }
                 }
+            } 
+            else if (value && typeof value === 'object') {
+                // geneste map: duik dieper
+                const found = this.searchNode(value, newPath, text);
+                if (found) {
+                    return found;
+                }
             }
+            // anders: skip niet-array, niet-object (bv. string/number)
         }
         return null;
+    }
+
+    // 3) Pas ruleBasedMatch aan zodat het de structuur gebruikt
+    ruleBasedMatch(description: string, recipient: string): MatchResult | null {
+        if (!this.classifications) return null;  // nog niet ingeladen
+       
+        const text = `${description} ${recipient}`.toLowerCase();
+        const result = this.searchNode(this.classifications, [], text);
+       
+        if (!result) { return null; }
+        
+        const { path, match } = result; // Match variables to return type of searchNode
+
+        return {
+          type: path[0],
+          category: path[1] || path[0],
+          subcategory: path[path.length - 1],
+          match
+        };
     }
 
     /**
      * Execute rule-based classification on all Transactions that dont have a category.
      */
     classifyAll(): void {
-        for (let t of this.transactions) {
-            if (!t.category || t.category.trim() === '') { // If Category is Empty then
-                const match = this.ruleBasedMatch(t.description, t.recipient); // Check if there is a match
-                if(match) { // If there is a match then
-                    t.category = match.subcategory; // Replace the empty value with a category
-                    t.classificationSource = 2;
-                    this.ruleBasedColoring[t.transactionsId] = true; // and set Color
+        for (const transaction of this.transactions) {
+            if (!transaction.category?.trim()) {
+                const match = this.ruleBasedMatch(transaction.description, transaction.recipient);
+                if (match) {
+                    transaction.category = match.subcategory; // Might want to edit
+                    transaction.classificationSource = 2;
+                    this.ruleBasedColoring[transaction.transactionsId] = true;
                 }
             }
         }
