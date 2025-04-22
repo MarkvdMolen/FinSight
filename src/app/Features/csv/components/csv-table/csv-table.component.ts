@@ -116,6 +116,8 @@ export class CsvTableComponent implements OnInit {
 	 */
 	fetchTransactions(): void {
         this.isLoading = true;
+        this.ruleBasedColoring = {};
+		this.ngOnDestroy();
 
         const page = this.paginator ? this.paginator.pageIndex : 0;
         const size = this.paginator ? this.paginator.pageSize : 10;
