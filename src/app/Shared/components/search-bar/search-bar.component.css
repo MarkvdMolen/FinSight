@@ -1,6 +1,21 @@
+.search_bar {
+    @apply
+    relative mb-4 max-w-md
+}
+
+.search_bar_inside {
+    @apply
+    flex items-center 
+    w-full overflow-hidden 
+    rounded-md border border-[#019b98] bg-white 
+}
+
 .search_input {
     @apply
-    block p-2 ps-10 text-sm 
-    text-gray-900 border border-gray-300 rounded-lg w-80 
-    bg-gray-50 focus:ring-blue-500 focus:border-blue-500
+    w-full py-2 px-3 text-sm text-gray-900 border-0 focus:outline-none focus:ring-0
+}
+
+.search_btn {
+    @apply
+    px-4 py-2 bg-[#019b98] text-white font-medium text-sm hover:bg-[#017f7d]
 }
