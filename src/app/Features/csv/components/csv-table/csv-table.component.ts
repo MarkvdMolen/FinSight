@@ -13,6 +13,7 @@ import { Transaction } from '@shared/models/transaction.model';
 import { TransactionResponse } from '@shared/models/transaction-response.model';
 import { MatchResult } from '@shared/models/match-result.model';
 import { ClassificationService } from '@shared/services/classification.service';
+import { MatSort } from '@angular/material/sort';
 
 @Component({
     selector: 'app-csv-table',
@@ -53,6 +54,18 @@ export class CsvTableComponent implements OnInit {
     totalRecords: number = 0;
     classifications: any;  // de JSON-structuur uit MongoDB
     classificationLabels = ['Unclassified','Manual','Rule‑based','ML'];
+    totalItems: number = 0;
+
+    // Voor paginering en sortering
+    @ViewChild(MatPaginator) paginator!: MatPaginator;
+    @ViewChild(MatSort) sort!: MatSort;
+
+    // Search parameters
+    searchText: string = '';
+    searchFields: string[] = ['recipient', 'description', 'category'];
+    exactAmount: number | null = null;
+
+
 
     private transactionService = inject(TransactionService);
     private classificationService = inject(ClassificationService);
@@ -102,29 +115,33 @@ export class CsvTableComponent implements OnInit {
 	 *    - Er wordt een lege lijst teruggegeven als fallback.
 	 */
 	fetchTransactions(): void {
-		this.isLoading = true;  
-        this.ruleBasedColoring = {};
-		this.ngOnDestroy();
+        this.isLoading = true;
 
-		this.transactionSubscription = this.transactionService.getTransactions(
-			this.sortedColumn,
-			this.sortDirection,
-			this.filterCriteria,
-			this.pageIndex,
-			this.pageSize
-		).pipe(
-			tap((data: TransactionResponse) => {
-				this.transactions = data.content; 
-				this.totalRecords = data.totalElements;
-				this.isLoading = false;
-			}),
-			catchError(error => {
-				console.error('Error fetching transactions', error);
-				this.isLoading = false;
-				return of([]); 
-			})
-		).subscribe();
-	}
+        const page = this.paginator ? this.paginator.pageIndex : 0;
+        const size = this.paginator ? this.paginator.pageSize : 10;
+        const sortBy = this.sort ? this.sort.active : 'date';
+        const direction = this.sort ? this.sort.direction : 'asc';
+    
+        this.transactionService.getTransactions(
+          this.searchText,
+          this.searchFields,
+          this.exactAmount,
+          sortBy,
+          direction,
+          page,
+          size
+        ).subscribe({
+          next: (response: TransactionResponse) => {
+            this.transactions = response.content;
+            this.totalItems = response.totalElements;
+            this.isLoading = false;
+          },
+          error: (err) => {
+            console.error('Fout bij laden transacties', err);
+            this.isLoading = false;
+          }
+        });
+      }
 
     // 2) Recursieve helper: doorloop de tree, zoek een match in leaf-arrays
     private searchNode(node: any, path: string[], text: string): { path: string[]; match: string } | null {
