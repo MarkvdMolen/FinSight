@@ -1,12 +1,14 @@
 import { Component, OnInit, ViewChild, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule, MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
-import { Subscription } from 'rxjs';
+import { MatInputModule } from '@angular/material/input';
+import { map, Observable, startWith, Subscription } from 'rxjs';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 // Shared imports
 import { TransactionService } from '@shared/services/transaction.service';
 import { Transaction } from '@shared/models/transaction.model';
@@ -25,7 +27,10 @@ import { MatSort } from '@angular/material/sort';
       MatTableModule,
       MatPaginatorModule,
       MatFormFieldModule,
-      MatSelectModule
+      MatSelectModule,
+      ReactiveFormsModule,  
+      MatAutocompleteModule,
+      MatInputModule 
     ],
     templateUrl: './csv-table.component.html',
     styleUrls: ['./csv-table.component.css']
@@ -53,7 +58,11 @@ export class CsvTableComponent implements OnInit {
     pageSize: number = 10;  
     totalRecords: number = 0;
     classifications: any;  // de JSON-structuur uit MongoDB
-    classificationsCategories: Array<string> = []
+    
+    classificationsCategories: string[] = [];
+    filteredCategories$!: Observable<string[]>;  // Async observable voor filtering
+    categoryControl = new FormControl('');  // FormControl voor binding
+
     classificationLabels = ['Unclassified','Manual','Rule‑based','ML'];
     totalItems: number = 0;
 
@@ -75,10 +84,16 @@ export class CsvTableComponent implements OnInit {
     ngOnInit() {
         this.fetchTransactions();
         this.getListOfClassificationsCategories();
-        
+
         this.classificationService.getClassifications().subscribe(data => {
             this.classifications = data; // Fetch JSON from DB
         }); 
+
+        // Initilaize Observable on Form with every change execute
+        this.filteredCategories$ = this.categoryControl.valueChanges.pipe( 
+            startWith(''),  // Begin direct met lege input
+            map(value => this._filterCategories(value || ''))   //
+        );
     }
 
     ngAfterViewInit() {
@@ -88,6 +103,13 @@ export class CsvTableComponent implements OnInit {
 	ngOnDestroy(): void {
 		this.transactionSubscription?.unsubscribe();
 	}
+
+    private _filterCategories(value: string): string[] {
+        const filterValue = value.toLowerCase();
+        return this.classificationsCategories.filter(
+            option => option.toLowerCase().includes(filterValue)
+        );
+    }
 
 	/**
 	 * Handler voor paginawijzigingen vanuit de Material paginator.
