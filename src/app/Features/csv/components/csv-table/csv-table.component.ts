@@ -6,7 +6,7 @@ import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule, MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
-import { Subscription, tap, catchError, of } from 'rxjs';
+import { Subscription } from 'rxjs';
 // Shared imports
 import { TransactionService } from '@shared/services/transaction.service';
 import { Transaction } from '@shared/models/transaction.model';
@@ -53,6 +53,7 @@ export class CsvTableComponent implements OnInit {
     pageSize: number = 10;  
     totalRecords: number = 0;
     classifications: any;  // de JSON-structuur uit MongoDB
+    classificationsCategories: Array<string> = []
     classificationLabels = ['Unclassified','Manual','Rule‑based','ML'];
     totalItems: number = 0;
 
@@ -73,6 +74,8 @@ export class CsvTableComponent implements OnInit {
 
     ngOnInit() {
         this.fetchTransactions();
+        this.getListOfClassificationsCategories();
+        
         this.classificationService.getClassifications().subscribe(data => {
             this.classifications = data; // Fetch JSON from DB
         }); 
@@ -144,6 +147,12 @@ export class CsvTableComponent implements OnInit {
           }
         });
       }
+
+    getListOfClassificationsCategories(){
+        this.classificationService.getCategories().subscribe(data => {
+            this.classificationsCategories = data;
+        });
+    }
 
     // 2) Recursieve helper: doorloop de tree, zoek een match in leaf-arrays
     private searchNode(node: any, path: string[], text: string): { path: string[]; match: string } | null {

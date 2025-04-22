@@ -68,7 +68,15 @@
                     >
                         {{ classificationLabels[transaction.classificationSource] }}
                     </td>
-                    <td><input [(ngModel)]="editingTransaction!.category"></td>
+                    <td>
+                        <mat-form-field appearance="fill" class="w-40">
+                          <mat-select [(ngModel)]="editingTransaction!.category">
+                            <mat-option *ngFor="let option of classificationsCategories" [value]="option">
+                              {{ option }}
+                            </mat-option>
+                          </mat-select>
+                        </mat-form-field>
+                    </td>
                     <td><input type="number" [(ngModel)]="editingTransaction!.amount"></td>
                     <td><input type="date" [(ngModel)]="editingTransaction!.date"></td>
                     <td class="space-x-2">
