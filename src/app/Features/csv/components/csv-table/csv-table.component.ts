@@ -286,4 +286,8 @@ export class CsvTableComponent implements OnInit {
     cancelEdit() {
         this.editingTransaction = null;
     }
+
+    isEditing(transaction: Transaction): boolean {
+        return this.editingTransaction?.transactionsId === transaction.transactionsId;
+    }
 }

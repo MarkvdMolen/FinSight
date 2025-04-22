@@ -1,139 +1,97 @@
-
-<!-- Material Spinner -->
-<div *ngIf="isLoading" >
-    <div class="flex flex-col gap-4 p-4 flex-wrap items-center text-center">
-        <img class="w-20 h-20 animate-spin" src="https://www.svgrepo.com/show/70469/loading.svg" alt="Loading icon">
-        <p>Loading.....</p>
-    </div>
+<!-- Loading state -->
+<div *ngIf="isLoading" class="flex flex-col gap-4 p-4 flex-wrap items-center text-center">
+    <img class="w-20 h-20 animate-spin" src="https://www.svgrepo.com/show/70469/loading.svg" alt="Loading icon">
+    <p>Loading...</p>
 </div>
   
-<table *ngIf="!isLoading">
+<!-- Table -->
+<table *ngIf="!isLoading" class="w-full">
     <thead>
         <tr>
-            <tr>
-                <ng-container *ngFor="let header of headers">
-                  <th
-                    (click)="sortData(header.key)"
-                  >
+            <ng-container *ngFor="let header of headers">
+                <th (click)="sortData(header.key)">
                     <div class="flex items-center space-x-1">
-                      <span>{{ header.label }}</span>
-                      <span class="flex flex-col">
-                        <svg
-                        [ngClass]="{
-                          'text-gray-400': sortedColumn !== header.key || sortDirection !== 'asc',
-                          'text-blue-500': sortedColumn === header.key && sortDirection === 'asc'
-                        }"
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                        class="w-4 h-4"
-                      >
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7" />
-                      </svg>
-                      
-                      <svg
-                        [ngClass]="{
-                          'text-gray-400': sortedColumn !== header.key || sortDirection !== 'desc',
-                          'text-blue-500': sortedColumn === header.key && sortDirection === 'desc'
-                        }"
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                        class="w-4 h-4"
-                      >
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-                      </svg>
-                      
-                      </span>
+                        <span>{{ header.label }}</span>
+                            <span class="flex flex-col">
+                            <svg [ngClass]="{ 'text-gray-400': sortedColumn !== header.key || sortDirection !== 'asc', 'text-blue-500': sortedColumn === header.key && sortDirection === 'asc' }" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7" />
+                            </svg>
+                            <svg [ngClass]="{ 'text-gray-400': sortedColumn !== header.key || sortDirection !== 'desc', 'text-blue-500': sortedColumn === header.key && sortDirection === 'desc' }" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                            </svg>
+                        </span>
                     </div>
-                  </th>
-                </ng-container>
-              </tr>
+                </th>
+            </ng-container>
+            <th>Actions</th>
+        </tr>
     </thead>
     <tbody>
         <tr *ngFor="let transaction of transactions">
-            <td>{{ transaction.transactionsId }}</td>
-            <!-- Account -->
-            <td *ngIf="!editingTransaction || editingTransaction.transactionsId !== transaction.transactionsId">
-                {{ transaction.account }}
-            </td>
-            <td *ngIf="editingTransaction && editingTransaction.transactionsId === transaction.transactionsId">
-                <input [(ngModel)]="editingTransaction.account">
-            </td>
-            <!-- Recipient -->
-            <td *ngIf="!editingTransaction || editingTransaction.transactionsId !== transaction.transactionsId">
-                {{ transaction.recipient }}
-            </td>
-            <td *ngIf="editingTransaction && editingTransaction.transactionsId === transaction.transactionsId">
-                <input [(ngModel)]="editingTransaction.recipient">
-            </td>
-            <!-- Description -->
-            <td *ngIf="!editingTransaction || editingTransaction.transactionsId !== transaction.transactionsId">
-                {{ transaction.description }}
-            </td>
-            <td *ngIf="editingTransaction && editingTransaction.transactionsId === transaction.transactionsId">
-                <input [(ngModel)]="editingTransaction.description">
-            </td>
-            <td
-                [ngClass]="{
-                'text-red-700': transaction.classificationSource === 0,
-                'text-green-600': transaction.classificationSource === 1,
-                'text-yellow-600': transaction.classificationSource === 2,
-                'text-orange-600': transaction.classificationSource === 3
-              }">
-            {{ classificationLabels[transaction.classificationSource] }}
-            </td>
-            <!-- Category -->
-            <td
-              *ngIf="!editingTransaction || editingTransaction.transactionsId !== transaction.transactionsId"
-              [ngClass]="{ 'bg-yellow-100': ruleBasedColoring[transaction.transactionsId] }"
-            >
-              {{ transaction.category }}
-            </td>
-            <td *ngIf="editingTransaction && editingTransaction.transactionsId === transaction.transactionsId">
-                <input [(ngModel)]="editingTransaction.category">
-            </td>
-            <!-- Amount -->
-            <td *ngIf="!editingTransaction || editingTransaction.transactionsId !== transaction.transactionsId">
-                {{ transaction.amount | currency:'EUR' }}
-            </td>
-            <td *ngIf="editingTransaction && editingTransaction.transactionsId === transaction.transactionsId">
-                <input type="number" [(ngModel)]="editingTransaction.amount">
-            </td>
-            <!-- Date -->
-            <td *ngIf="!editingTransaction || editingTransaction.transactionsId !== transaction.transactionsId">
-                {{ transaction.date | date }}
-            </td>
-            <td *ngIf="editingTransaction && editingTransaction.transactionsId === transaction.transactionsId">
-                <input [(ngModel)]="editingTransaction.date" type="date">
-            </td>
-
-            <!-- Actions -->
-            <td>
-                <a *ngIf="!editingTransaction || editingTransaction.transactionsId !== transaction.transactionsId"
-                    class="edit"
-                    (click)="editTransaction(transaction)">Edit</a>
-                <a *ngIf="editingTransaction && editingTransaction.transactionsId === transaction.transactionsId"
-                    class="save"
-                    (click)="saveTransaction()">Save</a>
-                <a *ngIf="editingTransaction && editingTransaction.transactionsId === transaction.transactionsId"
-                    class="cancel"
-                    (click)="cancelEdit()">Cancel</a>
-            </td>
-        </tr>              
+            <ng-container [ngSwitch]="isEditing(transaction)">
+                <!-- Normal Row -->
+                <ng-container *ngSwitchCase="false">
+                    <td>{{ transaction.transactionsId }}</td>
+                    <td>{{ transaction.account }}</td>
+                    <td>{{ transaction.recipient }}</td>
+                    <td>{{ transaction.description }}</td>
+                    <td [ngClass]="{
+                        'text-red-700': transaction.classificationSource === 0,
+                        'text-green-600': transaction.classificationSource === 1,
+                        'text-yellow-600': transaction.classificationSource === 2,
+                        'text-orange-600': transaction.classificationSource === 3
+                      }">
+                        {{ classificationLabels[transaction.classificationSource] }}
+                    </td>
+                    <td [ngClass]="{ 'bg-yellow-100': ruleBasedColoring[transaction.transactionsId] }">
+                        {{ transaction.category }}
+                    </td>
+                    <td>{{ transaction.amount | currency:'EUR' }}</td>
+                    <td>{{ transaction.date | date }}</td>
+                    <td>
+                        <a class="edit" (click)="editTransaction(transaction)">Edit</a>
+                    </td>
+                </ng-container>
+                <!-- Edit Mode -->
+                <ng-container *ngSwitchCase="true">
+                    <td>{{ transaction.transactionsId }}</td>
+                    <td><input [(ngModel)]="editingTransaction!.account"></td>
+                    <td><input [(ngModel)]="editingTransaction!.recipient"></td>
+                    <td><input [(ngModel)]="editingTransaction!.description"></td>
+                    <td 
+                        [ngClass]="{
+                            'text-red-700': transaction.classificationSource === 0,
+                            'text-green-600': transaction.classificationSource === 1,
+                            'text-yellow-600': transaction.classificationSource === 2,
+                            'text-orange-600': transaction.classificationSource === 3
+                        }"
+                    >
+                        {{ classificationLabels[transaction.classificationSource] }}
+                    </td>
+                    <td><input [(ngModel)]="editingTransaction!.category"></td>
+                    <td><input type="number" [(ngModel)]="editingTransaction!.amount"></td>
+                    <td><input type="date" [(ngModel)]="editingTransaction!.date"></td>
+                    <td class="space-x-2">
+                        <a class="save" (click)="saveTransaction()">Save</a>
+                        <a class="cancel" (click)="cancelEdit()">Cancel</a>
+                    </td>
+                </ng-container>
+            </ng-container>
+        </tr>
     </tbody>
 </table>
-
-<mat-paginator
-  [length]="totalItems"
-  [pageSize]="pageSize"
-  [pageSizeOptions]="[5, 10, 25, 50]"
-  (page)="onPageChange($event)">
-</mat-paginator>
-
-<button (click)="classifyAll()" class="mb-4 bg-blue-500 text-white px-4 py-2 rounded">Classificeer alles</button>
-<button (click)="pushAllTransactions()" class="mb-4 bg-green-600 text-white px-4 py-2 rounded ml-2">
-  Opslaan naar database
-</button>
+  
+  <!-- Paginator -->
+  <mat-paginator
+    [length]="totalItems"
+    [pageSize]="pageSize"
+    [pageSizeOptions]="[5, 10, 25, 50]"
+    (page)="onPageChange($event)">
+  </mat-paginator>
+  
+  <!-- Action Buttons -->
+  <div class="flex gap-4 mt-4">
+    <button (click)="classifyAll()" class="bg-blue-500 text-white px-4 py-2 rounded">Classificeer alles</button>
+    <button (click)="pushAllTransactions()" class="bg-green-600 text-white px-4 py-2 rounded">Opslaan naar database</button>
+  </div>
+  
