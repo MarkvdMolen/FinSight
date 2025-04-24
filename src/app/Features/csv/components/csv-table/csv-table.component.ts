@@ -54,7 +54,6 @@ export class CsvTableComponent implements OnInit {
     sortedBy: string = 'transactionsId'; 
     filterCriteria: string = '';  
     
-    pageSize: number = 10;  
     classifications: any;  // de JSON-structuur uit MongoDB
     
     classificationsCategories: Record<string, string[]> = {};
@@ -112,7 +111,14 @@ export class CsvTableComponent implements OnInit {
 	 * @param event - Het paginagebeurtenis-object van Angular Material,
 	 *                met informatie over de nieuwe `pageIndex` en `pageSize`.
 	 */
-    onPageChange(event: PageEvent): void {		
+    onPageChange(event: PageEvent): void {
+        const sizeChanged = event.pageSize !== this.paginator.pageSize;
+        this.paginator.pageSize = event.pageSize;
+      
+        if (sizeChanged) {
+          this.paginator.pageIndex = 0; // reset to first page
+        }
+
         this.fetchTransactions()
     }
 
@@ -196,8 +202,11 @@ export class CsvTableComponent implements OnInit {
      */
     classifyAllTransactions() {
         for (const tx of this.transactions) {
+            if (tx.classificationSource !== 0) { return } // Don't classify if its already classified
+
             const text = `${tx.description} ${tx.recipient}`;
             const matchedCategory = this._matchCategory(text);
+
             if (matchedCategory) {
                 tx.category = matchedCategory;
                 tx.classificationSource = 2;
