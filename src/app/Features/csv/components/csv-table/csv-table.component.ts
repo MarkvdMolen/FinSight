@@ -162,16 +162,24 @@ export class CsvTableComponent implements OnInit {
         });
     }
 
-    // Write Comment
+    /**
+     * Fetches the list of classification categories from the backend and assigns them to the component state.
+     */
     getListOfClassificationsCategories(){
         this.classificationService.getCategories().subscribe(data => {
             this.classificationsCategories = data;
         });
     }
 
-    // write Comment
-    private _matchCategory(text: string, categories: Record<string, string[]>): string | null {
+    /**
+     * Attempts to match a given text to a category based on given classifications for a category.
+     * @param text The combined description and recipient string to match.
+     * @returns The matched category name, or null if no match is found.
+     */
+    private _matchCategory(text: string): string | null {
         const lowerText = text.toLowerCase();
+        const categories = this.classificationsCategories;
+
         for (const [category, tags] of Object.entries(categories)) {
             for (const tag of tags) {
                 if (lowerText.includes(tag.toLowerCase())) {
@@ -182,11 +190,14 @@ export class CsvTableComponent implements OnInit {
         return null;
     }   
 
-    // write Comment
+    /**
+     * Classifies all unclassified transactions using rule-based keyword matching.
+     * Updates the category and classificationSource if a match is found.
+     */
     classifyAllTransactions() {
         for (const tx of this.transactions) {
             const text = `${tx.description} ${tx.recipient}`;
-            const matchedCategory = this._matchCategory(text, this.classificationsCategories);
+            const matchedCategory = this._matchCategory(text);
             if (matchedCategory) {
                 tx.category = matchedCategory;
                 tx.classificationSource = 2;
@@ -195,9 +206,10 @@ export class CsvTableComponent implements OnInit {
         }
     }
 
-    /*
-    * Function that will bulk save al currently edited fields
-    */
+    /**
+     * Pushes all current transactions to the backend to be saved in bulk.
+     * Shows an alert on success or failure.
+     */
     pushAllTransactions(): void {
         this.transactionService.pushAllTransactions(this.transactions).subscribe({
             next: () => {
@@ -282,9 +294,13 @@ export class CsvTableComponent implements OnInit {
         return this.editingTransaction?.transactionsId === transaction.transactionsId;
     }
 
-    // Keep track of item in the transaction
-    // So that incase of reloading transasaction
-    // The dom doesnt need to remove en reupdate the whole array
+    /**
+     * Tracks items in the transaction list by their unique transaction ID.
+     * Helps Angular optimize DOM updates by preventing full re-renders on list changes.
+     * @param index The index of the current item.
+     * @param item The transaction item.
+     * @returns The transaction ID used for tracking.
+     */
     trackById(index: number, item: Transaction): number {
         return item.transactionsId;
     }
