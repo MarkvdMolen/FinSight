@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class ClassificationService {
-    private apiUrl = 'http://localhost:3000/api/classifications'; // Gebruik proxy of pas aan indien nodig
+    private apiUrl = 'http://localhost:3000/api'; // Gebruik proxy of pas aan indien nodig
 
     constructor(private http: HttpClient) {}
 
@@ -14,7 +14,7 @@ export class ClassificationService {
      * Haalt de classificatiestructuur op vanuit de backend
      */
     getClassifications(): Observable<any> {
-        return this.http.get<any>(this.apiUrl);
+        return this.http.get<any>(this.apiUrl+ '/classifications');
     }
 
     /**
@@ -22,6 +22,10 @@ export class ClassificationService {
      * @param data De JSON-structuur om op te slaan
      */
     saveClassifications(data: any): Observable<{ success: boolean }> {
-        return this.http.post<{ success: boolean }>(this.apiUrl, data);
+        return this.http.post<{ success: boolean }>(this.apiUrl + '/classifications', data);
     }
+
+    getCategories(): Observable<Record<string, string[]>> {
+        return this.http.get<Record<string, string[]>>(this.apiUrl + '/categories');
+    }  
 }

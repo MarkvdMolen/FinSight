@@ -45,4 +45,4 @@ input {
 .cancel {
     @apply
     text-red-500 hover:underline;
-}
+} 

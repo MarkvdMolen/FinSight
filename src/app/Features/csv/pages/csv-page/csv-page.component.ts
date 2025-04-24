@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DefaultButtonComponent } from '@shared/components/default-button/default-button.component';
 import { CsvUploadComponent } from "@features/csv/components/csv-upload/csv-upload.component";
@@ -30,5 +30,13 @@ export class CsvPageComponent {
   getData() {
     // console.log(this.transactionService.hasData)
     return this.transactionService.getData()
+  }
+
+  @ViewChild('csvTable') csvTable!: CsvTableComponent;
+
+  onSearch(searchTerm: string): void {
+    this.csvTable.searchText = searchTerm;
+    this.csvTable.paginator.firstPage(); // reset naar pagina 0
+    this.csvTable.fetchTransactions();
   }
 }
