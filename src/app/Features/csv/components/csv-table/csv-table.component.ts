@@ -13,9 +13,7 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { TransactionService } from '@shared/services/transaction.service';
 import { Transaction } from '@shared/models/transaction.model';
 import { TransactionResponse } from '@shared/models/transaction-response.model';
-import { MatchResult } from '@shared/models/match-result.model';
 import { ClassificationService } from '@shared/services/classification.service';
-import { MatSort } from '@angular/material/sort';
 
 @Component({
     selector: 'app-csv-table',
@@ -34,7 +32,7 @@ import { MatSort } from '@angular/material/sort';
     ],
     templateUrl: './csv-table.component.html',
     styleUrls: ['./csv-table.component.css']
-  })
+})
 export class CsvTableComponent implements OnInit {
     headers = [
         { key: 'transactionsId', label: 'ID' },
@@ -59,7 +57,7 @@ export class CsvTableComponent implements OnInit {
     pageSize: number = 10;  
     classifications: any;  // de JSON-structuur uit MongoDB
     
-    classificationsCategories: string[] = [];
+    classificationsCategories: Record<string, string[]> = {};
     filteredCategories$!: Observable<string[]>;  // Async observable voor filtering
     categoryControl = new FormControl('');  // FormControl voor binding
 
@@ -103,10 +101,10 @@ export class CsvTableComponent implements OnInit {
 
     private _filterCategories(value: string): string[] {
         const filterValue = value.toLowerCase();
-        return this.classificationsCategories.filter(
-            option => option.toLowerCase().includes(filterValue)
+        return Object.keys(this.classificationsCategories).filter(option =>
+          option.toLowerCase().includes(filterValue)
         );
-    }
+    }  
 
 	/**
 	 * Handler voor paginawijzigingen vanuit de Material paginator.
@@ -167,68 +165,32 @@ export class CsvTableComponent implements OnInit {
     // Write Comment
     getListOfClassificationsCategories(){
         this.classificationService.getCategories().subscribe(data => {
-            this.classificationsCategories = data.sort();
+            this.classificationsCategories = data;
         });
     }
 
-    // 2) Recursieve helper: doorloop de tree, zoek een match in leaf-arrays
-    // Would like to move this out of the front end
-    private searchNode(node: any, path: string[], text: string): { path: string[]; match: string } | null {
-        for (const key of Object.keys(node)) {
-            const value = node[key];
-            const newPath = [...path, key];
-
-            if (Array.isArray(value)) {
-                // we zitten op een leaf: een array van keywords
-                for (const kw of value) {
-                    if (text.includes(kw.toLowerCase())) {
-                        return { path: newPath, match: kw };
-                    }
-                }
-            } 
-            else if (value && typeof value === 'object') {
-                // geneste map: duik dieper
-                const found = this.searchNode(value, newPath, text);
-                if (found) {
-                    return found;
+    // write Comment
+    private _matchCategory(text: string, categories: Record<string, string[]>): string | null {
+        const lowerText = text.toLowerCase();
+        for (const [category, tags] of Object.entries(categories)) {
+            for (const tag of tags) {
+                if (lowerText.includes(tag.toLowerCase())) {
+                    return category;
                 }
             }
-            // anders: skip niet-array, niet-object (bv. string/number)
         }
         return null;
-    }
+    }   
 
-    // 3) Pas ruleBasedMatch aan zodat het de structuur gebruikt
-    ruleBasedMatch(description: string, recipient: string): MatchResult | null {
-        if (!this.classifications) return null;  // nog niet ingeladen
-       
-        const text = `${description} ${recipient}`.toLowerCase();
-        const result = this.searchNode(this.classifications, [], text);
-       
-        if (!result) { return null; }
-        
-        const { path, match } = result; // Match variables to return type of searchNode
-
-        return {
-          type: path[0],
-          category: path[1] || path[0],
-          subcategory: path[path.length - 1],
-          match
-        };
-    }
-
-    /**
-     * Execute rule-based classification on all Transactions that dont have a category.
-     */
-    classifyAll(): void {
-        for (const transaction of this.transactions) {
-            if (!transaction.category?.trim()) {
-                const match = this.ruleBasedMatch(transaction.description, transaction.recipient);
-                if (match) {
-                    transaction.category = match.subcategory; // Might want to edit
-                    transaction.classificationSource = 2;
-                    this.ruleBasedColoring[transaction.transactionsId] = true;
-                }
+    // write Comment
+    classifyAllTransactions() {
+        for (const tx of this.transactions) {
+            const text = `${tx.description} ${tx.recipient}`;
+            const matchedCategory = this._matchCategory(text, this.classificationsCategories);
+            if (matchedCategory) {
+                tx.category = matchedCategory;
+                tx.classificationSource = 2;
+                this.ruleBasedColoring[tx.transactionsId] = true;
             }
         }
     }
@@ -247,7 +209,6 @@ export class CsvTableComponent implements OnInit {
             }
         });
     }
-      
 
     /**
      * Sorts data based on the clicked column.
@@ -319,5 +280,12 @@ export class CsvTableComponent implements OnInit {
 
     isEditing(transaction: Transaction): boolean {
         return this.editingTransaction?.transactionsId === transaction.transactionsId;
+    }
+
+    // Keep track of item in the transaction
+    // So that incase of reloading transasaction
+    // The dom doesnt need to remove en reupdate the whole array
+    trackById(index: number, item: Transaction): number {
+        return item.transactionsId;
     }
 }

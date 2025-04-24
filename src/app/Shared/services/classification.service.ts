@@ -25,7 +25,7 @@ export class ClassificationService {
         return this.http.post<{ success: boolean }>(this.apiUrl + '/classifications', data);
     }
 
-    getCategories(): Observable<string[]> {
-        return this.http.get<string[]>(this.apiUrl + '/categories');
-    }
+    getCategories(): Observable<Record<string, string[]>> {
+        return this.http.get<Record<string, string[]>>(this.apiUrl + '/categories');
+    }  
 }

@@ -27,7 +27,7 @@
         </tr>
     </thead>
     <tbody>
-        <tr *ngFor="let transaction of transactions">
+        <tr *ngFor="let transaction of transactions; trackBy: trackById">
             <ng-container [ngSwitch]="isEditing(transaction)">
                 <!-- Normal Row -->
                 <ng-container *ngSwitchCase="false">
@@ -88,7 +88,7 @@
                         </div>
                     </div>
                     <!-- Custom styled autocomplete panel -->
-                    <mat-autocomplete #auto="matAutocomplete" class="custom-autocomplete" panelWidth="auto">
+                    <mat-autocomplete #auto="matAutocomplete">
                         <mat-option 
                             *ngFor="let option of filteredCategories$ | async" 
                             [value]="option"
@@ -118,6 +118,6 @@
 
 <!-- Action Buttons -->
 <div class="flex gap-4 mt-4">
-<button (click)="classifyAll()" class="bg-blue-500 text-white px-4 py-2 rounded">Classificeer alles</button>
+<button (click)="classifyAllTransactions()" class="bg-blue-500 text-white px-4 py-2 rounded">Classificeer alles</button>
 <button (click)="pushAllTransactions()" class="bg-green-600 text-white px-4 py-2 rounded">Opslaan naar database</button>
 </div>
