@@ -51,10 +51,11 @@ export class CsvTableComponent implements OnInit {
     editingTransaction: Transaction | null = null;
     isLoading = true;
     ruleBasedColoring: { [id: number]: boolean } = {}; // var to store two colors in
+    
     sortDirection: 'asc' | 'desc' = 'asc';  
-    sortedColumn: string = 'transactionsId'; 
+    sortedBy: string = 'transactionsId'; 
     filterCriteria: string = '';  
-    pageIndex: number = 0;  
+    
     pageSize: number = 10;  
     totalRecords: number = 0;
     classifications: any;  // de JSON-structuur uit MongoDB
@@ -68,7 +69,6 @@ export class CsvTableComponent implements OnInit {
 
     // Voor paginering en sortering
     @ViewChild(MatPaginator) paginator!: MatPaginator;
-    @ViewChild(MatSort) sort!: MatSort;
 
     // Search parameters
     searchText: string = '';
@@ -119,7 +119,6 @@ export class CsvTableComponent implements OnInit {
 	 */
     onPageChange(event: PageEvent): void {
 		this.pageSize = event.pageSize;
-		this.pageIndex = event.pageIndex;
 		
         this.fetchTransactions()
     }
@@ -146,8 +145,8 @@ export class CsvTableComponent implements OnInit {
 
         const page = this.paginator ? this.paginator.pageIndex : 0;
         const size = this.paginator ? this.paginator.pageSize : 10;
-        const sortBy = this.sort ? this.sort.active : 'date';
-        const direction = this.sort ? this.sort.direction : 'asc';
+        const sortBy = this.sortedBy || 'date';
+        const direction = this.sortDirection || 'asc';
     
         this.transactionService.getTransactions(
           this.searchText,
@@ -172,7 +171,7 @@ export class CsvTableComponent implements OnInit {
 
     getListOfClassificationsCategories(){
         this.classificationService.getCategories().subscribe(data => {
-            this.classificationsCategories = data;
+            this.classificationsCategories = data.sort();
         });
     }
 
@@ -257,17 +256,19 @@ export class CsvTableComponent implements OnInit {
      * @param column The column to sort by.
      */
     sortData(column: string): void {
-        console.log(column)
-        console.log(this.sortedColumn)
-        if (this.sortedColumn === column) {
-            // Toggle sorting direction if the same column is clicked again
-            this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc';
+        if (this.sortedBy === column) { 
+            this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc'; // Toggle sorting direction if the same column is clicked again
         } else {
             // Set new column to sort by and default to ascending
-            this.sortedColumn = column;
+            this.sortedBy = column;
+            this._resetPageIndex();
             this.sortDirection = 'asc';
         }
         this.fetchTransactions();  // Re-fetch sorted data
+    }
+
+    private _resetPageIndex(): void {
+        this.paginator.pageIndex = 0; 
     }
 
     /**
