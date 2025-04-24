@@ -45,7 +45,7 @@ export class CsvTableComponent implements OnInit {
         { key: 'category', label: 'Category' },
         { key: 'amount', label: 'Amount' },
         { key: 'date', label: 'Date' }
-    ]; // Match Transaction Model to kv for display of table
+    ]; 
 
     transactions: Transaction[] = [];
     editingTransaction: Transaction | null = null;
@@ -57,7 +57,6 @@ export class CsvTableComponent implements OnInit {
     filterCriteria: string = '';  
     
     pageSize: number = 10;  
-    totalRecords: number = 0;
     classifications: any;  // de JSON-structuur uit MongoDB
     
     classificationsCategories: string[] = [];
@@ -74,8 +73,6 @@ export class CsvTableComponent implements OnInit {
     searchText: string = '';
     searchFields: string[] = ['recipient', 'description', 'category'];
     exactAmount: number | null = null;
-
-
 
     private transactionService = inject(TransactionService);
     private classificationService = inject(ClassificationService);
@@ -117,9 +114,7 @@ export class CsvTableComponent implements OnInit {
 	 * @param event - Het paginagebeurtenis-object van Angular Material,
 	 *                met informatie over de nieuwe `pageIndex` en `pageSize`.
 	 */
-    onPageChange(event: PageEvent): void {
-		this.pageSize = event.pageSize;
-		
+    onPageChange(event: PageEvent): void {		
         this.fetchTransactions()
     }
 
@@ -149,26 +144,27 @@ export class CsvTableComponent implements OnInit {
         const direction = this.sortDirection || 'asc';
     
         this.transactionService.getTransactions(
-          this.searchText,
-          this.searchFields,
-          this.exactAmount,
-          sortBy,
-          direction,
-          page,
-          size
+            this.searchText,
+            this.searchFields,
+            this.exactAmount,
+            sortBy,
+            direction,
+            page,
+            size
         ).subscribe({
-          next: (response: TransactionResponse) => {
-            this.transactions = response.content;
-            this.totalItems = response.totalElements;
-            this.isLoading = false;
-          },
-          error: (err) => {
-            console.error('Fout bij laden transacties', err);
-            this.isLoading = false;
-          }
+            next: (response: TransactionResponse) => {
+                this.transactions = response.content;
+                this.totalItems = response.totalElements;
+                this.isLoading = false;
+            },
+            error: (err) => {
+                console.error('Fout bij laden transacties', err);
+                this.isLoading = false;
+            }
         });
-      }
+    }
 
+    // Write Comment
     getListOfClassificationsCategories(){
         this.classificationService.getCategories().subscribe(data => {
             this.classificationsCategories = data.sort();
@@ -176,6 +172,7 @@ export class CsvTableComponent implements OnInit {
     }
 
     // 2) Recursieve helper: doorloop de tree, zoek een match in leaf-arrays
+    // Would like to move this out of the front end
     private searchNode(node: any, path: string[], text: string): { path: string[]; match: string } | null {
         for (const key of Object.keys(node)) {
             const value = node[key];
@@ -243,6 +240,7 @@ export class CsvTableComponent implements OnInit {
         this.transactionService.pushAllTransactions(this.transactions).subscribe({
             next: () => {
                 alert('Transacties succesvol opgeslagen!');
+                this.fetchTransactions(); // Refresh
             },
             error: (err) => {
                 alert('Fout bij het opslaan van transacties.');
