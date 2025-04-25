@@ -1,7 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DefaultButtonComponent } from '@shared/components/default-button/default-button.component';
-import { CsvUploadComponent } from "@features/upload/csv-upload/csv-upload.component";
 import { CsvTableComponent } from "@features/csv/components/csv-table/csv-table.component";
 import { MissingFilesComponent } from "@shared/components/missing-files/missing-files.component";
 import { TransactionService } from '@shared/services/transaction.service';
@@ -11,32 +10,40 @@ import { ClassificationOverviewComponent } from "@shared/components/classificati
 @Component({
   selector: 'app-csv-page',
   standalone: true,
-  imports: [CommonModule, DefaultButtonComponent, CsvUploadComponent, CsvTableComponent, MissingFilesComponent, SearchBarComponent, ClassificationOverviewComponent], 
+  imports: [CommonModule, DefaultButtonComponent, CsvTableComponent, MissingFilesComponent, SearchBarComponent, ClassificationOverviewComponent], 
   templateUrl: './csv-page.component.html',
   styleUrls: ['./csv-page.component.css']
 })
-export class CsvPageComponent {
+export class CsvPageComponent implements OnInit {
 
-  activeSection: string = 'overview';
+    hasData = false;
+    isLoading = true;
+    @ViewChild('csvTable') csvTable!: CsvTableComponent;
 
-  constructor(private transactionService: TransactionService) { }
+    constructor(private transactionService: TransactionService) { }
+    
+    ngOnInit(): void {
+        this.checkIfHasData();
+    }
 
-  // Functie om de sectie te wijzigen
-  setActiveSection(section: string) {
-    this.activeSection = section;
-    this.transactionService.checkData()
-  }
+    checkIfHasData(): void {
+        this.isLoading = true;
 
-  getData() {
-    // console.log(this.transactionService.hasData)
-    return this.transactionService.getData()
-  }
+        this.transactionService.getTransactions().subscribe({
+          next: (data) => {
+            this.hasData = data.content.length > 0;
+            this.isLoading = false;
+          },
+          error: () => {
+            this.hasData = false;
+            this.isLoading = false;
+          }
+        });
+    }
 
-  @ViewChild('csvTable') csvTable!: CsvTableComponent;
-
-  onSearch(searchTerm: string): void {
-    this.csvTable.searchText = searchTerm;
-    this.csvTable.paginator.firstPage(); // reset naar pagina 0
-    this.csvTable.fetchTransactions();
-  }
+    onSearch(searchTerm: string): void {
+        this.csvTable.searchText = searchTerm;
+        this.csvTable.paginator.firstPage(); // reset naar pagina 0
+        this.csvTable.fetchTransactions();
+    }
 }
