@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
 import { HomeComponent } from '@features/overview/pages/home/home.component';
-import { CsvPageComponent } from '@features/csv/pages/csv-page/csv-page.component';
+import { CsvPageComponent } from '@features/csv/csv-page.component';
 import { ClassificationViewerComponent } from '@features/classification-viewer/classification-viewer.component';
 
 export const routes: Routes = [
