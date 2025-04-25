@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { CsvPageComponent } from '../../csv-page.component';
+import { CsvPageComponent } from './csv-page.component';
 
 describe('CsvPageComponent', () => {
   let component: CsvPageComponent;

@@ -43,7 +43,7 @@ export class CsvPageComponent implements OnInit {
 
     onSearch(searchTerm: string): void {
         this.csvTable.searchText = searchTerm;
-        this.csvTable.paginator.firstPage(); // reset naar pagina 0
+        this.csvTable.paginator.firstPage();
         this.csvTable.fetchTransactions();
     }
 }
