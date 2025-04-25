@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DefaultButtonComponent } from '@shared/components/default-button/default-button.component';
-import { CsvUploadComponent } from "@features/csv/components/csv-upload/csv-upload.component";
+import { CsvUploadComponent } from "@features/upload/csv-upload/csv-upload.component";
 import { CsvTableComponent } from "@features/csv/components/csv-table/csv-table.component";
 import { MissingFilesComponent } from "@shared/components/missing-files/missing-files.component";
 import { TransactionService } from '@shared/services/transaction.service';
