@@ -14,22 +14,24 @@ import { TransactionService } from '@shared/services/transaction.service';
 import { Transaction } from '@shared/models/transaction.model';
 import { TransactionResponse } from '@shared/models/transaction-response.model';
 import { ClassificationService } from '@shared/services/classification.service';
+import { TxActionsComponent } from "../tx-actions/tx-actions.component";
 
 @Component({
     selector: 'app-csv-table',
     standalone: true,
     imports: [
-      CommonModule,
-      FormsModule,
-      MatProgressSpinnerModule,
-      MatTableModule,
-      MatPaginatorModule,
-      MatFormFieldModule,
-      MatSelectModule,
-      ReactiveFormsModule,  
-      MatAutocompleteModule,
-      MatInputModule 
-    ],
+    CommonModule,
+    FormsModule,
+    MatProgressSpinnerModule,
+    MatTableModule,
+    MatPaginatorModule,
+    MatFormFieldModule,
+    MatSelectModule,
+    ReactiveFormsModule,
+    MatAutocompleteModule,
+    MatInputModule,
+    TxActionsComponent
+],
     templateUrl: './csv-table.component.html',
     styleUrls: ['./csv-table.component.css']
 })

@@ -117,7 +117,7 @@
 </mat-paginator>
 
 <!-- Action Buttons -->
-<div class="flex gap-4 mt-4">
-    <button (click)="classifyAllTransactions()" class="bg-blue-500 text-white px-4 py-2 rounded">Classificeer alles</button>
-    <button (click)="pushAllTransactions()" class="bg-green-600 text-white px-4 py-2 rounded">Opslaan naar database</button>
-</div>
+<app-tx-actions
+    (classify)="classifyAllTransactions()" 
+    (save)="pushAllTransactions()">
+</app-tx-actions>
