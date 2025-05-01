@@ -1,0 +1,146 @@
+{
+    "Uitgaven": {
+        "Wonen": {
+            "Hypotheek/Huur": ["domeq"],
+            "Verzekeringen": ["ASR", "InShared"],
+            "Belastingen": [],
+            "Energie en water": [],
+            "Internet, telefoon en televisie": [],
+            "Onderhoud": [],
+            "Interieur, huis & tuin": [],
+            "Overige": []
+        },
+        "Boodschappen": {
+            "Supermarkt": [
+                "jumbo",
+                "albert heijn",
+                "ah",
+                "lidl",
+                "aldi",
+                "plus",
+                "dirk"
+            ]
+        },
+        "Vervoer": {
+            "Auto": [
+                "tankstation",
+                "shell",
+                "total",
+                "bp",
+                "autogarage",
+                "apk"
+            ],
+            "OV": [
+                "ns",
+                "ov-chipkaart",
+                "arriva",
+                "connexxion"
+            ],
+            "Overige vervoerskosten": [
+            ]
+        },
+        "Zorg": {
+            "Apotheek, huisarts": [
+                "apotheek",
+                "huisarts"
+            ],
+            "Ziekenhuis": [
+                "ziekenhuis"
+            ],
+            "Mondzorg": [
+                "tandarts",
+                "mondzorg",
+                "orthodontist",
+                "mondhygi\u00ebnist"
+            ],
+            "Kapper en Persoonlijke Verzorging": [
+                "kapper"
+            ]
+        },
+        "Abonnementen en contributies": {
+            "Tijdschriften": [
+                "tijdschrift",
+                "magazine"
+            ],
+            "Verenigingen": [
+                "Basic fit",
+                "Samen Sterk"
+            ],
+            "Internet, TV & Bellen": [
+                "netflix",
+                "spotify",
+                "viaplay",
+                "disney+",
+                "youtube premium",
+                "kpn"
+            ]
+        },
+        "Noodzakelijk": {
+            "Kleding": [
+                "zalando"
+            ],
+            "Cadeau\u2019s": [
+                "cadeaubon"
+            ]
+        },
+        "Vrije Tijd": {
+            "Hobby\u2019s": [
+            ],
+            "Uitstapjes": [
+                "pretpark",
+                "dierentuin",
+                "museum",
+                "bioscoop"
+            ],
+            "Horeca": [
+                "restaurant",
+                "caf\u00e9",
+                "mcdonalds"
+            ],
+            "Ontspanning": [
+            ],
+            "Spelletjes": [
+                "bordspel",
+                "steam",
+                "nintendo"
+            ],
+            "Overige kosten": [
+            ]
+        },
+        "Overige kosten": {
+            "Sparen": [
+            ],
+            "Reserveren": [
+            ]
+        }
+    },
+    "Inkomsten": {
+        "Inkomen": {
+            "Salaris": [
+                "salaris",
+                "loon"
+            ],
+            "Belastingteruggave": [
+                "belastingdienst",
+                "teruggave",
+                "toeslag"
+            ],
+            "Uitkeringen verzekeringen": [
+                "uitkering",
+                "aow",
+                "uwv",
+                "verzekering",
+                "inach"
+            ],
+            "Giften": [
+                "donatie",
+                "gift"
+            ],
+            "Overige": [
+                "restbedrag",
+                "overige inkomsten",
+                "extra storting"
+            ]
+        }
+    }
+}
