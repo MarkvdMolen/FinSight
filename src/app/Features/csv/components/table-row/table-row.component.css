@@ -1,24 +1,3 @@
-table {
-    @apply
-    min-w-full select-none shadow-2xl rounded-lg border-[#f1f1f1] border font-outfit text-[#014e60];
-}
-
-thead {
-    @apply
-    uppercase bg-[#f1f1f1];
-}
-
-th {
-    @apply
-    px-4 py-2 text-left
-    select-text;
-}
-
-tbody{
-    @apply
-    text-gray-700 text-sm;
-}
-
 td {
     @apply
     border px-4 py-2
