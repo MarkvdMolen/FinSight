@@ -15,6 +15,8 @@ import { Transaction } from '@shared/models/transaction.model';
 import { TransactionResponse } from '@shared/models/transaction-response.model';
 import { ClassificationService } from '@shared/services/classification.service';
 import { TxActionsComponent } from "../tx-actions/tx-actions.component";
+import { TableHeaderComponent } from "../table-header/table-header.component";
+import { TableRowComponent } from '../table-row/table-row.component';
 
 @Component({
     selector: 'app-csv-table',
@@ -30,7 +32,9 @@ import { TxActionsComponent } from "../tx-actions/tx-actions.component";
     ReactiveFormsModule,
     MatAutocompleteModule,
     MatInputModule,
-    TxActionsComponent
+    TxActionsComponent,
+    TableHeaderComponent,
+    TableRowComponent
 ],
     templateUrl: './csv-table.component.html',
     styleUrls: ['./csv-table.component.css']

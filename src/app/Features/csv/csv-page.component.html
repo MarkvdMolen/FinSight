@@ -1,10 +1,6 @@
 <ng-container *ngIf="!isLoading; else loading">
     <div class="container mt-4 mx-4">
-        <div class="mb-4">
-            <app-default-button [buttonName]="'Overview'"></app-default-button>
-            <app-default-button [buttonName]="'Upload'"></app-default-button>
-        </div>
-        
+
         <ng-container *ngIf="hasData; else noData">
             <app-search-bar (search)="onSearch($event)"></app-search-bar>
             <app-classification-overview></app-classification-overview>

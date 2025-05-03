@@ -3,119 +3,37 @@
     <img class="w-20 h-20 animate-spin" src="https://www.svgrepo.com/show/70469/loading.svg" alt="Loading icon">
     <p>Loading...</p>
 </div>
-  
 <!-- Table -->
 <table *ngIf="!isLoading" class="table-container">
     <thead>
-        <tr>
-            <ng-container *ngFor="let header of headers">
-                <th (click)="sortData(header.key)">
-                    <div class="flex items-center space-x-1">
-                        <span>{{ header.label }}</span>
-                            <span class="flex flex-col">
-                            <svg [ngClass]="{ 'text-gray-400': sortedBy !== header.key || sortDirection !== 'asc', 'text-blue-500': sortedBy === header.key && sortDirection === 'asc' }" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7" />
-                            </svg>
-                            <svg [ngClass]="{ 'text-gray-400': sortedBy !== header.key || sortDirection !== 'desc', 'text-blue-500': sortedBy === header.key && sortDirection === 'desc' }" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-                            </svg>
-                        </span>
-                    </div>
-                </th>
-            </ng-container>
-            <th>Actions</th>
-        </tr>
-    </thead>
+        <app-table-header
+            [headers]="headers"
+            [sortedBy]="sortedBy"
+            [sortDirection]="sortDirection"
+            (sort)="sortData($event)">
+        </app-table-header>   
+    </thead> 
     <tbody>
-        <tr *ngFor="let transaction of transactions; trackBy: trackById">
-            <ng-container [ngSwitch]="isEditing(transaction)">
-                <!-- Normal Row -->
-                <ng-container *ngSwitchCase="false">
-                    <td>{{ transaction.transactionsId }}</td>
-                    <td>{{ transaction.account }}</td>
-                    <td>{{ transaction.recipient }}</td>
-                    <td>{{ transaction.description }}</td>
-                    <td [ngClass]="{
-                        'text-red-700': transaction.classificationSource === 0,
-                        'text-green-600': transaction.classificationSource === 1,
-                        'text-yellow-600': transaction.classificationSource === 2,
-                        'text-orange-600': transaction.classificationSource === 3
-                    }">
-                        {{ classificationLabels[transaction.classificationSource] }}
-                    </td>
-                    <td [ngClass]="{ 'bg-yellow-100': ruleBasedColoring[transaction.transactionsId] }">
-                        {{ transaction.category }}
-                    </td>
-                    <td>{{ transaction.amount | currency:'EUR' }}</td>
-                    <td>{{ transaction.date | date }}</td>
-                    <td>
-                        <a class="edit" (click)="editTransaction(transaction)">Edit</a>
-                    </td>
-                </ng-container>
-                <!-- Edit Mode -->
-                <ng-container *ngSwitchCase="true">
-                    <td>{{ transaction.transactionsId }}</td>
-                    <td><input [(ngModel)]="editingTransaction!.account"></td>
-                    <td><input [(ngModel)]="editingTransaction!.recipient"></td>
-                    <td><input [(ngModel)]="editingTransaction!.description"></td>
-                    <td 
-                        [ngClass]="{
-                            'text-red-700': transaction.classificationSource === 0,
-                            'text-green-600': transaction.classificationSource === 1,
-                            'text-yellow-600': transaction.classificationSource === 2,
-                            'text-orange-600': transaction.classificationSource === 3
-                        }"
-                    >
-                        {{ classificationLabels[transaction.classificationSource] }}
-                    </td>
-                    <td class="relative">
-                    <!-- Custom styled autocomplete input -->
-                    <div class="relative">
-                        <input
-                            type="text"
-                            class="category-input"
-                            placeholder="Selecteer categorie"
-                            aria-label="Category"
-                            [matAutocomplete]="auto"
-                            [formControl]="categoryControl"
-                        />
-                        
-                    <!-- Custom dropdown icon -->
-                    <div class="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none text-gray-400">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
-                            <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
-                        </svg>
-                        </div>
-                    </div>
-                    <!-- Custom styled autocomplete panel -->
-                    <mat-autocomplete #auto="matAutocomplete">
-                        <mat-option 
-                            *ngFor="let option of filteredCategories$ | async" 
-                            [value]="option"
-                            >
-                            {{ option }}
-                        </mat-option>
-                    </mat-autocomplete>
-                    </td>
-                    <td><input type="number" [(ngModel)]="editingTransaction!.amount"></td>
-                    <td><input type="date" [(ngModel)]="editingTransaction!.date"></td>
-                    <td class="space-x-2">
-                        <a class="save" (click)="saveTransaction()">Save</a>
-                        <a class="cancel" (click)="cancelEdit()">Cancel</a>
-                    </td>
-                </ng-container>
-            </ng-container>
-        </tr>
+        <app-table-row
+            *ngFor="let transaction of transactions; trackBy: trackById"
+            [transaction]="transaction"
+            [editingTransaction]="editingTransaction"
+            [classificationLabels]="classificationLabels"
+            [ruleBasedColoring]="ruleBasedColoring"
+            [categoryControl]="categoryControl"
+            (edit)="editTransaction(transaction)"
+            (save)="saveTransaction()"
+            (cancel)="cancelEdit()">
+        </app-table-row>
     </tbody>
 </table>
-
+<!-- Paginator -->
 <mat-paginator
     [length]="totalItems"
     [pageSize]="10"
     [pageSizeOptions]="[5, 10, 25, 50]"
     (page)="onPageChange($event)">
 </mat-paginator>
-
 <!-- Action Buttons -->
 <app-tx-actions
     (classify)="classifyAllTransactions()" 
