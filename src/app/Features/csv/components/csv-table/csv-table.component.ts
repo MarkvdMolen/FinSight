@@ -18,6 +18,7 @@ import { ClassificationLogicService } from '../../services/classification-logic.
 import { TxActionsComponent } from "../tx-actions/tx-actions.component";
 import { TableHeaderComponent } from "../table-header/table-header.component";
 import { TableRowComponent } from '../table-row/table-row.component';
+import { TransactionFilterOptions } from '@shared/models/transaction-filter-options.model';
 
 @Component({
     selector: 'app-csv-table',
@@ -126,51 +127,50 @@ export class CsvTableComponent implements OnInit {
         this.fetchTransactions()
     }
 
-    // TODO ONLY APPLY LOADING IF IT TAKES MORE THAN 2 Seconds
-	/**
-	 * Haalt transacties op van de backend met de huidige filter-, sorteer- en paginatie-instellingen.
-	 *
-	 * 1. Zet de `isLoading` vlag aan om een laadindicator te tonen.
-	 * 2. Unsubscribet van een eerdere subscription (indien aanwezig) om memory leaks te voorkomen.
-	 * 3. Roept `TransactionService.getTransactions(...)` aan met de huidige sorteer- en paginatieconfiguratie.
-	 * 4. Zodra de data binnenkomt:
-	 *    - Wordt de `transactions` lijst bijgewerkt.
-	 *    - Wordt de `isLoading` vlag uitgezet.
-	 * 5. Bij een fout:
-	 *    - Wordt de fout gelogd.
-	 *    - De `isLoading` vlag wordt alsnog uitgezet.
-	 *    - Er wordt een lege lijst teruggegeven als fallback.
-	 */
-	fetchTransactions(): void {
-        this.isLoading = true;
+    /**
+     * Fetches transactions using filter, sort and pagination settings.
+     * Uses the `TransactionService.fetchTransactionsWithFilters` method and updates the local transaction state.
+     * A loading spinner is shown only if the request takes longer than 2 seconds.
+     */
+    fetchTransactions(): void {
+        this.transactionSubscription?.unsubscribe();
         this.ruleBasedColoring = {};
-		this.ngOnDestroy();
 
-        const page = this.paginator ? this.paginator.pageIndex : 0;
-        const size = this.paginator ? this.paginator.pageSize : 10;
-        const sortBy = this.sortedBy || 'date';
-        const direction = this.sortDirection || 'asc';
-    
-        this.transactionService.getTransactions(
-            this.searchText,
-            this.searchFields,
-            this.exactAmount,
-            sortBy,
-            direction,
-            page,
-            size
-        ).subscribe({
-            next: (response: TransactionResponse) => {
-                this.transactions = response.content;
-                this.totalItems = response.totalElements;
-                this.isLoading = false;
-            },
-            error: (err) => {
-                console.error('Fout bij laden transacties', err);
-                this.isLoading = false;
-            }
+        let showSpinner = true;
+        const loadingDelay = setTimeout(() => {
+            if (showSpinner) this.isLoading = true;
+        }, 2000);
+      
+        const filters: TransactionFilterOptions = {
+            searchText: this.searchText,
+            searchFields: this.searchFields,
+            exactAmount: this.exactAmount,
+            sortBy: this.sortedBy || 'date',
+            direction: this.sortDirection || 'asc',
+            page: this.paginator?.pageIndex ?? 0,
+            size: this.paginator?.pageSize ?? 10
+        };
+
+        // Subscribe to the backend response
+        this.transactionSubscription = this.transactionService
+            .fetchTransactionsWithFilters(filters)
+            .subscribe({
+                next: (response) => {
+                    clearTimeout(loadingDelay);
+                    showSpinner = false;
+                    this.transactions = response.content;
+                    this.totalItems = response.totalElements;
+                    this.isLoading = false;
+                },
+                error: (err) => {
+                    clearTimeout(loadingDelay);
+                    showSpinner = false;
+                    console.error('Failed to fetch transactions:', err);
+                    this.isLoading = false;
+                }
         });
     }
+      
  
     /**
      * Fetches the list of classification categories from the backend and assigns them to the component state.
