@@ -33,8 +33,8 @@
         
     />
     <mat-autocomplete #auto="matAutocomplete">
-        <mat-option *ngFor="let option of filteredCategories$ | async" [value]="option">
-        {{ option }}
+        <mat-option *ngFor="let option of classificationsCategories | filterCategories:(categoryControl.value || '')" [value]="option">
+            {{ option }}
         </mat-option>
     </mat-autocomplete>
     </ng-container>

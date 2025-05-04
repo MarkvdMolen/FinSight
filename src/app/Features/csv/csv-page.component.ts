@@ -10,7 +10,7 @@ import { ClassificationOverviewComponent } from "@shared/components/classificati
 @Component({
   selector: 'app-csv-page',
   standalone: true,
-  imports: [CommonModule, DefaultButtonComponent, CsvTableComponent, MissingFilesComponent, SearchBarComponent, ClassificationOverviewComponent], 
+  imports: [CommonModule, CsvTableComponent, MissingFilesComponent, SearchBarComponent, ClassificationOverviewComponent], 
   templateUrl: './csv-page.component.html',
   styleUrls: ['./csv-page.component.css']
 })

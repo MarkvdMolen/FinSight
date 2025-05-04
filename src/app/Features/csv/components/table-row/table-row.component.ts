@@ -3,11 +3,12 @@ import { FormControl, FormsModule } from '@angular/forms';
 import { Transaction } from '@shared/models/transaction.model';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { CommonModule } from '@angular/common';
+import { FilterCategoriesPipe } from "../../pipes/filter-categories.pipe";
 
 @Component({
     selector: 'app-table-row', 
     standalone: true,
-    imports: [CommonModule, FormsModule, MatAutocompleteModule],
+    imports: [CommonModule, FormsModule, MatAutocompleteModule, FilterCategoriesPipe],
     templateUrl: './table-row.component.html',
     styleUrl: './table-row.component.css',
     host: { 'style': 'display: table-row;' }
@@ -17,8 +18,8 @@ export class TableRowComponent {
     @Input() editingTransaction!: Transaction | null;
     @Input() classificationLabels: string[] = [];
     @Input() ruleBasedColoring: Record<number, boolean> = {};
-    @Input() filteredCategories$ = null!;
     @Input() categoryControl = new FormControl('');
+    @Input() classificationsCategories: Record<string, string[]> = {};
 
     @Output() edit = new EventEmitter<void>();
     @Output() save = new EventEmitter<void>();

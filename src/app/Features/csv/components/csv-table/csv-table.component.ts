@@ -19,6 +19,7 @@ import { TxActionsComponent } from "../tx-actions/tx-actions.component";
 import { TableHeaderComponent } from "../table-header/table-header.component";
 import { TableRowComponent } from '../table-row/table-row.component';
 import { TransactionFilterOptions } from '@shared/models/transaction-filter-options.model';
+import { FilterCategoriesPipe } from '@features/csv/pipes/filter-categories.pipe';
 
 @Component({
     selector: 'app-csv-table',
@@ -82,6 +83,7 @@ export class CsvTableComponent implements OnInit {
     private transactionService = inject(TransactionService);
     private classificationService = inject(ClassificationService);
     private classificationLogicService = inject(ClassificationLogicService);
+
 	private transactionSubscription: Subscription | undefined;
 
     ngOnInit() {
@@ -89,26 +91,13 @@ export class CsvTableComponent implements OnInit {
         this.getListOfClassificationsCategories();
 
         this.classificationService.getClassifications().subscribe(data => {
-            this.classifications = data; // Fetch JSON from DB
+            this.classifications = data;
         }); 
-
-        // Initilaize Observable on Form with every change execute
-        this.filteredCategories$ = this.categoryControl.valueChanges.pipe( 
-            startWith(''),  // Begin direct met lege input
-            map(value => this._filterCategories(value || ''))   //
-        );
     }
 
 	ngOnDestroy(): void {
 		this.transactionSubscription?.unsubscribe();
 	}
-
-    private _filterCategories(value: string): string[] {
-        const filterValue = value.toLowerCase();
-        return Object.keys(this.classificationsCategories).filter(option =>
-          option.toLowerCase().includes(filterValue)
-        );
-    }  
 
 	/**
 	 * Handler voor paginawijzigingen vanuit de Material paginator.
@@ -170,7 +159,6 @@ export class CsvTableComponent implements OnInit {
                 }
         });
     }
-      
  
     /**
      * Fetches the list of classification categories from the backend and assigns them to the component state.
