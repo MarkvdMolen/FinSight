@@ -14,6 +14,7 @@ import { TransactionService } from '@shared/services/transaction.service';
 import { Transaction } from '@shared/models/transaction.model';
 import { TransactionResponse } from '@shared/models/transaction-response.model';
 import { ClassificationService } from '@shared/services/classification.service';
+import { ClassificationLogicService } from '../../services/classification-logic.service';
 import { TxActionsComponent } from "../tx-actions/tx-actions.component";
 import { TableHeaderComponent } from "../table-header/table-header.component";
 import { TableRowComponent } from '../table-row/table-row.component';
@@ -79,6 +80,7 @@ export class CsvTableComponent implements OnInit {
 
     private transactionService = inject(TransactionService);
     private classificationService = inject(ClassificationService);
+    private classificationLogicService = inject(ClassificationLogicService);
 	private transactionSubscription: Subscription | undefined;
 
     ngOnInit() {
@@ -94,10 +96,6 @@ export class CsvTableComponent implements OnInit {
             startWith(''),  // Begin direct met lege input
             map(value => this._filterCategories(value || ''))   //
         );
-    }
-
-    ngAfterViewInit() {
-        // Paginator binding (optioneel)
     }
 
 	ngOnDestroy(): void {
@@ -173,7 +171,7 @@ export class CsvTableComponent implements OnInit {
             }
         });
     }
-
+ 
     /**
      * Fetches the list of classification categories from the backend and assigns them to the component state.
      */
@@ -184,38 +182,15 @@ export class CsvTableComponent implements OnInit {
     }
 
     /**
-     * Attempts to match a given text to a category based on given classifications for a category.
-     * @param text The combined description and recipient string to match.
-     * @returns The matched category name, or null if no match is found.
-     */
-    private _matchCategory(text: string): string | null {
-        const lowerText = text.toLowerCase();
-        const categories = this.classificationsCategories;
-
-        for (const [category, tags] of Object.entries(categories)) {
-            for (const tag of tags) {
-                if (lowerText.includes(tag.toLowerCase())) {
-                    return category;
-                }
-            }
-        }
-        return null;
-    }   
-
-    /**
      * Classifies all unclassified transactions using rule-based keyword matching.
      * Updates the category and classificationSource if a match is found.
      */
     classifyAllTransactions() {
-        for (const tx of this.transactions) {
-            if (tx.classificationSource !== 0) { return } // Don't classify if its already classified
-
-            const text = `${tx.description} ${tx.recipient}`;
-            const matchedCategory = this._matchCategory(text);
-
-            if (matchedCategory) {
-                tx.category = matchedCategory;
-                tx.classificationSource = 2;
+        const updated = this.classificationLogicService.classify(this.transactions, this.classificationsCategories);
+        this.transactions = updated;
+        // Pas visuele kleurmarkering toe
+        for (const tx of updated) {
+            if (tx.classificationSource === 2) {
                 this.ruleBasedColoring[tx.transactionsId] = true;
             }
         }
