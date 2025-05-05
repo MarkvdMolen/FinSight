@@ -24,30 +24,11 @@
         {{ transaction.category }}
     </ng-container>
     <ng-container *ngIf="isEditing()">
-        <div class="relative">
-          <input
-            type="text"
-            class="category-input w-full"
-            placeholder="Selecteer categorie"
-            aria-label="Category"
-            [matAutocomplete]="auto"
-            [(ngModel)]="editingTransaction!.category"
-          />
-    
-          <!-- Custom dropdown icon -->
-          <div class="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none text-gray-400">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
-              <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
-            </svg>
-          </div>
-        </div>
-    
-        <mat-autocomplete #auto="matAutocomplete">
-          <mat-option *ngFor="let option of classificationsCategories | filterCategories:(categoryControl.value || '')" [value]="option">
-            {{ option }}
-          </mat-option>
-        </mat-autocomplete>
-      </ng-container>
+        <app-autocomplete-dropdown 
+            [(model)]="editingTransaction!.category"
+            [categories]="classificationsCategories"
+        />
+    </ng-container>
 </td>
 <!-- Amount -->
 <td *ngIf="!isEditing()">{{ transaction.amount | currency:'EUR' }}</td>
@@ -59,7 +40,7 @@
 <td>
     <a *ngIf="!isEditing()" class="edit" (click)="edit.emit()">Edit</a>
     <ng-container *ngIf="isEditing()">
-    <a class="save" (click)="save.emit()">Save</a>
-    <a class="cancel" (click)="cancel.emit()">Cancel</a>
+        <a class="save" (click)="save.emit()">Save</a>
+        <a class="cancel" (click)="cancel.emit()">Cancel</a>
     </ng-container>
 </td>

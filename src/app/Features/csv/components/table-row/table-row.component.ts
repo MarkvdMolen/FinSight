@@ -3,19 +3,19 @@ import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Transaction } from '@shared/models/transaction.model';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { CommonModule } from '@angular/common';
-import { FilterCategoriesPipe } from "../../pipes/filter-categories.pipe";
+import { AutocompleteDropdownComponent } from "../autocomplete-dropdown/autocomplete-dropdown.component";
 
 @Component({
     selector: 'app-table-row', 
     standalone: true,
-    imports: [CommonModule, ReactiveFormsModule, FormsModule, MatAutocompleteModule, FilterCategoriesPipe],
+    imports: [CommonModule, ReactiveFormsModule, FormsModule, MatAutocompleteModule, AutocompleteDropdownComponent],
     templateUrl: './table-row.component.html',
     styleUrl: './table-row.component.css',
     host: { 'style': 'display: table-row;' }
 })
 export class TableRowComponent {
     @Input() transaction!: Transaction;
-    @Input() editingTransaction!: Transaction | null;
+    @Input() editingTransaction!: Transaction;
     @Input() classificationLabels: string[] = [];
     @Input() ruleBasedColoring: Record<number, boolean> = {};
     @Input() categoryControl = new FormControl('');
