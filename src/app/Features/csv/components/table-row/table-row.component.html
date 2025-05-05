@@ -10,13 +10,8 @@
 <td *ngIf="!isEditing()">{{ transaction.description }}</td>
 <td *ngIf="isEditing()"><input [(ngModel)]="editingTransaction!.description"></td>
 <!-- Classification -->
-<td [ngClass]="{
-        'text-red-700': transaction.classificationSource === 0,
-        'text-green-600': transaction.classificationSource === 1,
-        'text-yellow-600': transaction.classificationSource === 2,
-        'text-orange-600': transaction.classificationSource === 3
-    }">
-    {{ classificationLabels[transaction.classificationSource] }}
+<td>
+    <app-classification-label-cell [source]="transaction.classificationSource" />
 </td>
 <!-- Category -->
 <td [ngClass]="{ 'bg-yellow-100': ruleBasedColoring[transaction.transactionsId] }">

@@ -4,11 +4,12 @@ import { Transaction } from '@shared/models/transaction.model';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { CommonModule } from '@angular/common';
 import { AutocompleteDropdownComponent } from "../autocomplete-dropdown/autocomplete-dropdown.component";
+import { ClassificationLabelCellComponent } from "../classification-label-cell/classification-label-cell.component";
 
 @Component({
     selector: 'app-table-row', 
     standalone: true,
-    imports: [CommonModule, ReactiveFormsModule, FormsModule, MatAutocompleteModule, AutocompleteDropdownComponent],
+    imports: [CommonModule, ReactiveFormsModule, FormsModule, MatAutocompleteModule, AutocompleteDropdownComponent, ClassificationLabelCellComponent],
     templateUrl: './table-row.component.html',
     styleUrl: './table-row.component.css',
     host: { 'style': 'display: table-row;' }
