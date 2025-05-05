@@ -14,17 +14,22 @@
         </app-table-header>   
     </thead> 
     <tbody>
-        <app-table-row
-            *ngFor="let transaction of transactions; trackBy: trackById"
-            [transaction]="transaction"
-            [editingTransaction]="editingTransaction"
-            [classificationLabels]="classificationLabels"
-            [ruleBasedColoring]="ruleBasedColoring"
-            [categoryControl]="categoryControl"
-            (edit)="editTransaction(transaction)"
-            (save)="saveTransaction()"
-            (cancel)="cancelEdit()">
-        </app-table-row>
+        <ng-container *ngIf="classificationsCategories && (classificationsCategories | keyvalue).length">
+            <app-table-row
+              *ngFor="let transaction of transactions"
+              [transaction]="transaction"
+              [editingTransaction]="editingTransaction"
+              [ruleBasedColoring]="ruleBasedColoring"
+              [classificationLabels]="classificationLabels"
+              [categoryControl]="categoryControl"
+              [classificationsCategories]="classificationsCategories"
+              (edit)="editTransaction(transaction)"
+              (save)="saveTransaction()"
+              (cancel)="cancelEdit()"
+            >
+            </app-table-row>
+          </ng-container>
+          
     </tbody>
 </table>
 <!-- Paginator -->

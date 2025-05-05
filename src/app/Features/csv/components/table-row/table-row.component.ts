@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { FormControl, FormsModule } from '@angular/forms';
+import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Transaction } from '@shared/models/transaction.model';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { CommonModule } from '@angular/common';
@@ -8,7 +8,7 @@ import { FilterCategoriesPipe } from "../../pipes/filter-categories.pipe";
 @Component({
     selector: 'app-table-row', 
     standalone: true,
-    imports: [CommonModule, FormsModule, MatAutocompleteModule, FilterCategoriesPipe],
+    imports: [CommonModule, ReactiveFormsModule, FormsModule, MatAutocompleteModule, FilterCategoriesPipe],
     templateUrl: './table-row.component.html',
     styleUrl: './table-row.component.css',
     host: { 'style': 'display: table-row;' }
