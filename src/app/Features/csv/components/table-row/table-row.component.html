@@ -14,7 +14,8 @@
     <app-classification-label-cell [source]="transaction.classificationSource" />
 </td>
 <!-- Category -->
-<td [ngClass]="{ 'bg-yellow-100': ruleBasedColoring[transaction.transactionsId] }">
+<td class="min-w-[220px] max-w-[280px] overflow-hidden"
+    [ngClass]="{ 'bg-yellow-100': ruleBasedColoring[transaction.transactionsId] }">
     <ng-container *ngIf="!isEditing()">
         {{ transaction.category }}
     </ng-container>

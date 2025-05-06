@@ -1,7 +1,7 @@
 <div class="relative w-full">
     <input
         type="text"
-        class="category-input w-full"
+        class="w-full truncate overflow-hidden text-ellipsis whitespace-nowrap"
         placeholder="Selecteer categorie"
         aria-label="Categorie"
         [(ngModel)]="model"
@@ -16,7 +16,7 @@
     </div>
 
     <mat-autocomplete #auto="matAutocomplete">
-        <mat-option *ngFor="let option of categories | filterCategories:(model || '')" [value]="option">
+        <mat-option class="px-2" *ngFor="let option of categories | filterCategories:(model || '')" [value]="option">
             {{ option }}
         </mat-option>
     </mat-autocomplete>
