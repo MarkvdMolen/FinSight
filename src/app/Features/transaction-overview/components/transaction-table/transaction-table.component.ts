@@ -15,13 +15,13 @@ import { Transaction } from '@shared/models/transaction.model';
 import { ClassificationService } from '@shared/services/classification.service';
 import { ClassificationLogicService } from '../../services/classification-logic.service';
 import { TxActionsComponent } from "../tx-actions/tx-actions.component";
-import { TableHeaderComponent } from "../table-header/table-header.component";
-import { TableRowComponent } from '../table-row/table-row.component';
+import { TableHeaderComponent } from "./components/table-header/table-header.component";
+import { TableRowComponent } from './components/table-row/table-row.component';
 import { TransactionFilterOptions } from '@shared/models/transaction-filter-options.model';
 import { LoadingSpinnerComponent } from "@shared/components/loading-spinner/loading-spinner.component";
 
 @Component({
-    selector: 'app-csv-table',
+    selector: 'app-transaction-table',
     standalone: true,
     imports: [
     CommonModule,
@@ -39,10 +39,10 @@ import { LoadingSpinnerComponent } from "@shared/components/loading-spinner/load
     TableRowComponent,
     LoadingSpinnerComponent
 ],
-    templateUrl: './csv-table.component.html',
-    styleUrls: ['./csv-table.component.css']
+    templateUrl: './transaction-table.component.html',
+    styleUrls: ['./transaction-table.component.css']
 })
-export class CsvTableComponent implements OnInit {
+export class TransactionTableComponent implements OnInit {
     headers = [
         { key: 'transactionsId', label: 'ID' },
         { key: 'account', label: 'Account' },

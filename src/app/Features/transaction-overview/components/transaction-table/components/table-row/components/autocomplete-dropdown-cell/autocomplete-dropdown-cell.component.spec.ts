@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { AutocompleteDropdownComponent } from './autocomplete-dropdown.component';
+import { AutocompleteDropdownCellComponent } from './autocomplete-dropdown-cell.component';
 
 describe('AutocompleteDropdownComponent', () => {
-  let component: AutocompleteDropdownComponent;
-  let fixture: ComponentFixture<AutocompleteDropdownComponent>;
+  let component: AutocompleteDropdownCellComponent;
+  let fixture: ComponentFixture<AutocompleteDropdownCellComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [AutocompleteDropdownComponent]
+      imports: [AutocompleteDropdownCellComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(AutocompleteDropdownComponent);
+    fixture = TestBed.createComponent(AutocompleteDropdownCellComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

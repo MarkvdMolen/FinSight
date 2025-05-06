@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { CsvPageComponent } from './csv-page.component';
+import { CsvTableComponent } from './transaction-table.component';
 
-describe('CsvPageComponent', () => {
-  let component: CsvPageComponent;
-  let fixture: ComponentFixture<CsvPageComponent>;
+describe('CsvTableComponent', () => {
+  let component: CsvTableComponent;
+  let fixture: ComponentFixture<CsvTableComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [CsvPageComponent]
+      imports: [CsvTableComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(CsvPageComponent);
+    fixture = TestBed.createComponent(CsvTableComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

@@ -20,7 +20,7 @@
         {{ transaction.category }}
     </ng-container>
     <ng-container *ngIf="isEditing()">
-        <app-autocomplete-dropdown 
+        <app-autocomplete-dropdown-cell 
             [(model)]="editingTransaction!.category"
             [categories]="classificationsCategories"
         />
