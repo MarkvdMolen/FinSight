@@ -4,7 +4,7 @@
         <ng-container *ngIf="hasData; else noData">
             <app-search-bar (search)="onSearch($event)"></app-search-bar>
             <app-classification-overview></app-classification-overview>
-            <app-csv-table #csvTable></app-csv-table>
+            <app-transaction-table #csvTable></app-transaction-table>
         </ng-container>
 
 
