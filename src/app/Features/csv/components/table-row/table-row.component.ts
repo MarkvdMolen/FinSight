@@ -16,7 +16,7 @@ import { ClassificationLabelCellComponent } from "../classification-label-cell/c
 })
 export class TableRowComponent {
     @Input() transaction!: Transaction;
-    @Input() editingTransaction!: Transaction;
+    @Input() editingTransaction: Transaction | null = null;
     @Input() classificationLabels: string[] = [];
     @Input() ruleBasedColoring: Record<number, boolean> = {};
     @Input() categoryControl = new FormControl('');

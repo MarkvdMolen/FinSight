@@ -7,19 +7,18 @@ import { MatPaginatorModule, MatPaginator, PageEvent } from '@angular/material/p
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { MatInputModule } from '@angular/material/input';
-import { map, Observable, startWith, Subscription } from 'rxjs';
+import { map, Observable, Subscription } from 'rxjs';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 // Shared imports
 import { TransactionService } from '@shared/services/transaction.service';
 import { Transaction } from '@shared/models/transaction.model';
-import { TransactionResponse } from '@shared/models/transaction-response.model';
 import { ClassificationService } from '@shared/services/classification.service';
 import { ClassificationLogicService } from '../../services/classification-logic.service';
 import { TxActionsComponent } from "../tx-actions/tx-actions.component";
 import { TableHeaderComponent } from "../table-header/table-header.component";
 import { TableRowComponent } from '../table-row/table-row.component';
 import { TransactionFilterOptions } from '@shared/models/transaction-filter-options.model';
-import { FilterCategoriesPipe } from '@features/csv/pipes/filter-categories.pipe';
+import { LoadingSpinnerComponent } from "@shared/components/loading-spinner/loading-spinner.component";
 
 @Component({
     selector: 'app-csv-table',
@@ -37,7 +36,8 @@ import { FilterCategoriesPipe } from '@features/csv/pipes/filter-categories.pipe
     MatInputModule,
     TxActionsComponent,
     TableHeaderComponent,
-    TableRowComponent
+    TableRowComponent,
+    LoadingSpinnerComponent
 ],
     templateUrl: './csv-table.component.html',
     styleUrls: ['./csv-table.component.css']

@@ -1,8 +1,5 @@
 <!-- Loading state -->
-<div *ngIf="isLoading" class="flex flex-col gap-4 p-4 flex-wrap items-center text-center">
-    <img class="w-20 h-20 animate-spin" src="https://www.svgrepo.com/show/70469/loading.svg" alt="Loading icon">
-    <p>Loading...</p>
-</div>
+<app-loading-spinner *ngIf="isLoading"/>
 <!-- Table -->
 <table *ngIf="!isLoading" class="table-container">
     <thead>
