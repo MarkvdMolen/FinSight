@@ -7,29 +7,38 @@ import { MatPaginatorModule, MatPaginator, PageEvent } from '@angular/material/p
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { MatInputModule } from '@angular/material/input';
-import { map, Observable, startWith, Subscription } from 'rxjs';
+import { map, Observable, Subscription } from 'rxjs';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 // Shared imports
 import { TransactionService } from '@shared/services/transaction.service';
 import { Transaction } from '@shared/models/transaction.model';
-import { TransactionResponse } from '@shared/models/transaction-response.model';
 import { ClassificationService } from '@shared/services/classification.service';
+import { ClassificationLogicService } from '../../services/classification-logic.service';
+import { TxActionsComponent } from "../tx-actions/tx-actions.component";
+import { TableHeaderComponent } from "../table-header/table-header.component";
+import { TableRowComponent } from '../table-row/table-row.component';
+import { TransactionFilterOptions } from '@shared/models/transaction-filter-options.model';
+import { LoadingSpinnerComponent } from "@shared/components/loading-spinner/loading-spinner.component";
 
 @Component({
     selector: 'app-csv-table',
     standalone: true,
     imports: [
-      CommonModule,
-      FormsModule,
-      MatProgressSpinnerModule,
-      MatTableModule,
-      MatPaginatorModule,
-      MatFormFieldModule,
-      MatSelectModule,
-      ReactiveFormsModule,  
-      MatAutocompleteModule,
-      MatInputModule 
-    ],
+    CommonModule,
+    FormsModule,
+    MatProgressSpinnerModule,
+    MatTableModule,
+    MatPaginatorModule,
+    MatFormFieldModule,
+    MatSelectModule,
+    ReactiveFormsModule,
+    MatAutocompleteModule,
+    MatInputModule,
+    TxActionsComponent,
+    TableHeaderComponent,
+    TableRowComponent,
+    LoadingSpinnerComponent
+],
     templateUrl: './csv-table.component.html',
     styleUrls: ['./csv-table.component.css']
 })
@@ -73,6 +82,8 @@ export class CsvTableComponent implements OnInit {
 
     private transactionService = inject(TransactionService);
     private classificationService = inject(ClassificationService);
+    private classificationLogicService = inject(ClassificationLogicService);
+
 	private transactionSubscription: Subscription | undefined;
 
     ngOnInit() {
@@ -80,30 +91,13 @@ export class CsvTableComponent implements OnInit {
         this.getListOfClassificationsCategories();
 
         this.classificationService.getClassifications().subscribe(data => {
-            this.classifications = data; // Fetch JSON from DB
+            this.classifications = data;
         }); 
-
-        // Initilaize Observable on Form with every change execute
-        this.filteredCategories$ = this.categoryControl.valueChanges.pipe( 
-            startWith(''),  // Begin direct met lege input
-            map(value => this._filterCategories(value || ''))   //
-        );
-    }
-
-    ngAfterViewInit() {
-        // Paginator binding (optioneel)
     }
 
 	ngOnDestroy(): void {
 		this.transactionSubscription?.unsubscribe();
 	}
-
-    private _filterCategories(value: string): string[] {
-        const filterValue = value.toLowerCase();
-        return Object.keys(this.classificationsCategories).filter(option =>
-          option.toLowerCase().includes(filterValue)
-        );
-    }  
 
 	/**
 	 * Handler voor paginawijzigingen vanuit de Material paginator.
@@ -122,52 +116,50 @@ export class CsvTableComponent implements OnInit {
         this.fetchTransactions()
     }
 
-    // TODO ONLY APPLY LOADING IF IT TAKES MORE THAN 2 Seconds
-	/**
-	 * Haalt transacties op van de backend met de huidige filter-, sorteer- en paginatie-instellingen.
-	 *
-	 * 1. Zet de `isLoading` vlag aan om een laadindicator te tonen.
-	 * 2. Unsubscribet van een eerdere subscription (indien aanwezig) om memory leaks te voorkomen.
-	 * 3. Roept `TransactionService.getTransactions(...)` aan met de huidige sorteer- en paginatieconfiguratie.
-	 * 4. Zodra de data binnenkomt:
-	 *    - Wordt de `transactions` lijst bijgewerkt.
-	 *    - Wordt de `isLoading` vlag uitgezet.
-	 * 5. Bij een fout:
-	 *    - Wordt de fout gelogd.
-	 *    - De `isLoading` vlag wordt alsnog uitgezet.
-	 *    - Er wordt een lege lijst teruggegeven als fallback.
-	 */
-	fetchTransactions(): void {
-        this.isLoading = true;
+    /**
+     * Fetches transactions using filter, sort and pagination settings.
+     * Uses the `TransactionService.fetchTransactionsWithFilters` method and updates the local transaction state.
+     * A loading spinner is shown only if the request takes longer than 2 seconds.
+     */
+    fetchTransactions(): void {
+        this.transactionSubscription?.unsubscribe();
         this.ruleBasedColoring = {};
-		this.ngOnDestroy();
 
-        const page = this.paginator ? this.paginator.pageIndex : 0;
-        const size = this.paginator ? this.paginator.pageSize : 10;
-        const sortBy = this.sortedBy || 'date';
-        const direction = this.sortDirection || 'asc';
-    
-        this.transactionService.getTransactions(
-            this.searchText,
-            this.searchFields,
-            this.exactAmount,
-            sortBy,
-            direction,
-            page,
-            size
-        ).subscribe({
-            next: (response: TransactionResponse) => {
-                this.transactions = response.content;
-                this.totalItems = response.totalElements;
-                this.isLoading = false;
-            },
-            error: (err) => {
-                console.error('Fout bij laden transacties', err);
-                this.isLoading = false;
-            }
+        let showSpinner = true;
+        const loadingDelay = setTimeout(() => {
+            if (showSpinner) this.isLoading = true;
+        }, 2000);
+      
+        const filters: TransactionFilterOptions = {
+            searchText: this.searchText,
+            searchFields: this.searchFields,
+            exactAmount: this.exactAmount,
+            sortBy: this.sortedBy || 'date',
+            direction: this.sortDirection || 'asc',
+            page: this.paginator?.pageIndex ?? 0,
+            size: this.paginator?.pageSize ?? 10
+        };
+
+        // Subscribe to the backend response
+        this.transactionSubscription = this.transactionService
+            .fetchTransactionsWithFilters(filters)
+            .subscribe({
+                next: (response) => {
+                    clearTimeout(loadingDelay);
+                    showSpinner = false;
+                    this.transactions = response.content;
+                    this.totalItems = response.totalElements;
+                    this.isLoading = false;
+                },
+                error: (err) => {
+                    clearTimeout(loadingDelay);
+                    showSpinner = false;
+                    console.error('Failed to fetch transactions:', err);
+                    this.isLoading = false;
+                }
         });
     }
-
+ 
     /**
      * Fetches the list of classification categories from the backend and assigns them to the component state.
      */
@@ -178,38 +170,15 @@ export class CsvTableComponent implements OnInit {
     }
 
     /**
-     * Attempts to match a given text to a category based on given classifications for a category.
-     * @param text The combined description and recipient string to match.
-     * @returns The matched category name, or null if no match is found.
-     */
-    private _matchCategory(text: string): string | null {
-        const lowerText = text.toLowerCase();
-        const categories = this.classificationsCategories;
-
-        for (const [category, tags] of Object.entries(categories)) {
-            for (const tag of tags) {
-                if (lowerText.includes(tag.toLowerCase())) {
-                    return category;
-                }
-            }
-        }
-        return null;
-    }   
-
-    /**
      * Classifies all unclassified transactions using rule-based keyword matching.
      * Updates the category and classificationSource if a match is found.
      */
     classifyAllTransactions() {
-        for (const tx of this.transactions) {
-            if (tx.classificationSource !== 0) { return } // Don't classify if its already classified
-
-            const text = `${tx.description} ${tx.recipient}`;
-            const matchedCategory = this._matchCategory(text);
-
-            if (matchedCategory) {
-                tx.category = matchedCategory;
-                tx.classificationSource = 2;
+        const updated = this.classificationLogicService.classify(this.transactions, this.classificationsCategories);
+        this.transactions = updated;
+        // Pas visuele kleurmarkering toe
+        for (const tx of updated) {
+            if (tx.classificationSource === 2) {
                 this.ruleBasedColoring[tx.transactionsId] = true;
             }
         }

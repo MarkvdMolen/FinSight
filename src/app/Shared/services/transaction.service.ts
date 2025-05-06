@@ -4,6 +4,7 @@ import { map, Observable, of } from 'rxjs';
 import { Transaction } from '@shared/models/transaction.model';
 import { TransactionResponse } from '@shared/models/transaction-response.model';
 import { ClassificationObject } from '@shared/models/classification-object.model';
+import { TransactionFilterOptions } from '@shared/models/transaction-filter-options.model';
 
 const BASE_URL = 'http://localhost:8080/api/transactions';
 
@@ -52,6 +53,35 @@ export class TransactionService {
         }
 
         return this.http.get<TransactionResponse>(BASE_URL, { params });
+    }
+
+    /**
+     * Fetches transactions based on provided filter, sort and pagination options.
+     *
+     * @param filters - An object containing query parameters for filtering, sorting and paging.
+     * @returns An observable of paginated transaction results.
+     *
+     * @example
+     * transactionService.fetchTransactionsWithFilters({
+     *   searchText: 'supermarkt',
+     *   searchFields: ['description', 'recipient'],
+     *   exactAmount: null,
+     *   sortBy: 'date',
+     *   direction: 'asc',
+     *   page: 0,
+     *   size: 10
+     * }).subscribe(res => this.transactions = res.content);
+     */
+    fetchTransactionsWithFilters(filters: TransactionFilterOptions): Observable<TransactionResponse> {
+        return this.getTransactions(
+            filters.searchText,
+            filters.searchFields,
+            filters.exactAmount,
+            filters.sortBy,
+            filters.direction,
+            filters.page,
+            filters.size
+        );
     }
 
     /**

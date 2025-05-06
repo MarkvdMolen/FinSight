@@ -1,0 +1,4 @@
+input {
+    @apply
+    border p-1;
+}
