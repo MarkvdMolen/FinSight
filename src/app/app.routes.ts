@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
 import { HomeComponent } from '@features/overview/pages/home/home.component';
-import { TransactionOverviewPageComponent } from '@features/csv/transaction-overview-page.component';
+import { TransactionOverviewPageComponent } from '@features/transaction-overview/transaction-overview-page.component';
 import { ClassificationViewerComponent } from '@features/classification-viewer/classification-viewer.component';
 
 export const routes: Routes = [

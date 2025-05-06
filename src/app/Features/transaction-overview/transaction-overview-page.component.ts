@@ -1,7 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { DefaultButtonComponent } from '@shared/components/default-button/default-button.component';
-import { CsvTableComponent } from "@features/csv/components/transaction-table/transaction-table.component";
+import { TransactionTableComponent } from "@features/transaction-overview/components/transaction-table/transaction-table.component";
 import { MissingFilesComponent } from "@shared/components/missing-files/missing-files.component";
 import { TransactionService } from '@shared/services/transaction.service';
 import { SearchBarComponent } from "@shared/components/search-bar/search-bar.component";
@@ -10,7 +9,7 @@ import { ClassificationOverviewComponent } from "@shared/components/classificati
 @Component({
   selector: 'app-transaction-overview-page',
   standalone: true,
-  imports: [CommonModule, CsvTableComponent, MissingFilesComponent, SearchBarComponent, ClassificationOverviewComponent], 
+  imports: [CommonModule, TransactionTableComponent, MissingFilesComponent, SearchBarComponent, ClassificationOverviewComponent], 
   templateUrl: './transaction-overview-page.component.html',
   styleUrls: ['./transaction-overview-page.component.css']
 })
@@ -18,7 +17,7 @@ export class TransactionOverviewPageComponent implements OnInit {
 
     hasData = false;
     isLoading = true;
-    @ViewChild('csvTable') csvTable!: CsvTableComponent;
+    @ViewChild('csvTable') csvTable!: TransactionTableComponent;
 
     constructor(private transactionService: TransactionService) { }
     

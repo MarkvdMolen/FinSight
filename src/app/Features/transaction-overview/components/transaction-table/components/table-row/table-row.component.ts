@@ -3,8 +3,8 @@ import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Transaction } from '@shared/models/transaction.model';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { CommonModule } from '@angular/common';
-import { AutocompleteDropdownComponent } from "../autocomplete-dropdown/autocomplete-dropdown.component";
-import { ClassificationLabelCellComponent } from "../classification-label-cell/classification-label-cell.component";
+import { AutocompleteDropdownComponent } from "./components/autocomplete-dropdown/autocomplete-dropdown.component";
+import { ClassificationLabelCellComponent } from "./components/classification-label-cell/classification-label-cell.component";
 
 @Component({
     selector: 'app-table-row', 
