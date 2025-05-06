@@ -6,7 +6,7 @@ import { MatInputModule } from '@angular/material/input';
 import { FilterCategoriesPipe } from '../../../../../../pipes/filter-categories.pipe';
 
 @Component({
-  selector: 'app-autocomplete-dropdown',
+  selector: 'app-autocomplete-dropdown-cell',
   standalone: true,
   imports: [
     CommonModule,
@@ -15,10 +15,10 @@ import { FilterCategoriesPipe } from '../../../../../../pipes/filter-categories.
     MatInputModule,
     FilterCategoriesPipe
   ],
-  templateUrl: './autocomplete-dropdown.component.html',
-  styleUrl: './autocomplete-dropdown.component.css'
+  templateUrl: './autocomplete-dropdown-cell.component.html',
+  styleUrl: './autocomplete-dropdown-cell.component.css'
 })
-export class AutocompleteDropdownComponent {
+export class AutocompleteDropdownCellComponent {
     @Input() categories: Record<string, string[]> = {};
     @Input() model: string | null = null;
     @Output() modelChange = new EventEmitter<string | null>();
