@@ -88,7 +88,7 @@ export class TransactionService {
      * Bulk update multiple transactions.
      */
     pushAllTransactions(transactions: Transaction[]): Observable<any> {
-    	return this.http.post<Transaction[]>(`${BASE_URL}/bulk-update`, transactions);
+    	return this.http.put<Transaction[]>(`${BASE_URL}/bulk-update`, transactions);
     }
 
     /**
@@ -130,20 +130,20 @@ export class TransactionService {
    * Retrieve cached transactions from localStorage.
    * @returns Cached transactions or null if the cache is invalid.
    */
-  getCachedTransactions(): TransactionResponse | undefined {
-    const cached = localStorage.getItem(this.cacheKey);
-    if (cached) {
-      const parsed = JSON.parse(cached);
-      const cacheDuration = 1000 * 60 * 10; // 10 minutes
-      const isCacheValid = Date.now() - parsed.timestamp < cacheDuration;
-      if (isCacheValid) {
-        return parsed.data;
-      } else {
-        this.clearCache();
-      }
-    }
-    return this.cachedTransactions;
-  }
+  // getCachedTransactions(): TransactionResponse | undefined {
+  //   const cached = localStorage.getItem(this.cacheKey);
+  //   if (cached) {
+  //     const parsed = JSON.parse(cached);
+  //     const cacheDuration = 1000 * 60 * 10; // 10 minutes
+  //     const isCacheValid = Date.now() - parsed.timestamp < cacheDuration;
+  //     if (isCacheValid) {
+  //       return parsed.data;
+  //     } else {
+  //       this.clearCache();
+  //     }
+  //   }
+  //   return this.cachedTransactions;
+  // }
 
   /**
    * Clear the cached transactions.
@@ -155,15 +155,15 @@ export class TransactionService {
   /**
    * Check if there is data available (from cache or backend).
    */
-  checkData() {
-    this.getTransactions().subscribe(transactions => {
-      if (transactions && transactions.content.length > 0) {
-        this.hasData = true;
-      } else {
-        this.hasData = false;
-      }
-    });
-  }
+  // checkData() {
+  //   this.getTransactions().subscribe(transactions => {
+  //     if (transactions && transactions.content.length > 0) {
+  //       this.hasData = true;
+  //     } else {
+  //       this.hasData = false;
+  //     }
+  //   });
+  // }
 
   getData() {
     return this.hasData;
