@@ -9,28 +9,18 @@ import { DisplayCardComponent } from "@features/overview/components/display-card
 import { ExpenseIncomeLineChartComponent } from "@features/overview/components/expense-income-line-chart/expense-income-line-chart.component";
 import { MissingFilesComponent } from "@shared/components/missing-files/missing-files.component";
 import { CommonModule } from '@angular/common';
-import { TransactionService } from '@shared/services/transaction.service';
-import { FinancialService } from '@shared/services/financial.service';
 
 @Component({
   selector: 'app-home',
   standalone: true,
   imports: [RouterOutlet, CommonModule, GreetingsComponent, DisplayCardComponent, ExpenseIncomeLineChartComponent, MissingFilesComponent],
   templateUrl: './home.component.html',
-  styleUrls: ['./home.component.css'] // Note: Corrected 'styleUrl' to 'styleUrls'
+  styleUrls: ['./home.component.css'] 
 })
 export class HomeComponent {
 
-  constructor(
-    private transactionService: TransactionService,
-    private financialService: FinancialService
-  ) {
-  }
-
-
-  // getData() {
-  //   this.transactionService.checkData();
-  //   return this.transactionService.getData()
-  // }
+  chartHasData = false;
+  
+  constructor() {}
 
 }

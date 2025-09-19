@@ -1,16 +1,20 @@
 <div class="main-content">
-  <header>
-    <app-greetings></app-greetings>
-  </header>
+	<header>
+		<app-greetings></app-greetings>
+	</header>
 
-  <!-- <section class="grid grid-cols-4 gap-4 mt-4">
-    <app-display-card></app-display-card>
-    <app-display-card></app-display-card>
-  </section> -->
-  <!-- <ng-container *ngIf="this.getData(); else noData"> -->
-    <app-expense-income-line-chart></app-expense-income-line-chart>
-  <!-- </ng-container> -->
-  <ng-template #noData>
-    <app-missing-files></app-missing-files>
-  </ng-template>
+	<!-- <section class="grid grid-cols-4 gap-4 mt-4">
+	<app-display-card></app-display-card>
+	<app-display-card></app-display-card>
+	</section> -->
+
+	
+	<app-expense-income-line-chart (hasData)="chartHasData = $event"></app-expense-income-line-chart>
+	
+	<ng-container *ngIf="chartHasData; else noData">
+	</ng-container>
+
+	<ng-template #noData>
+		<app-missing-files></app-missing-files>
+	</ng-template>
 </div>

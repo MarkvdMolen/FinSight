@@ -1,8 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FinancialService } from '@shared/services/financial.service';
 import { NgxChartsModule, Color, ScaleType } from '@swimlane/ngx-charts';
 import * as shape from 'd3-shape';
-import { map } from 'rxjs';
+import { filter, map, shareReplay, tap } from 'rxjs';
 import { Observable } from 'rxjs/internal/Observable';
 
 @Component({
@@ -39,6 +39,8 @@ export class ExpenseIncomeLineChartComponent implements OnInit {
     curve: any = shape.curveBumpX
 
     monthlySummary$!: Observable<any>;
+    @Output() hasData = new EventEmitter<boolean>();
+
     private monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
     private monthMap: Record<string, number> = {
         january: 0, february: 1, march: 2, april: 3, may: 4, june: 5,
@@ -49,20 +51,36 @@ export class ExpenseIncomeLineChartComponent implements OnInit {
     constructor(private financialService: FinancialService) {}
 
     ngOnInit() {
-        this.monthlySummary$ = this.getMonthlySummary(2025);
+        this.monthlySummary$ = this.getMonthlySummary(2025).pipe(
+            tap(data => { this.hasData.emit(!!data && data.length > 0); }),
+            shareReplay(1) 
+        );
     }
 
-        /**
-     * Retrieves the monthly transaction summary for the given year and transforms
-     * the raw API response into chart-ready data using `calculateMonthlySummary`.
+    /**
+     * Retrieves the monthly income and expense summary for a given year.
      *
-     * @param {number} year - The year for which the summary should be calculated.
-     * @returns {Observable<any>} An observable that emits processed data formatted 
-     *   for charting (e.g., income vs. expenses per month).
+     * This method fetches raw transaction summary data from the financial service
+     * (`getMonthlyIncomeAndOutcome`), filters out empty results, transforms the data
+     * into a chart-ready format using `calculateMonthlySummary`, and ensures the
+     * resulting observable is shared and replayed across multiple subscribers.
+     *
+     * Processing steps:
+     *  1. Calls the API to fetch income/expense data per month.
+     *  2. Filters out empty arrays to avoid generating default values.
+     *  3. Maps the raw response to the ngx-charts compatible format.
+     *  4. Uses `shareReplay(1)` to cache the result, preventing multiple API calls
+     *     when used with multiple subscribers or async pipes.
+     *
+     * @param {number} year - The year for which the monthly summary should be retrieved.
+     * @returns {Observable<any>} An observable that emits chart-ready data for income
+     *   and expenses per month, or completes without emitting if the response is empty.
      */
     public getMonthlySummary(year: number): Observable<any> {
         return this.financialService.getMonthlyIncomeAndOutcome(year).pipe(
-            map(data => this.calculateMonthlySummary(data))
+            filter(data => Array.isArray(data) && data.length > 0),
+            map(data => this.calculateMonthlySummary(data)),
+            shareReplay(1)
         );
     }
 
