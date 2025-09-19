@@ -7,9 +7,9 @@
     <app-display-card></app-display-card>
     <app-display-card></app-display-card>
   </section> -->
-  <ng-container *ngIf="this.getData(); else noData">
+  <!-- <ng-container *ngIf="this.getData(); else noData"> -->
     <app-expense-income-line-chart></app-expense-income-line-chart>
-  </ng-container>
+  <!-- </ng-container> -->
   <ng-template #noData>
     <app-missing-files></app-missing-files>
   </ng-template>

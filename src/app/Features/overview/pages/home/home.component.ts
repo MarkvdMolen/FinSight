@@ -10,6 +10,7 @@ import { ExpenseIncomeLineChartComponent } from "@features/overview/components/e
 import { MissingFilesComponent } from "@shared/components/missing-files/missing-files.component";
 import { CommonModule } from '@angular/common';
 import { TransactionService } from '@shared/services/transaction.service';
+import { FinancialService } from '@shared/services/financial.service';
 
 @Component({
   selector: 'app-home',
@@ -20,10 +21,16 @@ import { TransactionService } from '@shared/services/transaction.service';
 })
 export class HomeComponent {
 
-  constructor(private transactionService: TransactionService) { }
-
-  getData() {
-    return this.transactionService.hasData
+  constructor(
+    private transactionService: TransactionService,
+    private financialService: FinancialService
+  ) {
   }
+
+
+  // getData() {
+  //   this.transactionService.checkData();
+  //   return this.transactionService.getData()
+  // }
 
 }
