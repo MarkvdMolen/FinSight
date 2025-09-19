@@ -10,6 +10,8 @@
 
 	
 	<app-expense-income-line-chart (hasData)="chartHasData = $event"></app-expense-income-line-chart>
+
+	<app-summary-table></app-summary-table>
 	
 	<ng-container *ngIf="chartHasData; else noData">
 	</ng-container>
