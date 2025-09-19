@@ -1,5 +1,32 @@
-<div class="flex flex-col justify-center items-center mt-36 select-none">
-    <img src="mappy_question_1.png" alt="Missing Content" class="w-64 h-64 mb-4">
-    <p class="text-5xl font-bold text-[#019b98] select-text">No Data?</p>
-    <p class="text-3xl text-[#3f7a8d] select-text">Head over to the upload page to get started by uploading your first set of data!</p>
+<div class="w-full h-full flex items-center justify-center px-4">
+  <div class="max-w-4xl w-full flex flex-col lg:flex-row items-center gap-12">
+    <!-- Left side - Illustration -->
+    <div class="flex-1 flex flex-col items-center lg:items-start">
+        <img src="mappy_question_1.png" alt="Missing Content" class="w-64 h-64 mb-4">
+    </div>
+
+    <!-- Right side - Content -->
+    <div class="flex-1 text-center lg:text-left">
+        <p class="text-5xl font-bold text-[#019b98] select-text">No Data?</p>
+
+        <p class="text-[#3f7a8d] text-lg mb-2 max-w-md mx-auto lg:mx-0">
+            Head over to the Upload page and kick things off by adding your first set of data!
+        </p>
+
+        <a
+            [routerLink]="['/upload']"
+            class="inline-flex items-center text-[#019b98] font-medium hover:text-[#036e55] transition-colors group"
+        >
+            <span>Upload</span>
+            <svg
+                class="ml-2 w-4 h-4 transform group-hover:translate-x-1 transition-transform"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+            >
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+            </svg>
+        </a>
+    </div>
+  </div>
 </div>
