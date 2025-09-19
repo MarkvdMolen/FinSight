@@ -1,50 +1,44 @@
-<div class="min-h-screen bg-background p-6">
-  <div class="max-w-6xl mx-auto shadow-lg rounded-lg bg-card text-card-foreground">
-    <!-- Table -->
-    <div class="overflow-x-auto">
-      <table class="w-full border-collapse">
-        <thead>
-          <tr>
-            <th class="bg-primary text-primary-foreground px-6 py-4 text-left font-semibold rounded-tl-lg border border-border">Maand</th>
-            <th class="bg-primary text-primary-foreground px-6 py-4 text-right font-semibold border border-border">Inkomsten</th>
-            <th class="bg-primary text-primary-foreground px-6 py-4 text-right font-semibold border border-border">Uitgaven</th>
-            <th class="bg-primary text-primary-foreground px-6 py-4 text-right font-semibold rounded-tr-lg border border-border">Netto</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let data of monthlyData; let i = index"
-              [ngClass]="i % 2 === 0 ? 'bg-muted/30' : 'bg-background'"
-              class="hover:bg-accent/50 transition-colors">
-            <td class="px-6 py-4 font-medium border border-border">{{ data.month }}</td>
-            <td class="px-6 py-4 text-right font-mono border border-border text-primary">
-              {{ formatCurrency(data.income) }}
-            </td>
-            <td class="px-6 py-4 text-right font-mono border border-border text-destructive">
-              {{ formatCurrency(data.expenses) }}
-            </td>
-            <td class="px-6 py-4 text-right font-mono font-semibold border border-border"
-                [ngClass]="data.income - data.expenses >= 0 ? 'text-primary' : 'text-destructive'">
-              {{ formatCurrency(data.income - data.expenses) }}
-            </td>
-          </tr>
-        </tbody>
-        <tfoot>
-          <tr class="bg-secondary text-secondary-foreground font-bold">
-            <td class="px-6 py-5 text-lg rounded-bl-lg border border-border">Totaal</td>
-            <td class="px-6 py-5 text-right text-lg font-mono border border-border">
-              {{ formatCurrency(totalIncome) }}
-            </td>
-            <td class="px-6 py-5 text-right text-lg font-mono border border-border">
-              {{ formatCurrency(totalExpenses) }}
-            </td>
-            <td class="px-6 py-5 text-right text-lg font-mono rounded-br-lg border border-border"
-                [ngClass]="totalNet >= 0 ? 'text-accent' : 'text-destructive'">
-              {{ formatCurrency(totalNet) }}
-            </td>
-          </tr>
-        </tfoot>
-      </table>
-    </div>
+<div class="p-6">
+    <div class="max-w-6xl mx-auto shadow-lg rounded-lg bg-card text-card-foreground">
+        <!-- Table -->
+        <div class="overflow-x-auto">
+            <table class="w-full border-collapse">
+                <thead>
+                    <tr>
+                        <th class="rounded-tl-lg">Maand</th>
+                        <th>Inkomsten</th>
+                        <th>Uitgaven</th>
+                        <th class="rounded-tr-lg">Netto</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let data of monthlyData; let i = index">
+                        <td class="px-6 py-4 font-medium border">{{ data.month }}</td>
+                        <td class="px-6 py-4 text-right font-mono border text-[#019b98]">{{ formatCurrency(data.income) }}</td>
+                        <td class="px-6 py-4 text-right font-mono border text-[#dd0025]">{{ formatCurrency(data.expenses) }}</td>
+                        <td class="px-6 py-4 text-right font-mono font-semibold border"
+                            [ngClass]="data.income - data.expenses >= 0 ? 'text-[#019b98]' : 'text-[#dd0025]'">
+                            {{ formatCurrency(data.income - data.expenses) }}
+                        </td>
+                    </tr>
+                </tbody>
+                <tfoot>
+                    <tr class="bg-secondary text-secondary-foreground font-bold">
+                        <td class="px-6 py-5 text-lg rounded-bl-lg border border-border">Totaal</td>
+                        <td class="px-6 py-5 text-right text-lg font-mono border text-[#0a6802]">
+                        {{ formatCurrency(totalIncome) }}
+                        </td>
+                        <td class="px-6 py-5 text-right text-lg font-mono border border-border">
+                        {{ formatCurrency(totalExpenses) }}
+                        </td>
+                        <td class="px-6 py-5 text-right text-lg font-mono rounded-br-lg border border-border"
+                            [ngClass]="totalNet >= 0 ? 'text-accent' : 'text-destructive'">
+                        {{ formatCurrency(totalNet) }}
+                        </td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
 
     <!-- Summary cards -->
     <div class="grid grid-cols-1 md:grid-cols-3 gap-4 p-6">
