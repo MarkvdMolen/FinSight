@@ -1,4 +1,4 @@
-<div class="main-content">
+<div class="main-content flex flex-row">
 	<header>
 		<app-greetings></app-greetings>
 	</header>
@@ -9,7 +9,7 @@
 	</section> -->
 
 	
-	<app-expense-income-line-chart (hasData)="chartHasData = $event"></app-expense-income-line-chart>
+	<app-expense-income-line-chart [data]="monthlySummary$"></app-expense-income-line-chart>
 
 	<app-summary-table></app-summary-table>
 	
