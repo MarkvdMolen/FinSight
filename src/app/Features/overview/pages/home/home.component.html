@@ -11,7 +11,7 @@
 	
 	<app-expense-income-line-chart [data]="monthlySummary$"></app-expense-income-line-chart>
 
-	<app-summary-table></app-summary-table>
+	<app-summary-table [data]="monthlySummary$"></app-summary-table>
 	
 	<ng-container *ngIf="chartHasData; else noData">
 	</ng-container>

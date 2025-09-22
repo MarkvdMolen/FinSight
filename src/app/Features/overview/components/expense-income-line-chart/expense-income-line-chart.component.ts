@@ -1,9 +1,7 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { FinancialService } from '@shared/services/financial.service';
+import { Component, Input } from '@angular/core';
 import { NgxChartsModule, Color, ScaleType } from '@swimlane/ngx-charts';
 import * as shape from 'd3-shape';
-import { filter, map, shareReplay, tap } from 'rxjs';
-import { Observable } from 'rxjs/internal/Observable';
+
 
 @Component({
   selector: 'app-expense-income-line-chart',
