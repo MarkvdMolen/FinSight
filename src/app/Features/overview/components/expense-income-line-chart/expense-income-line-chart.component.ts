@@ -1,4 +1,5 @@
 import { Component, Input } from '@angular/core';
+import { DefaultSummary } from '@shared/models/data_views/default-summary.model';
 import { NgxChartsModule, Color, ScaleType } from '@swimlane/ngx-charts';
 import * as shape from 'd3-shape';
 
@@ -36,7 +37,7 @@ export class ExpenseIncomeLineChartComponent {
     autoScale: boolean = true;
     curve: any = shape.curveBumpX
 
-    @Input() data!: any;
+    @Input() data!: DefaultSummary;
 
     constructor() {}
 
