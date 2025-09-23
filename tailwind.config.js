@@ -8,6 +8,26 @@ module.exports = {
       fontFamily: {
         outfit: ['Outfit', 'sans-serif'],
       },
+      colors: {
+        primary: {
+          100: '#019B98',
+          200: '#55CCC9',  
+          300: '#C1FFFF'
+        },
+        accent: {
+          100: '#DD0025',
+          200: '#FFBFAB'
+        },
+        text: {
+          100: '#014E60',
+          200: '#3F7A8D'
+        },
+        bg: {
+          100: '#FBFBFB',
+          200: '#F1F1F1',  
+          300: '#C8C8C8'
+        },
+      }
     },
   },
   plugins: [],
