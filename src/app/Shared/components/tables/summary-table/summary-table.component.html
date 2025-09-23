@@ -12,13 +12,13 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr *ngFor="let data of monthlyData; let i = index">
-                        <td class="px-6 py-4 font-medium border">{{ data.month }}</td>
-                        <td class="px-6 py-4 text-right font-mono border text-[#019b98]">{{ formatCurrency(data.income) }}</td>
-                        <td class="px-6 py-4 text-right font-mono border text-[#dd0025]">{{ formatCurrency(data.expenses) }}</td>
+                    <tr *ngFor="let item of data; let i = index">
+                        <td class="px-6 py-4 font-medium border">{{ item.month }}</td>
+                        <td class="px-6 py-4 text-right font-mono border text-[#019b98]">{{ formatCurrency(item.income) }}</td>
+                        <td class="px-6 py-4 text-right font-mono border text-[#dd0025]">{{ formatCurrency(item.expense) }}</td>
                         <td class="px-6 py-4 text-right font-mono font-semibold border"
-                            [ngClass]="data.income - data.expenses >= 0 ? 'text-[#019b98]' : 'text-[#dd0025]'">
-                            {{ formatCurrency(data.income - data.expenses) }}
+                            [ngClass]="item.income - item.expense >= 0 ? 'text-[#019b98]' : 'text-[#dd0025]'">
+                            {{ formatCurrency(item.income - item.expense) }}
                         </td>
                     </tr>
                 </tbody>

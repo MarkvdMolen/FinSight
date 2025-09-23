@@ -12,11 +12,10 @@
 
 	<section *ngIf="monthlySummary$ | async as yearlyData">
 		<ng-container *ngIf="yearlyData.length > 0">
-			<app-expense-income-line-chart [data]="yearlyData"></app-expense-income-line-chart>
+			<app-expense-income-line-chart [data]="monthlyChartSummary$ | async"></app-expense-income-line-chart>
 			<app-summary-table [data]="yearlyData"></app-summary-table>
 		</ng-container>
 	</section>
-	
 	
 	<ng-container *ngIf="chartHasData; else noData">
 	</ng-container>

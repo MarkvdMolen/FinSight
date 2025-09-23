@@ -13,6 +13,7 @@ import { CommonModule } from '@angular/common';
 
 import { filter, map, Observable, shareReplay, tap } from 'rxjs';
 import { FinancialService } from '@shared/services/financial.service';
+import { DefaultSummary } from '@shared/models/data_views/default-summary.model';
 
 @Component({
   selector: 'app-home',
@@ -24,91 +25,64 @@ import { FinancialService } from '@shared/services/financial.service';
 export class HomeComponent implements OnInit {
 
     chartHasData = false;
-    
     monthlySummary$!: Observable<any>;
-    // hasData = new EventEmitter<boolean>();
-
-    private monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-    private monthMap: Record<string, number> = {
-        january: 0, february: 1, march: 2, april: 3, may: 4, june: 5,
-        july: 6, august: 7, september: 8, october: 9, november: 10, december: 11
-    };
-    private summary = Array.from({ length: 12 }, () => ({ income: 0, expenses: 0 }));
+    monthlyChartSummary$!: Observable<any>;
   
     constructor(private financialService: FinancialService) {}
 
     ngOnInit() {
-        this.monthlySummary$ = this.getMonthlySummary(2025);
+        this.monthlySummary$ = this.financialService.getMonthlyIncomeAndOutcome(2025);
+        this.monthlyChartSummary$ = this.buildChartSummary(this.monthlySummary$);
     }
-    
-  /**
-     * Retrieves the monthly income and expense summary for a given year.
+
+
+    /**
+     * Transforms a stream of `DefaultSummary[]` into a chart-friendly structure
+     * for use with ngx-charts.
      *
-     * This method fetches raw transaction summary data from the financial service
-     * (`getMonthlyIncomeAndOutcome`), filters out empty results, transforms the data
-     * into a chart-ready format using `calculateMonthlySummary`, and ensures the
-     * resulting observable is shared and replayed across multiple subscribers.
+     * Each `DefaultSummary` item is mapped into two series:
+     *  - **Income**: values from the `income` property
+     *  - **Expenses**: values from the `expense` property
      *
-     * Processing steps:
-     *  1. Calls the API to fetch income/expense data per month.
-     *  2. Filters out empty arrays to avoid generating default values.
-     *  3. Maps the raw response to the ngx-charts compatible format.
-     *  4. Uses `shareReplay(1)` to cache the result, preventing multiple API calls
-     *     when used with multiple subscribers or async pipes.
-     *
-     * @param {number} year - The year for which the monthly summary should be retrieved.
-     * @returns {Observable<any>} An observable that emits chart-ready data for income
-     *   and expenses per month, or completes without emitting if the response is empty.
+     * @param source$ Observable emitting arrays of `DefaultSummary` objects.
+     * @returns Observable emitting a chart data array, where each entry has:
+     *   - `name`: the label of the series ("Income" or "Expenses")
+     *   - `series`: an array of `{ name: string, value: number }` points
      */
-    public getMonthlySummary(year: number): Observable<any> {
-        return this.financialService.getMonthlyIncomeAndOutcome(year).pipe(
-            filter(data => Array.isArray(data) && data.length > 0),
-            map(data => this.calculateMonthlySummary(data)),
-            shareReplay(1)
+    private buildChartSummary(source$: Observable<DefaultSummary[]>): Observable<any[]> {
+        return source$.pipe(
+            map(data => [
+                this.buildSeries('Income', data, item => item.income),
+                this.buildSeries('Expenses', data, item => item.expense)
+            ])
         );
     }
 
     /**
-    * Aggregates raw transaction data into a monthly summary for chart rendering.
-    *
-    * Each transaction is expected to contain at least:
-    * - `month`   → full month name as string (e.g., "January", "March")
-    * - `income`  → income amount for that transaction (number, optional)
-    * - `expense` → expense amount for that transaction (number, optional)
-    *
-    * The function:
-    *  1. Normalizes month strings into month indices.
-    *  2. Aggregates income and expenses per month.
-    *  3. Returns two series objects (Income and Expenses) in ngx-charts format.
-    * 
-    * @param {Array<any>} transactions - List of transaction objects containing
-    *   `month`, `income`, and `expense` fields.
-    *
-    * @returns {Array<{name: string, series: {name: string, value: number}[]}>}
-    *   An array with two objects: one for "Income" and one for "Expenses",
-    *   each containing a `series` array with monthly values.
-    */
-    private calculateMonthlySummary(transactions: any[]): any {
-        for (const transaction of transactions) {
-            const monthIndex = this.monthMap[transaction.month.trim().toLowerCase()];
-            if (monthIndex === undefined) continue;
-
-            this.summary[monthIndex].income += transaction.income ?? 0;
-            this.summary[monthIndex].expenses += transaction.expense ?? 0;
-        }
-
-        const buildSeries = (key: 'income' | 'expenses', label: string) => ({
-            name: label,
-            series: this.summary.map((val: any, idx: number) => ({
-                name: this.monthNames[idx],
-                value: val[key]
+     * Builds a single chart series object for use with ngx-charts.
+     *
+     * Iterates over an array of `DefaultSummary` objects and transforms
+     * each entry into a `{ name, value }` point, where:
+     *  - `name` is the month label from the `DefaultSummary`
+     *  - `value` is derived by applying the provided `selector` function
+     *
+     * @param name - The label of the chart series (e.g. "Income", "Expenses").
+     * @param data - The list of `DefaultSummary` items to transform.
+     * @param selector - A function that extracts the numeric value from
+     *   each `DefaultSummary` (e.g. `item => item.income`).
+     *
+     * @returns An object with:
+     *   - `name`: the series label
+     *   - `series`: an array of `{ name: string, value: number }` points
+     */
+    private buildSeries(name: string, data: DefaultSummary[], selector: (item: DefaultSummary) => number) {
+        return {
+            name,
+            series: data.map(item => ({
+                name: item.month,
+                value: selector(item)
             }))
-        });
-
-        return [
-            buildSeries('income', 'Income'),
-            buildSeries('expenses', 'Expenses')
-        ];
+        };
     }
-
+    
 }
