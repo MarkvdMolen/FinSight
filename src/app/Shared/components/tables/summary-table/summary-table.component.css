@@ -1,4 +1,34 @@
 th {
     @apply
-    px-6 py-4 text-right font-semibold border
+    px-6 py-4 font-semibold border
+}
+
+td {
+    @apply
+    px-6 py-4 border
+}
+
+td.price_data {
+    @apply
+    font-mono text-right
+}
+
+.flash_card_section {
+    @apply
+    bg-primary-100 grid grid-cols-1 md:grid-cols-3 gap-4 p-6
+}
+
+.flash_card {
+    @apply
+    rounded-lg p-4 text-center border flex flex-col justify-center;
+}
+
+p.flash_title {
+    @apply
+    text-sm mb-1
+}
+
+p.flash_price {
+    @apply
+    text-2xl font-bold leading-none mb-2
 }
