@@ -1,4 +1,4 @@
-<div class="main-content flex flex-row">
+<div class="main-content flex flex-col">
 	<header>
 		<app-greetings></app-greetings>
 	</header>
@@ -8,7 +8,14 @@
 	<app-display-card></app-display-card>
 	</section> -->
 
-
+	<div class="flex justify-end mb-4 h-12 w-12">
+		<select
+			class="border rounded p-2"
+			[ngModel]="selectedYear"
+			(ngModelChange)="onYearChange($event)">
+			<option *ngFor="let year of years" [value]="year">{{ year }}</option>
+		</select>
+	</div>
 
 	<section *ngIf="monthlySummary$ | async as yearlyData; else missing" class="flex flex-row">
 		<ng-container *ngIf="yearlyData.length > 0; else missing">

@@ -11,27 +11,49 @@ import { SummaryTableComponent } from '@shared/components/tables/summary-table/s
 import { MissingFilesComponent } from "@shared/components/missing-files/missing-files.component";
 import { CommonModule } from '@angular/common';
 
-import { filter, map, Observable, shareReplay, tap } from 'rxjs';
+import { map, Observable} from 'rxjs';
 import { FinancialService } from '@shared/services/financial.service';
 import { DefaultSummary } from '@shared/models/data_views/default-summary.model';
+import { Dropdown } from "@shared/components/dropdown/dropdown";
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [RouterOutlet, CommonModule, GreetingsComponent, DisplayCardComponent, ExpenseIncomeLineChartComponent, MissingFilesComponent, SummaryTableComponent],
+  imports: [
+    RouterOutlet,
+    FormsModule, 
+    CommonModule, 
+    GreetingsComponent, 
+    DisplayCardComponent, 
+    ExpenseIncomeLineChartComponent, 
+    MissingFilesComponent, 
+    SummaryTableComponent, 
+    Dropdown
+  ],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css'] 
 })
 export class HomeComponent implements OnInit {
+    years: number[] = [2023, 2024, 2025];
+    selectedYear = new Date().getFullYear(); 
 
-    chartHasData = false;
     monthlySummary$!: Observable<any>;
     monthlyChartSummary$!: Observable<any>;
   
     constructor(private financialService: FinancialService) {}
 
-    ngOnInit() {
-        this.monthlySummary$ = this.financialService.getMonthlyIncomeAndOutcome(2025);
+    ngOnInit(): void {
+        this.loadData(this.selectedYear);
+    }
+
+    onYearChange(year: number): void {
+        this.selectedYear = year;
+        this.loadData(year);
+    }
+
+    private loadData(year: number): void {
+        this.monthlySummary$ = this.financialService.getMonthlyIncomeAndOutcome(year);
         this.monthlyChartSummary$ = this.buildChartSummary(this.monthlySummary$);
     }
 
