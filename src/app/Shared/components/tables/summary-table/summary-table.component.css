@@ -25,10 +25,10 @@ td.price_data {
 
 p.flash_title {
     @apply
-    text-sm mb-1
+    text-xs font-mono text-gray-700 mb-1
 }
 
 p.flash_price {
     @apply
-    text-2xl font-bold leading-none mb-2
+    text-xl font-bold leading-none mb-2
 }
