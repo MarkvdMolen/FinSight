@@ -36,6 +36,12 @@ module.exports = {
           200: '#F1F1F1',  
           300: '#C8C8C8'
         },
+      },
+      screens: {
+        'mobile': '360',
+        'tablet': '768px',   
+        'laptop': '1366px',
+        'desktop': '1920px'  
       }
     },
   },

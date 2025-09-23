@@ -1,0 +1,5 @@
+.graph {
+    @apply
+    bg-white rounded-lg shadow-lg p-4
+    mobile:w-24 mobile:h-24
+}
