@@ -14,7 +14,7 @@ import * as shape from 'd3-shape';
 export class ExpenseIncomeLineChartComponent {
 
     // Ngx-charts Options
-    view: [number, number] = [700, 400];
+    view: [number, number] = [900, 612];
     legend: boolean = true;
     showLabels: boolean = true;
     animations: boolean = true;
@@ -25,14 +25,14 @@ export class ExpenseIncomeLineChartComponent {
     xAxisLabel: string = 'Month';
     yAxisLabel: string = 'Amount (€)';
     timeline: boolean = true;
-  
+
     colorScheme: Color = {
         name: 'myScheme',
         selectable: true,
         group: ScaleType.Ordinal,
         domain: ['#019b98', '#dd0025']
     };
-  
+
     gradient: boolean = true;
     autoScale: boolean = true;
     curve: any = shape.curveBumpX
@@ -40,5 +40,9 @@ export class ExpenseIncomeLineChartComponent {
     @Input() data!: DefaultSummary;
 
     constructor() {}
+
+    onResize(event: any) {
+        this.view = [event.target.innerWidth / 1.5, 612];
+    }
 
 }

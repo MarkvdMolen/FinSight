@@ -1,2 +1,5 @@
-
+section.insight {
+    @apply
+    flex flex-row justify-center;
+}
   

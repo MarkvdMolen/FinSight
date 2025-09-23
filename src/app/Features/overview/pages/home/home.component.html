@@ -1,16 +1,9 @@
-<div class="main-content flex flex-row">
+<div class="main-content flex flex-col">
 	<header>
 		<app-greetings></app-greetings>
 	</header>
 
-	<!-- <section class="grid grid-cols-4 gap-4 mt-4">
-	<app-display-card></app-display-card>
-	<app-display-card></app-display-card>
-	</section> -->
-
-
-
-	<section *ngIf="monthlySummary$ | async as yearlyData; else missing" class="flex flex-row">
+	<section *ngIf="monthlySummary$ | async as yearlyData; else missing" class="insight">
 		<ng-container *ngIf="yearlyData.length > 0; else missing">
 			<app-expense-income-line-chart [data]="monthlyChartSummary$ | async"></app-expense-income-line-chart>
 			<app-summary-table [data]="yearlyData"></app-summary-table>
