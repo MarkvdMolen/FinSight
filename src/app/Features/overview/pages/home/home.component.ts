@@ -38,23 +38,39 @@ export class HomeComponent implements OnInit {
     years: number[] = [2023, 2024, 2025];
     selectedYear = new Date().getFullYear(); 
 
+    chartModes: string[] = ['default', 'by-category'];
+    selectedChartMode = 'default';
+
     monthlySummary$!: Observable<any>;
     monthlyChartSummary$!: Observable<any>;
   
     constructor(private financialService: FinancialService) {}
 
     ngOnInit(): void {
-        this.loadData(this.selectedYear);
+        this.loadData(this.selectedYear, this.selectedChartMode);
     }
 
     onYearChange(year: number): void {
         this.selectedYear = year;
-        this.loadData(year);
+        this.loadData(year, this.selectedChartMode);
     }
 
-    private loadData(year: number): void {
+    onChartModeChange(mode: string): void {
+        this.selectedChartMode = mode;
+        this.loadData(this.selectedYear, mode);
+    }
+
+    private loadData(year: number, mode: string): void {
         this.monthlySummary$ = this.financialService.getMonthlyIncomeAndOutcome(year);
-        this.monthlyChartSummary$ = this.buildChartSummary(this.monthlySummary$);
+
+        if (mode === 'default') {
+            this.monthlyChartSummary$ = this.buildChartSummary(this.monthlySummary$);
+        }
+
+        if (mode === 'by-category') {
+            this.monthlyChartSummary$ = this.buildChartSummary(this.monthlySummary$);
+        }
+
     }
 
 
