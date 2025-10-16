@@ -20,6 +20,10 @@ import { AnalyticsService } from '@shared/services/analytics.service';
 import { OverviewSummaryDTO, MonthlyTrendDTO, CategoryTotalDTO, AverageMonthlyDTO } from '@shared/models/analytics_dtos/analytics.model';
 import { Tablist } from '@features/overview/components/tablist/tablist.component';
 
+import { ExpensesView } from '@features/overview/views/expenses-view/expenses-view.component';
+import { IncomeView } from '@features/overview/views/income-view/income-view.component';
+import { OverviewView } from '@features/overview/views/overview-view/overview-view.component';
+
 @Component({
   selector: 'app-home',
   standalone: true,
@@ -49,10 +53,12 @@ export class HomeComponent implements OnInit {
     monthlyChartSummary$!: Observable<any>;
 
     tabs = [
-        { label: 'Overzicht', route: 'overview' },
-        { label: 'Inkomen', route: 'income' },
-        { label: 'Uitgaven', route: 'expenses' }
+        { label: 'Overview', component: OverviewView },
+        { label: 'Expenses', component: ExpensesView },
+        { label: 'Income', component: IncomeView },
     ];
+
+    selectedIndex = 0;
   
     constructor(private financialService: FinancialService) {}
 

@@ -1,21 +1,27 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input } from '@angular/core';
-import { ActivatedRoute, RouterModule } from '@angular/router';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 export interface TabItem {
-  label: string;
-  route: string;
+    label: string;
+    component: any;
 }
 
 @Component({
-  selector: 'app-tablist',
-  standalone: true,
-  imports: [CommonModule, RouterModule],
-  templateUrl: './tablist.component.html',
-  styleUrl: './tablist.component.css'
+    selector: 'app-tablist',
+    standalone: true,
+    imports: [CommonModule],
+    templateUrl: './tablist.component.html',
+    styleUrl: './tablist.component.css'
 })
 export class Tablist {
-  constructor(public route: ActivatedRoute) {}
+    @Input() tabs: TabItem[] = [];
+    @Input() selectedIndex = 0;
+    @Output() selectedIndexChange = new EventEmitter<number>();
 
-  @Input() tabs: TabItem[] = [];
+    select(i: number) {
+        if (i !== this.selectedIndex) {
+            this.selectedIndex = i;
+            this.selectedIndexChange.emit(i);
+        }
+    }
 }
