@@ -47,6 +47,12 @@ export class HomeComponent implements OnInit {
 
     monthlySummary$!: Observable<any>;
     monthlyChartSummary$!: Observable<any>;
+
+    tabs = [
+        { label: 'Overzicht', route: 'overview' },
+        { label: 'Inkomen', route: 'income' },
+        { label: 'Uitgaven', route: 'expenses' }
+    ];
   
     constructor(private financialService: FinancialService) {}
 

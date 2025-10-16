@@ -5,7 +5,7 @@
 
 	<div class="flex flex-wrap flex-row justify-end gap-4 mb-4"></div>
 
-	<app-tablist></app-tablist>
+	<app-tablist [tabs]="tabs" class="mb-4"></app-tablist>
 
 	<section *ngIf="monthlySummary$ | async as yearlyData; else missing" class="flex flex-row">
 		<ng-container *ngIf="yearlyData.length > 0; else missing">
