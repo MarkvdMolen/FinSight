@@ -1,11 +1,14 @@
-OVERVIEW
-<!-- <section *ngIf="monthlySummary$ | async as yearlyData; else missing" class="flex flex-row">
+<section *ngIf="monthlySummary$ | async as yearlyData; else missing" class="flex flex-row">
     <ng-container *ngIf="yearlyData.length > 0; else missing">
-        <app-expense-income-line-chart [data]="monthlyChartSummary$ | async"></app-expense-income-line-chart>
+        <!-- <app-expense-income-line-chart [data]="(monthlyChartSummary$ | async)"></app-expense-income-line-chart> -->
     </ng-container>
 </section>
 
-<div *ngIf="avg$ | async as avg; else missing" class="grid grid-cols-2 gap-4">
+<div *ngIf="avg$ | async as avg" class="grid grid-cols-2 gap-4">
     <app-display-card [amount]=avg.avgIncome title="Avg Monthly Income"></app-display-card>
     <app-display-card [amount]=avg.avgExpenses title="Avg Monthly Expenses" trend="down"></app-display-card>
-</div> -->
+</div>
+
+<ng-template #missing>
+    <app-missing-files></app-missing-files>
+</ng-template>

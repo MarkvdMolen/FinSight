@@ -8,16 +8,11 @@
 	<app-tablist [tabs]="tabs" [(selectedIndex)]="selectedIndex" class="mb-4"></app-tablist>
 
 	<ng-container *ngIf="tabs[selectedIndex] as tab">
-		<ng-container *ngComponentOutlet="tab.component"></ng-container>
+		<ng-container 
+			*ngComponentOutlet="tab.component; 
+			inputs: { avg$ }"
+		>
+		</ng-container>
 	</ng-container>
-
-	<section *ngIf="monthlySummary$ | async as yearlyData; else missing" class="flex flex-row">
-	</section>
-
-
-
-	<ng-template #missing>
-		<app-missing-files></app-missing-files>
-	</ng-template>
-
+	
 </div>
