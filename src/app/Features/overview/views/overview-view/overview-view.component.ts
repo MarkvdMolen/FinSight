@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
-import { DisplayCardComponent } from '@features/overview/components/display-card/display-card.component';
-import { ExpenseIncomeLineChartComponent } from '@features/overview/components/expense-income-line-chart/expense-income-line-chart.component';
+import { DisplayCardComponent } from '@features/overview/views/overview-view/components/display-card/display-card.component';
+import { ExpenseIncomeLineChartComponent } from '@features/overview/views/overview-view/components/expense-income-line-chart/expense-income-line-chart.component';
 import { MissingFilesComponent } from '@shared/components/missing-files/missing-files.component';
 import { DefaultSummary } from '@shared/models/data_views/default-summary.model';
 import { FinancialService } from '@shared/services/financial.service';

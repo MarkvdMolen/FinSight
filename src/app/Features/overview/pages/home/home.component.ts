@@ -3,10 +3,10 @@ import { RouterOutlet } from '@angular/router';
 
 // Feature imports
 import { GreetingsComponent } from "@features/overview/components/greetings/greetings.component";
-import { DisplayCardComponent } from "@features/overview/components/display-card/display-card.component";
+import { DisplayCardComponent } from "@features/overview/views/overview-view/components/display-card/display-card.component";
 
 // Shared imports
-import { ExpenseIncomeLineChartComponent } from "@features/overview/components/expense-income-line-chart/expense-income-line-chart.component";
+import { ExpenseIncomeLineChartComponent } from "@features/overview/views/overview-view/components/expense-income-line-chart/expense-income-line-chart.component";
 import { SummaryTableComponent } from '@shared/components/tables/summary-table/summary-table.component';
 import { MissingFilesComponent } from "@shared/components/missing-files/missing-files.component";
 import { CommonModule } from '@angular/common';
