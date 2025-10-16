@@ -3,34 +3,13 @@
 		<app-greetings></app-greetings>
 	</header>
 
-	<!-- <section class="grid grid-cols-4 gap-4 mt-4">
-	<app-display-card></app-display-card>
-	<app-display-card></app-display-card>
-	</section> -->
 	<div class="flex flex-wrap flex-row justify-end gap-4 mb-4">
-	<!-- Jaar dropdown -->
-	<select
-		class="border rounded p-2"
-		[ngModel]="selectedYear"
-		(ngModelChange)="onYearChange($event)">
-		<option *ngFor="let year of years" [value]="year">{{ year }}</option>
-	</select>
 
-	<!-- Chart mode dropdown -->
-	<select
-		class="border rounded p-2"
-		[ngModel]="selectedChartMode"
-		(ngModelChange)="onChartModeChange($event)">
-		<option *ngFor="let mode of chartModes" [value]="mode">
-		{{ mode === 'default' ? 'default' : 'by-category' }}
-		</option>
-	</select>
 	</div>
 
 	<section *ngIf="monthlySummary$ | async as yearlyData; else missing" class="flex flex-row">
 		<ng-container *ngIf="yearlyData.length > 0; else missing">
 			<app-expense-income-line-chart [data]="monthlyChartSummary$ | async"></app-expense-income-line-chart>
-			<!-- <app-summary-table [data]="yearlyData"></app-summary-table> -->
 		</ng-container>
 	</section>
 
@@ -42,4 +21,5 @@
 	<ng-template #missing>
 		<app-missing-files></app-missing-files>
 	</ng-template>
+
 </div>
