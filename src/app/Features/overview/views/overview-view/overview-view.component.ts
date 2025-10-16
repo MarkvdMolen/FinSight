@@ -1,11 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { DisplayCardComponent } from '@features/overview/views/overview-view/components/display-card/display-card.component';
 import { ExpenseIncomeLineChartComponent } from '@features/overview/views/overview-view/components/expense-income-line-chart/expense-income-line-chart.component';
 import { MissingFilesComponent } from '@shared/components/missing-files/missing-files.component';
 import { DefaultSummary } from '@shared/models/data_views/default-summary.model';
 import { FinancialService } from '@shared/services/financial.service';
-import { map, Observable } from 'rxjs';
+import { map, Observable, tap } from 'rxjs';
 
 export interface TabItem {
 	label: string;
@@ -24,16 +24,15 @@ export interface TabItem {
 	templateUrl: './overview-view.component.html',
 	styleUrl: './overview-view.component.css'
 })
-export class OverviewView {
-	@Input({ required: true }) monthlySummary$!: Observable<any[]>;
-	@Input({ required: true }) monthlyChartSummary$!: Observable<DefaultSummary[]>;
+export class OverviewView implements OnInit {
+
+	@Input({ required: true }) monthlySummary$!: Observable<DefaultSummary[]>;
 	@Input({ required: true }) avg$!: Observable<any>;
 
-	constructor(private financialService: FinancialService) {}
+	monthlyChartSummary$!: Observable<DefaultSummary[]>;
 
 	ngOnInit(): void {
-		// this.monthlySummary$ = this.financialService.getMonthlyIncomeAndOutcome(2025);
-		// this.monthlyChartSummary$ = this.buildChartSummary(this.monthlySummary$);
+		this.monthlyChartSummary$ = this.buildChartSummary(this.monthlySummary$);
 	}
 
 	/**

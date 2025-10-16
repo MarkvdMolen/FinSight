@@ -1,6 +1,6 @@
-<section *ngIf="monthlySummary$ | async as yearlyData; else missing" class="flex flex-row">
+<section *ngIf="monthlyChartSummary$ | async as yearlyData; else missing" class="flex flex-row">
     <ng-container *ngIf="yearlyData.length > 0; else missing">
-        <!-- <app-expense-income-line-chart [data]="(monthlyChartSummary$ | async)"></app-expense-income-line-chart> -->
+        <app-expense-income-line-chart [data]="yearlyData"></app-expense-income-line-chart>
     </ng-container>
 </section>
 

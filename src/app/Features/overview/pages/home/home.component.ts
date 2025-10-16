@@ -3,10 +3,8 @@ import { RouterOutlet } from '@angular/router';
 
 // Feature imports
 import { GreetingsComponent } from "@features/overview/components/greetings/greetings.component";
-import { DisplayCardComponent } from "@features/overview/views/overview-view/components/display-card/display-card.component";
 
 // Shared imports
-import { ExpenseIncomeLineChartComponent } from "@features/overview/views/overview-view/components/expense-income-line-chart/expense-income-line-chart.component";
 import { SummaryTableComponent } from '@shared/components/tables/summary-table/summary-table.component';
 import { MissingFilesComponent } from "@shared/components/missing-files/missing-files.component";
 import { CommonModule } from '@angular/common';
@@ -32,8 +30,6 @@ import { OverviewView } from '@features/overview/views/overview-view/overview-vi
     FormsModule, 
     CommonModule, 
     GreetingsComponent, 
-    DisplayCardComponent, 
-    ExpenseIncomeLineChartComponent, 
     MissingFilesComponent, 
     SummaryTableComponent,
     Tablist, 
@@ -52,6 +48,11 @@ export class HomeComponent {
     selectedIndex = 0;
   
     private analytics = inject(AnalyticsService);
+    private charts = inject(FinancialService);
+
+
+    monthlySummary$: Observable<DefaultSummary> = this.charts.getMonthlyIncomeAndOutcome(2025);
+
 
     // state (simpele variant)
     start = signal<string>('2025-01-01');
