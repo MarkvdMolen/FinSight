@@ -1,4 +1,4 @@
-import { Component, OnInit} from '@angular/core';
+import { Component, inject, OnInit, signal} from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 
 // Feature imports
@@ -16,6 +16,8 @@ import { FinancialService } from '@shared/services/financial.service';
 import { DefaultSummary } from '@shared/models/data_views/default-summary.model';
 import { Dropdown } from "@shared/components/dropdown/dropdown";
 import { FormsModule } from '@angular/forms';
+import { AnalyticsService } from '@shared/services/analytics.service';
+import { OverviewSummaryDTO, MonthlyTrendDTO, CategoryTotalDTO, AverageMonthlyDTO } from '@shared/models/analytics_dtos/analytics.model';
 
 @Component({
   selector: 'app-home',
@@ -122,5 +124,17 @@ export class HomeComponent implements OnInit {
             }))
         };
     }
-    
+
+    private analytics = inject(AnalyticsService);
+
+    // state (simpele variant)
+    start = signal<string>('2025-01-01');
+    end   = signal<string>('2025-08-02');
+    excludes = signal<string[]>(['Overboeken', 'Betaalverzoek']);
+
+    summary$: Observable<OverviewSummaryDTO> = this.analytics.getSummary(this.start(), this.end(), this.excludes());
+    trend$: Observable<MonthlyTrendDTO[]>   = this.analytics.getMonthlyTrend(this.start(), this.end(), this.excludes());
+    expCat$: Observable<CategoryTotalDTO[]> = this.analytics.getExpensesByCategory(this.start(), this.end(), this.excludes());
+    incCat$: Observable<CategoryTotalDTO[]>  = this.analytics.getIncomeByCategory(this.start(), this.end(), this.excludes());
+    avg$: Observable<AverageMonthlyDTO> = this.analytics.getAverageMonthly(this.start(), this.end(), this.excludes());    
 }

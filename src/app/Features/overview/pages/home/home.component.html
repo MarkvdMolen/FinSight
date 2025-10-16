@@ -34,9 +34,9 @@
 		</ng-container>
 	</section>
 
-	<div class="grid grid-cols-2 gap-4">
-		<app-display-card [amount]="500" title="Avg Monthly Income"></app-display-card>
-		<app-display-card [amount]="500" title="Avg Monthly Expenses" trend="down"></app-display-card>
+	<div *ngIf="avg$ | async as avg; else missing" class="grid grid-cols-2 gap-4">
+		<app-display-card [amount]=avg.avgIncome title="Avg Monthly Income"></app-display-card>
+		<app-display-card [amount]=avg.avgExpenses title="Avg Monthly Expenses" trend="down"></app-display-card>
 	</div>
 
 	<ng-template #missing>
