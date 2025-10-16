@@ -18,6 +18,7 @@ import { Dropdown } from "@shared/components/dropdown/dropdown";
 import { FormsModule } from '@angular/forms';
 import { AnalyticsService } from '@shared/services/analytics.service';
 import { OverviewSummaryDTO, MonthlyTrendDTO, CategoryTotalDTO, AverageMonthlyDTO } from '@shared/models/analytics_dtos/analytics.model';
+import { Tablist } from '@features/overview/components/tablist/tablist.component';
 
 @Component({
   selector: 'app-home',
@@ -30,7 +31,8 @@ import { OverviewSummaryDTO, MonthlyTrendDTO, CategoryTotalDTO, AverageMonthlyDT
     DisplayCardComponent, 
     ExpenseIncomeLineChartComponent, 
     MissingFilesComponent, 
-    SummaryTableComponent, 
+    SummaryTableComponent,
+    Tablist, 
     Dropdown
   ],
   templateUrl: './home.component.html',

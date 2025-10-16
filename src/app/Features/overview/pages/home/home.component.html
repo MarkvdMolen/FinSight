@@ -3,9 +3,9 @@
 		<app-greetings></app-greetings>
 	</header>
 
-	<div class="flex flex-wrap flex-row justify-end gap-4 mb-4">
+	<div class="flex flex-wrap flex-row justify-end gap-4 mb-4"></div>
 
-	</div>
+	<app-tablist></app-tablist>
 
 	<section *ngIf="monthlySummary$ | async as yearlyData; else missing" class="flex flex-row">
 		<ng-container *ngIf="yearlyData.length > 0; else missing">

@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { Tablist } from './tablist';
+import { Tablist } from './tablist.component';
 
 describe('Tablist', () => {
   let component: Tablist;
