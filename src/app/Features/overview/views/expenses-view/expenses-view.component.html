@@ -1,0 +1,12 @@
+<nav class="flex bg-gray-50 rounded-xl shadow-sm p-1 gap-1">
+    <a 
+        *ngFor="let tab of tabs" 
+        [routerLink]="[tab.route]"           
+        [relativeTo]="route"
+        routerLinkActive="bg-white font-semibold text-gray-900"
+        [routerLinkActiveOptions]="{ exact: true }"
+        class="px-5 py-2 rounded-lg cursor-pointer transition-all text-gray-600 hover:text-gray-900 hover:bg-gray-100"
+    >
+        {{ tab.label }}
+    </a>
+</nav>
