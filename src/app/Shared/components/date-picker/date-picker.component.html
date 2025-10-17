@@ -1,13 +1,11 @@
-<div class="w-full flex flex-col gap-2">
-    <mat-form-field appearance="outline" class="w-full">
+<mat-form-field>
     <mat-label>Periode</mat-label>
-
+    
     <mat-date-range-input [rangePicker]="picker">
         <input matStartDate placeholder="Startdatum" [formControl]="startCtrl" />
-        <input matEndDate   placeholder="Einddatum"   [formControl]="endCtrl" />
+        <input matEndDate   placeholder="Einddatum" [formControl]="endCtrl" />
     </mat-date-range-input>
 
     <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
     <mat-date-range-picker #picker></mat-date-range-picker>
-    </mat-form-field>
-</div>
+</mat-form-field>

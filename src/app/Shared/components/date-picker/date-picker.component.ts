@@ -22,14 +22,13 @@ import { combineLatest, startWith } from 'rxjs';
 	styleUrl: './date-picker.component.css'
 })
 export class DatePickerComponent implements OnChanges {
-	@Input() start!: string; // 'YYYY-MM-DD'
+	@Input() start!: string;
 	@Input() end!: string;
-
 	@Output() startChange = new EventEmitter<string>();
 	@Output() endChange   = new EventEmitter<string>();
 
 	startCtrl = new FormControl<Date | null>(null, { nonNullable: false });
-	endCtrl   = new FormControl<Date | null>(null,   { nonNullable: false });
+	endCtrl   = new FormControl<Date | null>(null, { nonNullable: false });
 
 	ngOnInit(): void {
 		// Emit updates naar parent wanneer gebruiker kiest
