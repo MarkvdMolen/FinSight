@@ -5,7 +5,13 @@
 
 	<div class="flex flex-wrap flex-row justify-end gap-4 mb-4"></div>
 
-	<app-date-picker></app-date-picker>
+	<app-date-picker
+		[start]="startDate()"
+		[end]="endDate()"
+		(startChange)="startDate.set($event)"
+		(endChange)="endDate.set($event)"
+		class="mb-4 block">
+	</app-date-picker>
 
 	<app-tablist [tabs]="tabs" [(selectedIndex)]="selectedIndex" class="mb-4"></app-tablist>
 
