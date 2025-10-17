@@ -10,9 +10,13 @@
 	<ng-container *ngIf="tabs[selectedIndex] as tab">
 		<ng-container 
 			*ngComponentOutlet="tab.component; 
-			inputs: { avg$, monthlySummary$ }"
+			inputs: { avg$, monthlySummary$, expCat$ }"
 		>
 		</ng-container>
 	</ng-container>
+
+	<div *ngIf="expCat$ | async as yearlyData; ">
+		{{ yearlyData | json }}
+	</div>
 
 </div>

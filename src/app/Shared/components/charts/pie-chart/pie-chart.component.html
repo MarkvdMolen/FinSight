@@ -1,1 +1,14 @@
-<p>pie-chart works!</p>
+<section class="financial-overview max-w-3xl">
+    <div class="bg-white rounded-lg shadow-lg p-4">
+    <ngx-charts-pie-chart
+        [view]="view"
+        [scheme]="colorScheme"
+        [results]="data"
+        [gradient]="gradient"
+        [legend]="showLegend"
+        [labels]="showLabels"
+        [doughnut]="isDoughnut"
+    >
+    </ngx-charts-pie-chart>
+    </div>
+</section>  
