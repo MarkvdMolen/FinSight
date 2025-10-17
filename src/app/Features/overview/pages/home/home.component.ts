@@ -17,16 +17,18 @@ import { Tablist } from '@features/overview/components/tablist/tablist.component
 import { ExpensesView } from '@features/overview/views/expenses-view/expenses-view.component';
 import { IncomeView } from '@features/overview/views/income-view/income-view.component';
 import { OverviewView } from '@features/overview/views/overview-view/overview-view.component';
+import { DatePickerComponent } from "@shared/components/date-picker/date-picker.component";
 
 @Component({
   selector: 'app-home',
   standalone: true,
   imports: [
-    FormsModule, 
-    CommonModule, 
-    GreetingsComponent, 
-    Tablist, 
-  ],
+    FormsModule,
+    CommonModule,
+    GreetingsComponent,
+    Tablist,
+    DatePickerComponent
+],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css'] 
 })

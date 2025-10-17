@@ -5,6 +5,8 @@
 
 	<div class="flex flex-wrap flex-row justify-end gap-4 mb-4"></div>
 
+	<app-date-picker></app-date-picker>
+
 	<app-tablist [tabs]="tabs" [(selectedIndex)]="selectedIndex" class="mb-4"></app-tablist>
 
 	<ng-container *ngIf="tabs[selectedIndex] as tab">
