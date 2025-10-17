@@ -10,9 +10,8 @@
 	<ng-container *ngIf="tabs[selectedIndex] as tab">
 		<ng-container 
 			*ngComponentOutlet="tab.component; 
-			inputs: { avg$, monthlySummary$, expCat$ }"
+			inputs: { avg$, monthlySummary$, expCat$, incCat$ }"
 		>
 		</ng-container>
 	</ng-container>
-
 </div>

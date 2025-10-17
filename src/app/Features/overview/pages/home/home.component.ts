@@ -1,18 +1,14 @@
-import { Component, inject, OnInit, signal} from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { Component, inject, signal} from '@angular/core';
 
 // Feature imports
 import { GreetingsComponent } from "@features/overview/components/greetings/greetings.component";
 
 // Shared imports
-import { SummaryTableComponent } from '@shared/components/tables/summary-table/summary-table.component';
-import { MissingFilesComponent } from "@shared/components/missing-files/missing-files.component";
 import { CommonModule } from '@angular/common';
 
-import { map, Observable} from 'rxjs';
+import { Observable} from 'rxjs';
 import { FinancialService } from '@shared/services/financial.service';
 import { DefaultSummary } from '@shared/models/data_views/default-summary.model';
-import { Dropdown } from "@shared/components/dropdown/dropdown";
 import { FormsModule } from '@angular/forms';
 import { AnalyticsService } from '@shared/services/analytics.service';
 import { OverviewSummaryDTO, MonthlyTrendDTO, CategoryTotalDTO, AverageMonthlyDTO } from '@shared/models/analytics_dtos/analytics.model';
@@ -26,14 +22,10 @@ import { OverviewView } from '@features/overview/views/overview-view/overview-vi
   selector: 'app-home',
   standalone: true,
   imports: [
-    RouterOutlet,
     FormsModule, 
     CommonModule, 
     GreetingsComponent, 
-    MissingFilesComponent, 
-    SummaryTableComponent,
     Tablist, 
-    Dropdown
   ],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css'] 
@@ -61,6 +53,7 @@ export class HomeComponent {
 
     summary$: Observable<OverviewSummaryDTO> = this.analytics.getSummary(this.start(), this.end(), this.excludes());
     trend$: Observable<MonthlyTrendDTO[]>   = this.analytics.getMonthlyTrend(this.start(), this.end(), this.excludes());
+    
     expCat$: Observable<CategoryTotalDTO[]> = this.analytics.getExpensesByCategory(this.start(), this.end(), this.excludes());
     incCat$: Observable<CategoryTotalDTO[]>  = this.analytics.getIncomeByCategory(this.start(), this.end(), this.excludes());
     avg$: Observable<AverageMonthlyDTO> = this.analytics.getAverageMonthly(this.start(), this.end(), this.excludes());    

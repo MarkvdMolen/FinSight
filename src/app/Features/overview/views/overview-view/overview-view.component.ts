@@ -29,6 +29,9 @@ export class OverviewView implements OnInit {
 	@Input({ required: true }) monthlySummary$!: Observable<DefaultSummary[]>;
 	@Input({ required: true }) avg$!: Observable<any>;
 
+	@Input() incCat$!: Observable<any>;
+	@Input() expCat$!: Observable<any>;
+
 	monthlyChartSummary$!: Observable<DefaultSummary[]>;
 
 	ngOnInit(): void {

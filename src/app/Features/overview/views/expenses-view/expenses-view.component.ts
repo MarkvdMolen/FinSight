@@ -18,6 +18,7 @@ export class ExpensesView {
     // Not needed
     @Input() monthlySummary$!: Observable<DefaultSummary[]>;
     @Input() avg$!: Observable<any>;
+    @Input() incCat$!: Observable<any>;
     // Needed
     @Input() expCat$!: Observable<any>;
 }
