@@ -1,1 +1,17 @@
-<p>bar-chart works!</p>
+<section class="financial-overview max-w-3xl">
+    <div class="bg-white rounded-lg shadow-lg p-4">
+        <ngx-charts-bar-horizontal
+            [view]="view"
+            [scheme]="colorScheme"
+            [results]="chartData"
+            [gradient]="gradient"
+            [xAxis]="showXAxis"
+            [yAxis]="showYAxis"
+            [showXAxisLabel]="showXAxisLabel"
+            [showYAxisLabel]="showYAxisLabel"
+            [xAxisLabel]="xAxisLabel"
+            [yAxisLabel]="yAxisLabel"
+        >
+        </ngx-charts-bar-horizontal>
+    </div>
+</section>  
