@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { TransactionTableComponent } from "@features/transaction-overview/components/transaction-table/transaction-table.component";
 import { MissingFilesComponent } from "@shared/components/missing-files/missing-files.component";
 import { TransactionService } from '@shared/services/transaction.service';
-import { SearchBarComponent } from "@shared/components/search_components/search-bar/search-bar.component";
+import { SearchBarComponent } from "@shared/components/search-bar/search-bar.component";
 import { ClassificationOverviewComponent } from "@shared/components/classification-overview/classification-overview.component";
 
 @Component({
