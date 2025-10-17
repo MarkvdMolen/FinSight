@@ -1,0 +1,12 @@
+
+<app-object-with-objects-icon [size]="32" [color]="'#019b98'"></app-object-with-objects-icon>
+
+<app-json-editor
+    *ngIf="hasKeys(json)"
+    [json]="json" 
+    (jsonChanged)="onJsonChanged($event)">
+</app-json-editor>
+
+<button class="px-4 py-2 mt-8 bg-green-600 text-white rounded hover:bg-green-700" (click)="save()">
+    Opslaan
+</button>

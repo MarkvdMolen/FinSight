@@ -1,0 +1,4 @@
+<div *ngIf="incCat$ | async as IncomeByCategory; ">
+    <app-pie-chart [data]="IncomeByCategory"></app-pie-chart>
+    <app-bar-chart [data]="IncomeByCategory"></app-bar-chart>
+</div>

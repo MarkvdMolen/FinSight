@@ -1,0 +1,43 @@
+<!-- Loading state -->
+<app-loading-spinner *ngIf="isLoading"/>
+<!-- Table -->
+<table *ngIf="!isLoading" class="table-container">
+    <thead>
+        <app-table-header
+            [headers]="headers"
+            [sortedBy]="sortedBy"
+            [sortDirection]="sortDirection"
+            (sort)="sortData($event)">
+        </app-table-header>   
+    </thead> 
+    <tbody>
+        <ng-container *ngIf="classificationsCategories && (classificationsCategories | keyvalue).length">
+            <app-table-row
+              *ngFor="let transaction of transactions"
+              [transaction]="transaction"
+              [editingTransaction]="editingTransaction"
+              [ruleBasedColoring]="ruleBasedColoring"
+              [classificationLabels]="classificationLabels"
+              [categoryControl]="categoryControl"
+              [classificationsCategories]="classificationsCategories"
+              (edit)="editTransaction(transaction)"
+              (save)="saveTransaction()"
+              (cancel)="cancelEdit()"
+            >
+            </app-table-row>
+          </ng-container>
+          
+    </tbody>
+</table>
+<!-- Paginator -->
+<mat-paginator
+    [length]="totalItems"
+    [pageSize]="10"
+    [pageSizeOptions]="[5, 10, 25, 50]"
+    (page)="onPageChange($event)">
+</mat-paginator>
+<!-- Action Buttons -->
+<app-tx-actions
+    (classify)="classifyAllTransactions()" 
+    (save)="pushAllTransactions()">
+</app-tx-actions>

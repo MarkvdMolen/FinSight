@@ -1,0 +1,5 @@
+th {
+    @apply
+    px-4 py-2 text-left
+    select-text;
+}

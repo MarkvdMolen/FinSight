@@ -1,16 +1,17 @@
-<div class="main-content">
-  <header>
-    <app-greetings></app-greetings>
-  </header>
+<div class="main-content flex flex-col px-48">
+	<header>
+		<app-greetings></app-greetings>
+	</header>
 
-  <!-- <section class="grid grid-cols-4 gap-4 mt-4">
-    <app-display-card></app-display-card>
-    <app-display-card></app-display-card>
-  </section> -->
-  <ng-container *ngIf="this.getData(); else noData">
-    <app-expense-income-line-chart></app-expense-income-line-chart>
-  </ng-container>
-  <ng-template #noData>
-    <app-missing-files></app-missing-files>
-  </ng-template>
+	<div class="flex flex-wrap flex-row justify-end gap-4 mb-4"></div>
+
+	<app-tablist [tabs]="tabs" [(selectedIndex)]="selectedIndex" class="mb-4"></app-tablist>
+
+	<ng-container *ngIf="tabs[selectedIndex] as tab">
+		<ng-container 
+			*ngComponentOutlet="tab.component; 
+			inputs: { avg$, monthlySummary$, expCat$, incCat$ }"
+		>
+		</ng-container>
+	</ng-container>
 </div>

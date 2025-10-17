@@ -1,0 +1,4 @@
+<div *ngIf="expCat$ | async as yearlyData; ">
+    <app-pie-chart [data]="yearlyData"></app-pie-chart>
+    <app-bar-chart [data]="yearlyData"></app-bar-chart>
+</div>

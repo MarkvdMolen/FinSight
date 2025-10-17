@@ -1,0 +1,17 @@
+<ng-container *ngIf="!isLoading; else loading">
+    <div class="container mt-4 mx-4">
+
+        <ng-container *ngIf="hasData; else noData">
+            <app-search-bar (search)="onSearch($event)"></app-search-bar>
+            <app-classification-overview></app-classification-overview>
+            <app-transaction-table #csvTable></app-transaction-table>
+        </ng-container>
+
+
+        <ng-template #noData>
+            <app-missing-files></app-missing-files>
+        </ng-template>
+    </div>
+</ng-container>
+
+<ng-template #loading></ng-template>

@@ -1,0 +1,44 @@
+<div class="max-w-6xl mx-auto shadow-lg">
+    <div class="overflow-x-auto">
+        <table class="w-full border-collapse">
+            <thead class="bg-primary-100 text-bg-100">
+                <tr>
+                    <th class="text-left">Maand</th>
+                    <th class="text-right">Inkomsten</th>
+                    <th class="text-right">Uitgaven</th>
+                    <th class="text-right">Netto</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let item of data; let i = index">
+                    <td class="font-medium">{{ item.month }}</td>
+                    <td class="price_data text-primary-200">{{ formatCurrency(item.income) }}</td>
+                    <td class="price_data text-accent-100">{{ formatCurrency(item.expense) }}</td>
+                    <td class="price_data"
+                        [ngClass]="item.income - item.expense >= 0 ? 'text-primary-200' : 'text-accent-100'">
+                        {{ formatCurrency(item.income - item.expense) }}
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="flash_card_section">
+        <div class="bg-primary-400 flash_card">
+            <p class="flash_title">Totale Inkomsten</p>
+            <p class="flash_price text-money_green-100">{{ formatCurrency(totalIncome) }}</p>
+        </div>
+        <div class="bg-accent-200 flash_card">
+            <p class="flash_title">Totale Uitgaven</p>
+            <p class="flash_price text-accent-100">{{ formatCurrency(totalExpenses) }}</p>
+        </div>
+        <div class="bg-beige-100 rounded-lg p-4 text-center"
+            [ngClass]="totalNet >= 0 ? 'bg-accent/10 border border-accent/20' : 'bg-destructive/10 border border-destructive/20'">
+            <p class="flash_title">Netto Resultaat</p>
+            <p class="flash_price"
+                [ngClass]="totalNet >= 0 ? 'text-primary-200' : 'text-accent-100'">
+                {{ formatCurrency(totalNet) }}
+            </p>
+        </div>
+    </div>
+</div>

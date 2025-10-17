@@ -1,0 +1,42 @@
+<!-- Transaction Id -->
+<td>{{ transaction.transactionsId }}</td>
+<!-- Account -->
+<td *ngIf="!isEditing()">{{ transaction.account }}</td>
+<td *ngIf="isEditing()"><input [(ngModel)]="editingTransaction!.account"></td>
+<!-- Recipient -->
+<td *ngIf="!isEditing()">{{ transaction.recipient }}</td>
+<td *ngIf="isEditing()"><input [(ngModel)]="editingTransaction!.recipient"></td>
+<!-- Description -->
+<td *ngIf="!isEditing()">{{ transaction.description }}</td>
+<td *ngIf="isEditing()"><input [(ngModel)]="editingTransaction!.description"></td>
+<!-- Classification -->
+<td>
+    <app-classification-label-cell [source]="transaction.classificationSource" />
+</td>
+<!-- Category -->
+<td class="min-w-[220px] max-w-[280px] overflow-hidden"
+    [ngClass]="{ 'bg-yellow-100': ruleBasedColoring[transaction.transactionsId] }">
+    <ng-container *ngIf="!isEditing()">
+        {{ transaction.category }}
+    </ng-container>
+    <ng-container *ngIf="isEditing()">
+        <app-autocomplete-dropdown-cell 
+            [(model)]="editingTransaction!.category"
+            [categories]="classificationsCategories"
+        />
+    </ng-container>
+</td>
+<!-- Amount -->
+<td *ngIf="!isEditing()">{{ transaction.amount | currency:'EUR' }}</td>
+<td *ngIf="isEditing()"><input type="number" [(ngModel)]="editingTransaction!.amount"></td>
+<!-- Date -->
+<td *ngIf="!isEditing()">{{ transaction.date | date }}</td>
+<td *ngIf="isEditing()"><input type="date" [(ngModel)]="editingTransaction!.date"></td>
+<!-- Actions -->
+<td>
+    <a *ngIf="!isEditing()" class="edit" (click)="edit.emit()">Edit</a>
+    <ng-container *ngIf="isEditing()">
+        <a class="save" (click)="save.emit()">Save</a>
+        <a class="cancel" (click)="cancel.emit()">Cancel</a>
+    </ng-container>
+</td>
