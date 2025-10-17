@@ -1,0 +1,15 @@
+<nav class="flex bg-gray-50 rounded-xl shadow-sm p-1 gap-1" role="tablist">
+    <button
+        *ngFor="let tab of tabs; index as i"
+        type="button"
+        (click)="select(i)"
+        [attr.aria-selected]="selectedIndex === i"
+        class="px-5 py-2 rounded-lg transition-all
+                text-gray-600 hover:text-gray-900 hover:bg-gray-100"
+        [class.bg-white]="selectedIndex === i"
+        [class.font-semibold]="selectedIndex === i"
+        [class.text-gray-900]="selectedIndex === i"
+        >
+        {{ tab.label }}
+    </button>
+</nav>

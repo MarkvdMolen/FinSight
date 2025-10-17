@@ -37,7 +37,7 @@ export class ExpenseIncomeLineChartComponent {
     autoScale: boolean = true;
     curve: any = shape.curveBumpX
 
-    @Input() data!: DefaultSummary;
+    @Input() data!: DefaultSummary[];
 
     constructor() {}
 

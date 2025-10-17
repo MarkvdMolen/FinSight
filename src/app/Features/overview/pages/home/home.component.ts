@@ -1,88 +1,60 @@
-import { Component, OnInit} from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { Component, inject, signal} from '@angular/core';
 
 // Feature imports
 import { GreetingsComponent } from "@features/overview/components/greetings/greetings.component";
-import { DisplayCardComponent } from "@features/overview/components/display-card/display-card.component";
 
 // Shared imports
-import { ExpenseIncomeLineChartComponent } from "@features/overview/components/expense-income-line-chart/expense-income-line-chart.component";
-import { SummaryTableComponent } from '@shared/components/tables/summary-table/summary-table.component';
-import { MissingFilesComponent } from "@shared/components/missing-files/missing-files.component";
 import { CommonModule } from '@angular/common';
 
-import { filter, map, Observable, shareReplay, tap } from 'rxjs';
+import { Observable} from 'rxjs';
 import { FinancialService } from '@shared/services/financial.service';
 import { DefaultSummary } from '@shared/models/data_views/default-summary.model';
+import { FormsModule } from '@angular/forms';
+import { AnalyticsService } from '@shared/services/analytics.service';
+import { OverviewSummaryDTO, MonthlyTrendDTO, CategoryTotalDTO, AverageMonthlyDTO } from '@shared/models/analytics_dtos/analytics.model';
+import { Tablist } from '@features/overview/components/tablist/tablist.component';
+
+import { ExpensesView } from '@features/overview/views/expenses-view/expenses-view.component';
+import { IncomeView } from '@features/overview/views/income-view/income-view.component';
+import { OverviewView } from '@features/overview/views/overview-view/overview-view.component';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [RouterOutlet, CommonModule, GreetingsComponent, DisplayCardComponent, ExpenseIncomeLineChartComponent, MissingFilesComponent, SummaryTableComponent],
+  imports: [
+    FormsModule, 
+    CommonModule, 
+    GreetingsComponent, 
+    Tablist, 
+  ],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css'] 
 })
-export class HomeComponent implements OnInit {
+export class HomeComponent {
+    tabs = [
+        { label: 'Overview', component: OverviewView },
+        { label: 'Expenses', component: ExpensesView },
+        { label: 'Income', component: IncomeView },
+    ];
 
-    chartHasData = false;
-    monthlySummary$!: Observable<any>;
-    monthlyChartSummary$!: Observable<any>;
+    selectedIndex = 0;
   
-    constructor(private financialService: FinancialService) {}
-
-    ngOnInit() {
-        this.monthlySummary$ = this.financialService.getMonthlyIncomeAndOutcome(2025);
-        this.monthlyChartSummary$ = this.buildChartSummary(this.monthlySummary$);
-    }
+    private analytics = inject(AnalyticsService);
+    private charts = inject(FinancialService);
 
 
-    /**
-     * Transforms a stream of `DefaultSummary[]` into a chart-friendly structure
-     * for use with ngx-charts.
-     *
-     * Each `DefaultSummary` item is mapped into two series:
-     *  - **Income**: values from the `income` property
-     *  - **Expenses**: values from the `expense` property
-     *
-     * @param source$ Observable emitting arrays of `DefaultSummary` objects.
-     * @returns Observable emitting a chart data array, where each entry has:
-     *   - `name`: the label of the series ("Income" or "Expenses")
-     *   - `series`: an array of `{ name: string, value: number }` points
-     */
-    private buildChartSummary(source$: Observable<DefaultSummary[]>): Observable<any[]> {
-        return source$.pipe(
-            map(data => [
-                this.buildSeries('Income', data, item => item.income),
-                this.buildSeries('Expenses', data, item => item.expense)
-            ])
-        );
-    }
+    monthlySummary$: Observable<DefaultSummary> = this.charts.getMonthlyIncomeAndOutcome(2025);
 
-    /**
-     * Builds a single chart series object for use with ngx-charts.
-     *
-     * Iterates over an array of `DefaultSummary` objects and transforms
-     * each entry into a `{ name, value }` point, where:
-     *  - `name` is the month label from the `DefaultSummary`
-     *  - `value` is derived by applying the provided `selector` function
-     *
-     * @param name - The label of the chart series (e.g. "Income", "Expenses").
-     * @param data - The list of `DefaultSummary` items to transform.
-     * @param selector - A function that extracts the numeric value from
-     *   each `DefaultSummary` (e.g. `item => item.income`).
-     *
-     * @returns An object with:
-     *   - `name`: the series label
-     *   - `series`: an array of `{ name: string, value: number }` points
-     */
-    private buildSeries(name: string, data: DefaultSummary[], selector: (item: DefaultSummary) => number) {
-        return {
-            name,
-            series: data.map(item => ({
-                name: item.month,
-                value: selector(item)
-            }))
-        };
-    }
+
+    // state (simpele variant)
+    start = signal<string>('2025-01-01');
+    end   = signal<string>('2025-08-02');
+    excludes = signal<string[]>(['Overboeken', 'Betaalverzoek']);
+
+    summary$: Observable<OverviewSummaryDTO> = this.analytics.getSummary(this.start(), this.end(), this.excludes());
+    trend$: Observable<MonthlyTrendDTO[]>   = this.analytics.getMonthlyTrend(this.start(), this.end(), this.excludes());
     
+    expCat$: Observable<CategoryTotalDTO[]> = this.analytics.getExpensesByCategory(this.start(), this.end(), this.excludes());
+    incCat$: Observable<CategoryTotalDTO[]>  = this.analytics.getIncomeByCategory(this.start(), this.end(), this.excludes());
+    avg$: Observable<AverageMonthlyDTO> = this.analytics.getAverageMonthly(this.start(), this.end(), this.excludes());    
 }
