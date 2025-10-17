@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, SimpleChanges } from '@angular/core';
 import { CategoryTotalDTO } from '@shared/models/analytics_dtos/analytics.model';
 import { Color, NgxChartsModule, ScaleType } from '@swimlane/ngx-charts';
 import * as shape from 'd3-shape';
@@ -28,7 +28,22 @@ export class PieChartComponent {
   
     autoScale: boolean = true;
     curve: any = shape.curveBumpX
+    // End of Ngx-charts Options
 
     @Input() data!: CategoryTotalDTO[];
+    chartData: Array<{ name: string; value: number }> = [];
+
+    ngOnChanges(changes: SimpleChanges): void {
+        if (changes['data'] && this.data) {
+            this.chartData = this.transformData(this.data);
+        }
+    }
+
+    private transformData(data: Array<{ category: string; total: number }>) {
+        return data.map(item => ({
+            name: item.category,
+            value: item.total,
+        }));
+    }
 
 }
