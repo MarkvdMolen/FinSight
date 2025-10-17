@@ -1,4 +1,4 @@
-import { Component, Input, SimpleChanges } from '@angular/core';
+import { Component, ElementRef, Input, SimpleChanges, ViewChild } from '@angular/core';
 import { CategoryTotalDTO } from '@shared/models/analytics_dtos/analytics.model';
 import { Color, NgxChartsModule, ScaleType } from '@swimlane/ngx-charts';
 import * as shape from 'd3-shape';
@@ -28,8 +28,22 @@ export class PieChartComponent {
     curve: any = shape.curveBumpX
     // End of Ngx-charts Options
 
+    @ViewChild('chartContainer', { static: true }) chartContainer!: ElementRef;
+    private resizeObserver!: ResizeObserver;
     @Input() data!: CategoryTotalDTO[];
     chartData: Array<{ name: string; value: number }> = [];
+
+        ngAfterViewInit(): void {
+        this.resizeObserver = new ResizeObserver(entries => {
+            const rect = entries[0].contentRect;
+            this.view = [rect.width, rect.height];
+        });
+        this.resizeObserver.observe(this.chartContainer.nativeElement);
+    }
+
+    ngOnDestroy(): void {
+        this.resizeObserver.disconnect();
+    }
 
     /**
      * Lifecycle hook that is called whenever any data-bound @Input property changes.
