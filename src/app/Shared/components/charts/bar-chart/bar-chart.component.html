@@ -1,5 +1,5 @@
-<section class="financial-overview max-w-3xl">
-    <div class="bg-white rounded-lg shadow-lg p-4">
+<section class="bg-white rounded-lg shadow-lg p-4">
+    <div #chartContainer class="p-4">
         <ngx-charts-bar-horizontal
             [view]="view"
             [scheme]="colorScheme"
@@ -11,6 +11,7 @@
             [showYAxisLabel]="showYAxisLabel"
             [xAxisLabel]="xAxisLabel"
             [yAxisLabel]="yAxisLabel"
+            [trimYAxisTicks]="false"> 
         >
         </ngx-charts-bar-horizontal>
     </div>
