@@ -30,10 +30,10 @@ import { toObservable } from '@angular/core/rxjs-interop';
     Tablist,
     DatePickerComponent
 ],
-  templateUrl: './home.component.html',
-  styleUrls: ['./home.component.css'] 
+  templateUrl: './analytics-page.component.html',
+  styleUrls: ['./analytics-page.component.css'] 
 })
-export class HomeComponent {
+export class AnalyticsPageComponent {
     tabs = [
         { label: 'Overview', component: OverviewView },
         { label: 'Expenses', component: ExpensesView },
