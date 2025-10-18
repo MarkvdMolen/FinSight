@@ -33,7 +33,7 @@ export class PieChartComponent {
     @Input() data!: CategoryTotalDTO[];
     chartData: Array<{ name: string; value: number }> = [];
 
-        ngAfterViewInit(): void {
+    ngAfterViewInit(): void {
         this.resizeObserver = new ResizeObserver(entries => {
             const rect = entries[0].contentRect;
             this.view = [rect.width, rect.height];

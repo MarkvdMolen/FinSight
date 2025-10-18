@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, ElementRef, Input, ViewChild } from '@angular/core';
 import { DefaultSummary } from '@shared/models/data_views/default-summary.model';
 import { NgxChartsModule, Color, ScaleType } from '@swimlane/ngx-charts';
 import * as shape from 'd3-shape';
@@ -14,7 +14,7 @@ import * as shape from 'd3-shape';
 export class ExpenseIncomeLineChartComponent {
 
     // Ngx-charts Options
-    view: [number, number] = [700, 400];
+    view: [number, number] = [0, 600];
     legend: boolean = true;
     showLabels: boolean = true;
     animations: boolean = true;
@@ -39,6 +39,19 @@ export class ExpenseIncomeLineChartComponent {
 
     @Input() data!: DefaultSummary[];
 
-    constructor() {}
+    @ViewChild('chartContainer', { static: true }) chartContainer!: ElementRef;
+    private resizeObserver!: ResizeObserver;
+
+    ngAfterViewInit(): void {
+        this.resizeObserver = new ResizeObserver(entries => {
+            const rect = entries[0].contentRect;
+            this.view = [rect.width, rect.height];
+        });
+        this.resizeObserver.observe(this.chartContainer.nativeElement);
+    }
+
+    ngOnDestroy(): void {
+        this.resizeObserver.disconnect();
+    }
 
 }
