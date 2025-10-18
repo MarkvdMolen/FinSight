@@ -1,25 +1,30 @@
-<div class="main-content flex flex-col px-48">
-	<header>
-		<app-greetings></app-greetings>
-	</header>
+<div class="min-h-dvh">
+	<main>
+		<header>
+			<app-greetings></app-greetings>
+		</header>
 
-	<div class="flex flex-wrap flex-row justify-end gap-4 mb-4"></div>
-
-	<app-date-picker
-		[start]="startDate()"
-		[end]="endDate()"
-		(startChange)="startDate.set($event)"
-		(endChange)="endDate.set($event)"
-		class="mb-4 block">
-	</app-date-picker>
-
-	<app-tablist [tabs]="tabs" [(selectedIndex)]="selectedIndex" class="mb-4"></app-tablist>
-
-	<ng-container *ngIf="tabs[selectedIndex] as tab">
-		<ng-container 
-			*ngComponentOutlet="tab.component; 
-			inputs: { avg$, monthlySummary$, expCat$, incCat$ }"
+		<app-date-picker
+			[start]="startDate()"
+			[end]="endDate()"
+			(startChange)="startDate.set($event)"
+			(endChange)="endDate.set($event)"
 		>
-		</ng-container>
-	</ng-container>
+		</app-date-picker>
+
+		<app-tablist
+			[tabs]="tabs"
+			[(selectedIndex)]="selectedIndex"
+		>
+		</app-tablist>
+
+		<section>
+			<ng-container *ngIf="tabs[selectedIndex] as tab">
+				<ng-container 
+					*ngComponentOutlet="tab.component; 
+					inputs: { avg$, monthlySummary$, expCat$, incCat$ }">
+				</ng-container>
+			</ng-container>
+		</section>
+	</main>
 </div>

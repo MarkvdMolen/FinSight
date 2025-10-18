@@ -1,2 +1,22 @@
+main {
+    @apply
+    container 
+    mx-auto 
+    px-4 sm:px-6 lg:px-8 
+    py-4 sm:py-6;
+}
 
-  
+header {
+    @apply
+    mb-4 sm:mb-6;
+}
+
+app-date-picker {
+    @apply
+    w-full;
+}
+
+app-tab-list {
+    @apply
+    w-full md:justify-self-end md:self-center;
+}
