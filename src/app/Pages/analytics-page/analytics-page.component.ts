@@ -21,7 +21,7 @@ import { DatePickerComponent } from "@shared/components/date-picker/date-picker.
 import { toObservable } from '@angular/core/rxjs-interop';
 
 @Component({
-  selector: 'app-home',
+  selector: 'app-analytics-page',
   standalone: true,
   imports: [
     FormsModule,
