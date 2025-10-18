@@ -21,7 +21,7 @@ import { DatePickerComponent } from "@shared/components/date-picker/date-picker.
 import { toObservable } from '@angular/core/rxjs-interop';
 
 @Component({
-  selector: 'app-home',
+  selector: 'app-analytics-page',
   standalone: true,
   imports: [
     FormsModule,
@@ -30,10 +30,10 @@ import { toObservable } from '@angular/core/rxjs-interop';
     Tablist,
     DatePickerComponent
 ],
-  templateUrl: './home.component.html',
-  styleUrls: ['./home.component.css'] 
+  templateUrl: './analytics-page.component.html',
+  styleUrls: ['./analytics-page.component.css'] 
 })
-export class HomeComponent {
+export class AnalyticsPageComponent {
     tabs = [
         { label: 'Overview', component: OverviewView },
         { label: 'Expenses', component: ExpensesView },

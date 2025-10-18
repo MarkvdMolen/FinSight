@@ -5,13 +5,13 @@ import { DefaultButtonComponent } from '@shared/components/default-button/defaul
 import { NotificationMessageComponent } from "@shared/components/messages/notification-message/notification-message.component";
 
 @Component({
-  selector: 'app-csv-upload',
+  selector: 'app-bank-reciept-upload-page',
   standalone: true,
   imports: [CommonModule, DefaultButtonComponent, NotificationMessageComponent],
-  templateUrl: './csv-upload.component.html',  
-  styleUrls: ['./csv-upload.component.css']    
+  templateUrl: './bank-reciept-upload-page.component.html',  
+  styleUrls: ['./bank-reciept-upload-page.component.css']    
 })
-export class CsvUploadComponent {
+export class BankRecieptUploadPageComponent {
   uploadedFiles: File[] = [];
   isDragging: boolean = false;
   isUploading: boolean = false;
