@@ -11,18 +11,13 @@
 			(endChange)="endDate.set($event)"
 		>
 		</app-date-picker>
+		<app-category-selector></app-category-selector>
 
 		<app-tablist
 			[tabs]="tabs"
 			[(selectedIndex)]="selectedIndex"
 		>
 		</app-tablist>
-
-		<div *ngIf="categories$ | async as categories">
-			<div *ngFor="let category of categories | keyvalue" class="mb-4">
-				<p class="font-semibold text-lg">{{ category.key }}</p>
-			</div>
-		</div>
 
 		<section>
 			<ng-container *ngIf="tabs[selectedIndex] as tab">
