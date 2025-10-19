@@ -19,6 +19,7 @@ import { IncomeView } from '@features/overview/views/income-view/income-view.com
 import { OverviewView } from '@features/overview/views/overview-view/overview-view.component';
 import { DatePickerComponent } from "@shared/components/date-picker/date-picker.component";
 import { toObservable } from '@angular/core/rxjs-interop';
+import { ClassificationService } from '@shared/services/classification.service';
 
 @Component({
   selector: 'app-analytics-page',
@@ -44,6 +45,7 @@ export class AnalyticsPageComponent {
   
     private analytics = inject(AnalyticsService);
     private charts = inject(FinancialService);
+    private categoriesService = inject(ClassificationService);
 
     monthlySummary$: Observable<DefaultSummary> = this.charts.getMonthlyIncomeAndOutcome(2025);
 
@@ -88,4 +90,10 @@ export class AnalyticsPageComponent {
         switchMap(p => this.analytics.getAverageMonthly(p.start, p.end, p.exc)),
         shareReplay(1)
     );  
+
+
+    categories$: Observable<Record<string, string[]>> =
+    this.categoriesService.getCategories().pipe(
+        shareReplay({ bufferSize: 1, refCount: true })
+    );
 }
