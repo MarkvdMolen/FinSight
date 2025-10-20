@@ -1,30 +1,35 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, inject, signal, Signal } from '@angular/core';
+import { Component, computed, effect, inject, Input, Output, EventEmitter, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ClassificationService } from '@shared/services/classification.service';
-import { Observable, shareReplay, map } from 'rxjs';
+import { Observable, shareReplay, map, startWith } from 'rxjs';
 
 type CategoriesMap = Record<string, string[]>;
-
-interface Option {
-  group: string; // bv. "Supermarkt"
-  label: string; // bv. "jumbo"
-  value: string; // hier gelijk aan label
-}
 
 @Component({
   selector: 'app-category-selector',
   standalone: true,
   imports: [CommonModule],
   templateUrl: './category-selector.component.html',
-  styleUrl: './category-selector.component.css'
+  styleUrls: ['./category-selector.component.css']   // <-- array
 })
 export class CategorySelectorComponent {
 
   private categoriesService = inject(ClassificationService);
 
-  // === Excludes die megaan naar endpoints ===
-  excludes = signal<string[]>(['Overboeken', 'Betaalverzoek']);
+  // === Excludes die meegaan naar endpoints (keys van categorieën) ===
+  excludes = signal<string[]>([]);
+
+  // (Optioneel) initial value van parent
+  @Input() set initialExcludes(v: string[] | null | undefined) {
+    this.excludes.set(v ?? []);
+  }
+
+  // (Optioneel) emit naar parent wanneer excludes wijzigt
+  @Output() excludesChange = new EventEmitter<string[]>();
+  private emitEffect = effect(() => {
+    this.excludesChange.emit(this.excludes());
+  });
 
   // === Categories ophalen (Record<string,string[]>) ===
   categories$: Observable<CategoriesMap> =
@@ -32,65 +37,43 @@ export class CategorySelectorComponent {
       shareReplay({ bufferSize: 1, refCount: true })
     );
 
-    // === FLAT opties maken en als signal beschikbaar maken ===
-  private options$ = this.categories$.pipe(
-    map(obj =>
-      Object.entries(obj).flatMap(([group, items]) =>
-        items.map(label => ({ group, label, value: label } as Option))
-      )
-    )
+  // Alle categorie-namen (keys) uit de API
+  private groupKeys$ = this.categories$.pipe(
+    map(obj => Object.keys(obj).sort()),
+    startWith([] as string[]) // -> nooit undefined
   );
-  options = toSignal(this.options$, { initialValue: [] as Option[] }) as Signal<Option[]>;
 
-  // === Dropdown state & helpers ===
+  // Signal met alle beschikbare categorie-keys
+  groupKeys = toSignal(this.groupKeys$);
+
+  // UI state
   isOpen = signal(false);
   query  = signal('');
 
-  private selectedSet = computed(() => new Set(this.excludes()));
-
-  filteredOptions = computed(() => {
+  // Filter op basis van de query
+  filteredGroups = computed<string[]>(() => {
     const q = this.query().trim().toLowerCase();
-    const opts = this.options();
-    if (!q) return opts;
-    return opts.filter(o =>
-      o.label.toLowerCase().includes(q) || o.group.toLowerCase().includes(q)
-    );
-    });
-
-      groups = computed(() => {
-    const mapG = new Map<string, Option[]>();
-    for (const o of this.filteredOptions()) {
-      if (!mapG.has(o.group)) mapG.set(o.group, []);
-      mapG.get(o.group)!.push(o);
-    }
-    return Array.from(mapG.entries()) as [string, Option[]][];
+    const keys = this.groupKeys() ?? [];
+    return q ? keys.filter(k => k.toLowerCase().includes(q)) : keys;
   });
 
-  isSelected = (value: string) => this.selectedSet().has(value);
+  // Helpers
+  private selectedSet = computed(() => new Set(this.excludes()));
+  isGroupSelected = (key: string) => this.selectedSet().has(key);
 
-  toggle(value: string) {
+  toggleGroup(key: string) {
     const set = new Set(this.excludes());
-    set.has(value) ? set.delete(value) : set.add(value);
+    set.has(key) ? set.delete(key) : set.add(key);
     this.excludes.set([...set]);
   }
 
-  selectAllInGroup(group: string) {
+  // Bulk
+  selectAllVisible() {
     const set = new Set(this.excludes());
-    const inGroup = this.options().filter(o => o.group === group).map(o => o.value);
-    inGroup.forEach(v => set.add(v));
+    (this.filteredGroups() ?? []).forEach(k => set.add(k));
     this.excludes.set([...set]);
   }
-
-  clearGroup(group: string) {
-    const set = new Set(this.excludes());
-    const inGroup = this.options().filter(o => o.group === group).map(o => o.value);
-    inGroup.forEach(v => set.delete(v));
-    this.excludes.set([...set]);
-  }
-
   clearAll() {
     this.excludes.set([]);
   }
-
-
 }
