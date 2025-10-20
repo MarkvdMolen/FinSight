@@ -64,7 +64,12 @@ export class AnalyticsPageComponent {
   endDate   = signal<string>('2025-08-02');
 
   // === Excludes die megaan naar endpoints ===
-  excludes = signal<string[]>(['Overboeken', 'Betaalverzoek']);
+  excludes = signal<string[]>([]);
+
+  // parent state updaten
+  onExcludesChange(next: string[]) {
+    this.excludes.set(next);              
+  }
 
   // Params voor endpoints
   private params = computed(() => ({

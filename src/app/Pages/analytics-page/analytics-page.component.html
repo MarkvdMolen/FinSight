@@ -11,7 +11,10 @@
 			(endChange)="endDate.set($event)"
 		>
 		</app-date-picker>
-		<app-category-selector></app-category-selector>
+		<app-category-selector
+			(excludesChange)="onExcludesChange($event)">
+		>
+		</app-category-selector>
 
 		<app-tablist
 			[tabs]="tabs"
