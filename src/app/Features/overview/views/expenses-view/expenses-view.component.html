@@ -1,4 +1,8 @@
-<div *ngIf="expCat$ | async as yearlyData; ">
+<div *ngIf="expCat$ | async as yearlyData; " class="flex flex-row">
     <app-pie-chart [data]="yearlyData"></app-pie-chart>
-    <app-bar-chart [data]="yearlyData"></app-bar-chart>
+    <app-pie-chart [data]="yearlyData"></app-pie-chart>
+    <div class="grid grid-cols-1 gap-4">
+        <app-display-card [amount]="1000" title="Inkomsten"></app-display-card>
+        <app-display-card [amount]="1000" title="Uitgaven" trend="down"></app-display-card>
+    </div>
 </div>

@@ -6,11 +6,12 @@ import { DefaultSummary } from '@shared/models/data_views/default-summary.model'
 
 import { BarChartComponent } from "@shared/components/charts/bar-chart/bar-chart.component";
 import { PieChartComponent } from "@shared/components/charts/pie-chart/pie-chart.component";
+import { DisplayCardComponent } from '../overview-view/components/display-card/display-card.component';
 
 @Component({
   selector: 'app-expenses-view',
   standalone: true,
-  imports: [CommonModule, BarChartComponent, PieChartComponent],
+  imports: [CommonModule, BarChartComponent, PieChartComponent, DisplayCardComponent],
   templateUrl: './expenses-view.component.html',
   styleUrl: './expenses-view.component.css'
 })

@@ -12,17 +12,38 @@ import * as shape from 'd3-shape';
 })
 export class PieChartComponent {
     // Ngx-charts Options
-    view: [number, number] = [700, 400];
+    view: [number, number] = [300, 300];
     total = 0;
 
     gradient: boolean = true;
     isDoughnut: boolean = false;
   
     colorScheme: Color = {
-        name: 'myScheme',
+        name: 'appPalette',
         selectable: true,
         group: ScaleType.Ordinal,
-        domain: ['#019b98', '#dd0025']
+        domain: [
+            '#019B98', // primary-200 – teal
+            '#DD0025', // accent-100 – rood
+            '#267E4F', // money green
+            '#017573', // dark teal
+            '#BA8400', // warm geel/bruin
+            '#3F7A8D', // staalblauw / text
+            '#55CCC9', // licht teal
+            '#FFBFAB', // zacht oranje
+            '#014E60', // diepblauw
+            '#81D9D7', // licht aqua
+            '#A64B00', // warm bruin (contrast)
+            '#009688', // neutraal groenblauw
+            '#D64550', // roodachtig contrast
+            '#4CAF50', // groen
+            '#9C27B0', // paars
+            '#FFC107', // goudgeel
+            '#00BCD4', // cyaan
+            '#E91E63', // roze accent
+            '#795548', // bruin/grijs
+            '#607D8B'  // blauwgrijs
+        ]
     };
   
     autoScale: boolean = true;
