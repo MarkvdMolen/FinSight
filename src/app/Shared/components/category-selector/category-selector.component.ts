@@ -11,69 +11,68 @@ type CategoriesMap = Record<string, string[]>;
   standalone: true,
   imports: [CommonModule],
   templateUrl: './category-selector.component.html',
-  styleUrls: ['./category-selector.component.css']   // <-- array
+  styleUrls: ['./category-selector.component.css']
 })
 export class CategorySelectorComponent {
-
   private categoriesService = inject(ClassificationService);
 
-  // === Excludes die meegaan naar endpoints (keys van categorieën) ===
-  excludes = signal<string[]>([]);
-
-  // (Optioneel) initial value van parent
-  @Input() set initialExcludes(v: string[] | null | undefined) {
-    this.excludes.set(v ?? []);
+  // Parent → child
+  @Input() set excludes(value: string[] | null | undefined) {
+    this._excludes.set(value ?? []);
   }
 
-  // (Optioneel) emit naar parent wanneer excludes wijzigt
+  // Child → parent
   @Output() excludesChange = new EventEmitter<string[]>();
+
+  // Interne signal als bron voor alle child-logica
+  private _excludes = signal<string[]>([]);
+  public excludesSig = this._excludes; 
+
   private emitEffect = effect(() => {
-    this.excludesChange.emit(this.excludes());
+    this.excludesChange.emit(this._excludes());
   });
 
-  // === Categories ophalen (Record<string,string[]>) ===
+  // Data
   categories$: Observable<CategoriesMap> =
     this.categoriesService.getCategories().pipe(
       shareReplay({ bufferSize: 1, refCount: true })
     );
 
-  // Alle categorie-namen (keys) uit de API
   private groupKeys$ = this.categories$.pipe(
     map(obj => Object.keys(obj).sort()),
-    startWith([] as string[]) // -> nooit undefined
+    startWith([] as string[])
   );
-
-  // Signal met alle beschikbare categorie-keys
-  groupKeys = toSignal(this.groupKeys$);
+  // geef initialValue om |undefined uit het type te halen
+  groupKeys = toSignal<string[]>(this.groupKeys$);
 
   // UI state
   isOpen = signal(false);
   query  = signal('');
 
-  // Filter op basis van de query
+  // Afgeleiden
   filteredGroups = computed<string[]>(() => {
     const q = this.query().trim().toLowerCase();
-    const keys = this.groupKeys() ?? [];
+    const keys = this.groupKeys() ?? []; // fallback
     return q ? keys.filter(k => k.toLowerCase().includes(q)) : keys;
   });
 
-  // Helpers
-  private selectedSet = computed(() => new Set(this.excludes()));
+
+  private selectedSet = computed(() => new Set(this._excludes()));
   isGroupSelected = (key: string) => this.selectedSet().has(key);
 
   toggleGroup(key: string) {
-    const set = new Set(this.excludes());
+    const set = new Set(this._excludes());
     set.has(key) ? set.delete(key) : set.add(key);
-    this.excludes.set([...set]);
+    this._excludes.set([...set]);
   }
 
-  // Bulk
   selectAllVisible() {
-    const set = new Set(this.excludes());
-    (this.filteredGroups() ?? []).forEach(k => set.add(k));
-    this.excludes.set([...set]);
+    const set = new Set(this._excludes());
+    this.filteredGroups().forEach(k => set.add(k));
+    this._excludes.set([...set]);
   }
+
   clearAll() {
-    this.excludes.set([]);
+    this._excludes.set([]);
   }
 }

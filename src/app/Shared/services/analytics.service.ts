@@ -15,7 +15,7 @@ export class AnalyticsService {
         let params = new HttpParams();
         if (start) params = params.set('start', start);
         if (end) params = params.set('end', end);
-        if (excludeCategories && excludeCategories.length) {
+        if (excludeCategories && excludeCategories.length > 0) {
             excludeCategories.forEach(cat => { params = params.append('excludeCategories', cat); });
         }
         return params;

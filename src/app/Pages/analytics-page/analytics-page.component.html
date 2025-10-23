@@ -12,6 +12,7 @@
 		>
 		</app-date-picker>
 		<app-category-selector
+			[excludes]="excludes()" 
 			(excludesChange)="onExcludesChange($event)">
 		>
 		</app-category-selector>

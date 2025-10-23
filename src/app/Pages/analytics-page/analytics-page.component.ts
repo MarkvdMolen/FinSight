@@ -55,28 +55,26 @@ export class AnalyticsPageComponent {
 
   private analytics = inject(AnalyticsService);
   private charts = inject(FinancialService);
-  private categoriesService = inject(ClassificationService);
 
   monthlySummary$: Observable<DefaultSummary> = this.charts.getMonthlyIncomeAndOutcome(2025);
 
   // state (simpel)
   startDate = signal<string>('2025-01-01');
   endDate   = signal<string>('2025-08-02');
-
-  // === Excludes die megaan naar endpoints ===
   excludes = signal<string[]>([]);
 
   // parent state updaten
   onExcludesChange(next: string[]) {
-    this.excludes.set(next);              
+    this.excludes.set(next ?? []);            
   }
 
   // Params voor endpoints
   private params = computed(() => ({
     start: this.startDate(),
     end: this.endDate(),
-    exc: this.excludes()
+    exc:   this.excludes() ?? [] 
   }));
+  //
   private params$ = toObservable(this.params);
 
   // Endpoints (reageren automatisch op params)
@@ -105,69 +103,4 @@ export class AnalyticsPageComponent {
     shareReplay(1)
   );
 
-  // === Categories ophalen (Record<string,string[]>) ===
-  categories$: Observable<CategoriesMap> =
-    this.categoriesService.getCategories().pipe(
-      shareReplay({ bufferSize: 1, refCount: true })
-    );
-
-  // === FLAT opties maken en als signal beschikbaar maken ===
-  private options$ = this.categories$.pipe(
-    map(obj =>
-      Object.entries(obj).flatMap(([group, items]) =>
-        items.map(label => ({ group, label, value: label } as Option))
-      )
-    )
-  );
-  options = toSignal(this.options$, { initialValue: [] as Option[] }) as Signal<Option[]>;
-
-  // === Dropdown state & helpers ===
-  isOpen = signal(false);
-  query  = signal('');
-
-  private selectedSet = computed(() => new Set(this.excludes()));
-
-  filteredOptions = computed(() => {
-    const q = this.query().trim().toLowerCase();
-    const opts = this.options();
-    if (!q) return opts;
-    return opts.filter(o =>
-      o.label.toLowerCase().includes(q) || o.group.toLowerCase().includes(q)
-    );
-  });
-
-  groups = computed(() => {
-    const mapG = new Map<string, Option[]>();
-    for (const o of this.filteredOptions()) {
-      if (!mapG.has(o.group)) mapG.set(o.group, []);
-      mapG.get(o.group)!.push(o);
-    }
-    return Array.from(mapG.entries()) as [string, Option[]][];
-  });
-
-  isSelected = (value: string) => this.selectedSet().has(value);
-
-  toggle(value: string) {
-    const set = new Set(this.excludes());
-    set.has(value) ? set.delete(value) : set.add(value);
-    this.excludes.set([...set]);
-  }
-
-  selectAllInGroup(group: string) {
-    const set = new Set(this.excludes());
-    const inGroup = this.options().filter(o => o.group === group).map(o => o.value);
-    inGroup.forEach(v => set.add(v));
-    this.excludes.set([...set]);
-  }
-
-  clearGroup(group: string) {
-    const set = new Set(this.excludes());
-    const inGroup = this.options().filter(o => o.group === group).map(o => o.value);
-    inGroup.forEach(v => set.delete(v));
-    this.excludes.set([...set]);
-  }
-
-  clearAll() {
-    this.excludes.set([]);
-  }
 }
