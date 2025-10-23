@@ -1,12 +1,19 @@
-<section class="bg-white rounded-lg shadow-2xl p-4 my-4">
-    <div #chartContainer class="p-4">
-        <ngx-charts-pie-chart
-            [view]="view"
-            [scheme]="colorScheme"
-            [results]="chartData"
-            [gradient]="gradient"
-            [doughnut]="isDoughnut"
-        >
-        </ngx-charts-pie-chart>
-    </div>
+<section #chartContainer class="p-4">
+    <ngx-charts-pie-chart
+        [view]="view"
+        [scheme]="colorScheme"
+        [results]="chartData"
+        [gradient]="gradient"
+        [doughnut]="isDoughnut"
+    >
+        <ng-template #tooltipTemplate let-model="model">
+            <div class="p-2 text-sm">
+                <div class="font-semibold">{{ (model?.name) || 'Onbekend' }}</div>
+                <div class="text-md">
+                    €{{ model?.value | number:'1.0-2' }}
+                    ({{ (((model?.value) / total) * 100).toFixed(1) }}%)
+                </div>
+            </div>
+        </ng-template>
+    </ngx-charts-pie-chart>
 </section>  

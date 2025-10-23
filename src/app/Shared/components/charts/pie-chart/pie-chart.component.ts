@@ -13,6 +13,7 @@ import * as shape from 'd3-shape';
 export class PieChartComponent {
     // Ngx-charts Options
     view: [number, number] = [700, 400];
+    total = 0;
 
     gradient: boolean = true;
     isDoughnut: boolean = false;
@@ -60,6 +61,7 @@ export class PieChartComponent {
     ngOnChanges(changes: SimpleChanges): void {
         if (changes['data'] && this.data) {
             this.chartData = this.transformData(this.data);
+            this.total = this.chartData.reduce((sum, d) => sum + d.value, 0);
         }
     }
 
