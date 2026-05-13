@@ -14,7 +14,7 @@ import * as shape from 'd3-shape';
 export class ExpenseIncomeLineChartComponent {
 
     // Ngx-charts Options
-    view: [number, number] = [0, 600];
+    view: [number, number] = [0, 500];
     legend: boolean = true;
     showLabels: boolean = true;
     animations: boolean = true;
