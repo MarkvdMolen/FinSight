@@ -1,0 +1,439 @@
+/* Pagina en algemene typografie */
+
+:host {
+  display: block;
+  color: #203a35;
+}
+
+.dashboard {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 12px 4px 28px;
+}
+
+.page-header,
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+}
+
+.page-header {
+  margin-bottom: 28px;
+}
+
+.eyebrow {
+  font-size: 10px;
+  letter-spacing: 2px;
+  font-weight: 700;
+  color: #6c817b;
+  margin: 0 0 10px;
+}
+
+h1 {
+  font-size: 32px;
+  letter-spacing: -1px;
+  font-weight: 650;
+  margin: 0 0 8px;
+}
+
+h2 {
+  font-size: 17px;
+  font-weight: 600;
+  margin: 0;
+}
+
+p {
+  margin: 0;
+}
+
+.muted,
+small {
+  color: #74847e;
+  font-size: 12px;
+}
+
+.muted {
+  margin-top: 6px;
+}
+
+.demo-badge,
+.account-count {
+  font-size: 11px;
+  white-space: nowrap;
+  background: #eef4f0;
+  border: 1px solid #dce7df;
+  border-radius: 20px;
+  padding: 8px 12px;
+  color: #526e60;
+}
+
+.demo-badge span {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  background: #6e9675;
+  border-radius: 50%;
+  margin-right: 6px;
+}
+
+/* Samenvatting: vermogen, inkomsten en uitgaven */
+
+.summary-grid {
+  display: grid;
+  grid-template-columns: 1.35fr 1fr 1fr;
+  gap: 18px;
+  margin-bottom: 22px;
+}
+
+.card {
+  border: 1px solid #e1e9e4;
+  border-radius: 18px;
+  background: #fff;
+  padding: 24px;
+  box-shadow: 0 3px 14px #203a3503;
+}
+
+.total-card {
+  background: #203f37;
+  color: white;
+  border-color: #203f37;
+}
+
+.total-card p {
+  color: #c2d5ca;
+  font-size: 13px;
+}
+
+.total-card h2 {
+  font-size: 40px;
+  letter-spacing: -1px;
+  margin: 15px 0;
+}
+
+.growth {
+  display: inline-block;
+  color: #c5edd1;
+  background: #ffffff12;
+  padding: 6px 10px;
+  border-radius: 7px;
+  font-size: 12px;
+}
+
+.total-card small {
+  display: block;
+  color: #b2c5b9;
+  margin-top: 18px;
+  font-size: 10px;
+}
+
+.metric-icon {
+  display: inline-grid;
+  place-items: center;
+  background: #e9f4ed;
+  color: #338263;
+  border-radius: 12px;
+  width: 36px;
+  height: 36px;
+  font-size: 22px;
+  margin-bottom: 15px;
+}
+
+.expense {
+  background: #fff1e8;
+  color: #b57b50;
+}
+
+.metric p {
+  font-size: 13px;
+  color: #74847e;
+}
+
+.metric h2 {
+  font-size: 30px;
+  margin: 10px 0 12px;
+}
+
+/* Vermogensgrafiek en periodeselectie */
+
+.detail-grid {
+  display: grid;
+  grid-template-columns: minmax(0,2fr) minmax(260px,1fr);
+  gap: 22px;
+  margin-bottom: 22px;
+}
+
+.range {
+  display: flex;
+  background: #f2f5f3;
+  border-radius: 9px;
+  padding: 3px;
+}
+
+.range button {
+  padding: 6px 10px;
+  font-size: 11px;
+  border: 0;
+  border-radius: 7px;
+  color: #74847e;
+  cursor: pointer;
+  background: transparent;
+}
+
+.range .selected {
+  background: white;
+  color: #203f37;
+  box-shadow: 0 1px 4px #00000010;
+}
+
+.range button:focus-visible,
+summary:focus-visible {
+  outline: 2px solid #238477;
+  outline-offset: 3px;
+}
+
+.chart-growth {
+  color: #238477;
+  font-size: 18px;
+  font-weight: 600;
+  margin-top: 24px;
+}
+
+.chart-growth span {
+  color: #74847e;
+  font-size: 11px;
+  font-weight: 400;
+}
+
+.wealth-chart {
+  width: 100%;
+  display: block;
+  margin-top: 16px;
+}
+
+.axis-label {
+  font-size: 11px;
+  fill: #7b8984;
+}
+
+details {
+  font-size: 11px;
+  color: #74847e;
+}
+
+summary {
+  cursor: pointer;
+}
+
+table {
+  width: 100%;
+  margin-top: 12px;
+  text-align: left;
+}
+
+td,
+th {
+  padding: 5px;
+  border-bottom: 1px solid #edf1ef;
+}
+
+td:last-child,
+th:last-child {
+  text-align: right;
+}
+
+/* Verdeling tussen cash en beleggingen */
+
+.donut {
+  width: 174px;
+  height: 174px;
+  margin: 25px auto;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+}
+
+.donut > div {
+  width: 136px;
+  height: 136px;
+  background: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.donut strong {
+  font-size: 21px;
+}
+
+.allocation-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 12px;
+  padding: 11px 0;
+  border-top: 1px solid #edf1ef;
+}
+
+.allocation-row > span {
+  flex: 1;
+}
+
+.allocation-row small {
+  width: 38px;
+  text-align: right;
+}
+
+.allocation-row i {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  margin-right: 7px;
+}
+
+.cash-dot {
+  background: #238477;
+}
+
+.investment-dot {
+  background: #b9c9ed;
+}
+
+/* Rekeningen per instelling */
+
+.accounts-grid {
+  display: grid;
+  grid-template-columns: repeat(4,minmax(0,1fr));
+  gap: 16px;
+  margin-top: 24px;
+}
+
+.account {
+  border: 1px solid #e7ece9;
+  border-radius: 12px;
+  padding: 16px;
+}
+
+.account-top {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.bank-logo {
+  display: grid;
+  place-items: center;
+  background: #f4f6f4;
+  border-radius: 10px;
+  min-width: 34px;
+  height: 38px;
+  font-weight: 750;
+  font-size: 21px;
+}
+
+h3 {
+  font-size: 13px;
+  font-weight: 600;
+  margin: 0;
+}
+
+.account p {
+  font-size: 10px;
+  color: #74847e;
+  margin-top: 4px;
+}
+
+.account-value {
+  display: block;
+  font-size: 24px;
+  margin: 21px 0 16px;
+}
+
+.account-breakdown {
+  border-top: 1px solid #edf1ef;
+  padding-top: 10px;
+  min-height: 45px;
+}
+
+.account-breakdown span {
+  display: flex;
+  justify-content: space-between;
+  font-size: 10px;
+  color: #74847e;
+  margin-top: 5px;
+}
+
+.account-breakdown b {
+  font-weight: 500;
+  color: #405b50;
+}
+
+/* Toelichting onder het dashboard */
+
+footer {
+  margin-top: 20px;
+  font-size: 10px;
+  line-height: 1.7;
+  color: #84918a;
+}
+
+/* Responsive layout: tablet */
+
+@media (max-width: 1100px) {
+  .accounts-grid {
+    grid-template-columns: repeat(2,minmax(0,1fr));
+  }
+
+  .detail-grid {
+    grid-template-columns: minmax(0,1fr);
+  }
+
+  .summary-grid {
+    grid-template-columns: repeat(2,minmax(0,1fr));
+  }
+
+  .total-card {
+    grid-column: 1/-1;
+  }
+}
+
+/* Responsive layout: mobiel */
+
+@media (max-width: 600px) {
+  .page-header,
+  .section-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .summary-grid,
+  .accounts-grid {
+    grid-template-columns: minmax(0,1fr);
+  }
+
+  .card {
+    padding: 18px;
+  }
+
+  h1 {
+    font-size: 27px;
+  }
+
+  .chart-growth span {
+    display: block;
+    margin-top: 5px;
+  }
+
+  .dashboard {
+    padding: 0;
+  }
+
+  .metric h2 {
+    font-size: 27px;
+  }
+}
