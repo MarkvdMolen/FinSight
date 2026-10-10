@@ -5,13 +5,17 @@
         <h1>Mijn vermogen</h1>
         <p class="muted">Alles bij elkaar. Inzicht in waar je staat.</p>
     </div>
-    <span class="demo-badge"><span></span> Demodata · {{ data.monthLabel }}</span>
+    <span class="demo-badge"><span></span>  {{ data.monthLabel }}</span>
   </header>
 
   <section class="summary-grid" aria-label="Financieel overzicht">
     <article class="card total-card">
       <p>Totaal vermogen</p><h2>{{ money(total) }}</h2>
-      <span class="growth">↗ {{ money(monthlyGrowth) }} deze maand</span>
+      @if (monthlyGrowth !== null) {
+        <span class="growth">{{ money(monthlyGrowth!) }} ten opzichte van vorige maand</span>
+      } @else {
+        <span class="growth">Nog geen maandvergelijking beschikbaar</span>
+      }
       <small>Cash en beleggingen · {{ data.asOf }}</small>
     </article>
     <article class="card metric">
@@ -40,12 +44,12 @@
               <button type="button" [class.selected]="range() === 12" [attr.aria-pressed]="range() === 12" (click)="range.set(12)">12 mnd</button>
           </div>
       </div>
-      <p class="chart-growth">+{{ money(periodGrowth()) }}
+      <p class="chart-growth">{{ periodGrowth() > 0 ? '+' : '' }}{{ money(periodGrowth()) }}
           <span>({{ percentage(periodPercentage()) }}) in deze periode</span>
       </p>
       <svg class="wealth-chart" viewBox="0 0 800 270" role="img" aria-labelledby="wealth-chart-title wealth-chart-description">
         <title id="wealth-chart-title">Vermogensontwikkeling over {{ range() }} maanden</title>
-        <desc id="wealth-chart-description">Van {{ money(history()[0].value) }} in {{ history()[0].month }} naar {{ money(total) }} in oktober 2026. Een tabel met de waarden staat onder de grafiek.</desc>
+        <desc id="wealth-chart-description">Van {{ money(history()[0].value) }} in {{ history()[0].month }} naar {{ money(total) }} in {{ data.monthLabel }}. Een tabel met de waarden staat onder de grafiek.</desc>
         <defs><linearGradient id="wealth-fill" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#238477" stop-opacity="0.18"/><stop offset="100%" stop-color="#238477" stop-opacity="0.01"/></linearGradient></defs>
         @for (tick of chart().ticks; track $index) {
           <line x1="70" x2="760" [attr.y1]="30 + $index * 95" [attr.y2]="30 + $index * 95" stroke="#e8eeeb" stroke-dasharray="4 5"/>
@@ -67,9 +71,9 @@
   <section class="card accounts-card" aria-labelledby="accounts-title">
     <div class="section-header">
         <div><h2 id="accounts-title">Mijn rekeningen</h2>
-            <p class="muted">Vier instellingen, één overzicht</p>
+            <p class="muted">Al je rekeningen, één overzicht</p>
     </div>
-        <span class="account-count">{{ accounts.length }} instellingen</span>
+        <span class="account-count">{{ accounts.length }} rekeningen</span>
     </div>
     <div class="accounts-grid">
         @for (account of accounts; track account.id) {
@@ -91,5 +95,5 @@
         }
     </div>
   </section>
-  <footer>Voorbeeldgegevens, geen live koppelingen. Interne overboekingen tellen niet mee als inkomsten of uitgaven. Alle bedragen zijn in euro.</footer>
+  <footer>Gegevens uit je financiële database. Interne overboekingen tellen niet mee als inkomsten of uitgaven. Alle bedragen zijn in euro.</footer>
 </div>

@@ -6,7 +6,7 @@ import { BankRecieptUploadPageComponent } from 'app/Pages/bank-reciept-upload-pa
 
 export const routes: Routes = [
   { path: '', component: AnalyticsPageComponent },
-    { path: 'dashboard', loadComponent: () => import('@features/wealth-dashboard/wealth-dashboard.component').then(m => m.WealthDashboardComponent) },
+    { path: 'dashboard', loadComponent: () => import('@features/wealth-dashboard/wealth-dashboard-page.component').then(m => m.WealthDashboardPageComponent) },
   { path: 'home', component: AnalyticsPageComponent },
   { path: 'transactions', component: TransactionOverviewPageComponent },
   { path: 'upload', component: BankRecieptUploadPageComponent },
